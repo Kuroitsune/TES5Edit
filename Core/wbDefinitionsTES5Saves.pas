@@ -10,41 +10,64 @@ unit wbDefinitionsTES5Saves;
 
 interface
 
-procedure DefineTES5Saves;
-procedure SwitchToTES5CoSave;
-
 implementation
 
 uses
-  Types,
-  Classes,
-  SysUtils,
-  Math,
-  Variants,
-  wbInterface,
-  wbSaveInterface,
-  wbImplementation,
-  wbLocalization,
+  System.Classes,
+  System.SysUtils,
+
   wbDefinitionsCommon,
-  wbDefinitionsTES5;
+  wbImplementation,
+  wbInterface,
+  wbSaveInterface;
 
-var
-  wbSexEnum          : IwbEnumDef;
-  wbPropTypeEnum     : IwbEnumDef;
-  wbExtraTypeEnum    : IwbEnumDef;
-  wbRecordFlagsFlags : IwbFlagsDef;
+type
+  TwbSaveDefTES5Base = class(TwbSaveDef)
+  protected
+    sdSaveSexEnum      : IwbEnumDef;
+    sdPropTypeEnum     : IwbEnumDef;
+    sdExtraTypeEnum    : IwbEnumDef;
+    sdRecordFlagsFlags : IwbFlagsDef;
+    sdQuestFlags       : IwbIntegerDef;
+    sdChangeTypes      : IwbEnumDef;
+    sdSaveChapters     : IwbStructDef;
+    sdCoSaveChapters   : IwbStructDef;
+    sdSaveHeader       : IwbStructDef;
+    sdCoSaveHeader     : IwbStructDef;
+    sdExtractInfo      : TByteSet;
 
-var // forward type directives
-  wbChangeTypes    : IwbEnumDef;
-  wbQuestFlags     : IwbIntegerDef;
-  wbSaveChapters   : IwbStructDef;
-  wbCoSaveChapters : IwbStructDef;
-  wbSaveHeader     : IwbStructDef;
-  wbCoSaveHeader   : IwbStructDef;
+    function ChangedFormGetChapterTypeName(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): string;
 
-procedure DefineTES5SavesA;
+    procedure DefineTES5SavesA;
+    procedure DefineTES5SavesS;
+  public
+    procedure Define; override;
+  end;
+
+  TwbSaveDefTES5 = class(TwbSaveDefTES5Base)
+  protected
+    procedure SavePluginNames(const aHeader: IwbContainer; aNames, aLightNames: TStrings);
+  public
+    procedure Define; override; final;
+  end;
+
+  TwbCoSaveDefTES5 = class(TwbSaveDefTES5Base)
+  public
+    procedure Define; override; final;
+  end;
+
+  TwbSaveContextTES5 = class(TwbLoadingSaveContext)
+  protected
+    scLastRegistrationStart : Integer;
+  public
+    property LastRegistrationStart: Integer
+      read scLastRegistrationStart
+      write scLastRegistrationStart;
+  end;
+
+procedure TwbSaveDefTES5Base.DefineTES5SavesA;
 begin
-  wbPropTypeEnum := wbEnum([
+  sdPropTypeEnum := wbEnum([
     {00} 'None',
     {01} 'Object',
     {02} 'String',
@@ -63,9 +86,9 @@ begin
     {15} 'Array of Bool'
   ]);
 
-  wbSexEnum := wbEnum(['Male','Female']);
+  sdSaveSexEnum := wbEnum(['Male','Female']);
 
-  wbRecordFlagsFlags := wbFlags([
+  sdRecordFlagsFlags := wbFlags([
     {>>> 0x00000000 ACTI: Collision Geometry (default) <<<}
     {0x00000001}'ESM',
     {0x00000002}'Unknown 2',
@@ -136,7 +159,7 @@ begin
     {0x80000000}'MultiBound'
   ]);
 
-  wbQuestFlags := wbInteger('Flags', itU16, wbFlags([
+  sdQuestFlags := wbInteger('Flags', itU16, wbFlags([
     {0x0001} 'Start Game Enabled',
     {0x0002} 'Unknown 2',
     {0x0004} 'Unknown 3',
@@ -152,7 +175,7 @@ begin
     {0x1000} 'Unknown 13'
   ]));
 
-  wbExtraTypeEnum := wbEnum([
+  sdExtraTypeEnum := wbEnum([
     'Havok',
     'Cell3D',
     'CellWaterType',
@@ -364,20 +387,68 @@ begin
   Result := SaveVersionDecider(11, aBasePtr, aEndPtr, aElement);
 end;
 
-function SaveFormVersionDecider(aMinimum: Integer; aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
+function SaveContent(const aElement: IwbElement): IwbContainer;
 var
-  aType : Integer;
-  Element : IwbElement;
-  Container: IwbDataContainer;
+  Element   : IwbElement;
+  Container : IwbContainer;
+  Union     : IwbContainer;
+  i         : Integer;
 begin
-  Result := 0;
+  Result := nil;
   if not Assigned(aElement) then Exit;
   Element := aElement;
   while Assigned(Element.Container) do
     Element := Element.Container;
 
-  if Supports(Element, IwbContainer, Container) then begin
-    Element := Container.ElementByPath['Save File Header\Content\Form Version'];
+  if not Supports(Element, IwbContainer, Container) then Exit;
+  if not Supports(Container.ElementByName['Save File Header'], IwbContainer, Container) then Exit;
+  for i := 0 to Pred(Container.ElementCount) do
+    if Supports(Container.Elements[i], IwbContainer, Union) and (Union.Name = '') then begin
+      Element := Union.ElementByName['Content'];
+      if not Assigned(Element) then
+        Element := Union.ElementByPath['Compressed\Data\Content'];
+      if not Assigned(Element) then
+        Element := Union.ElementByPath['Compressed\Data\Data\Content'];
+      Supports(Element, IwbContainer, Result);
+      Exit;
+    end;
+end;
+
+procedure TwbSaveDefTES5.SavePluginNames(const aHeader: IwbContainer; aNames, aLightNames: TStrings);
+
+  procedure AddNames(const aList: IwbElement; aTarget: TStrings);
+  var
+    List : IwbContainerElementRef;
+    i    : Integer;
+  begin
+    if Supports(aList, IwbContainerElementRef, List) then
+      for i := 0 to Pred(List.ElementCount) do
+        aTarget.Add(List[i].EditValue);
+  end;
+
+var
+  Content : IwbContainer;
+  Union   : IwbContainer;
+  i       : Integer;
+begin
+  Content := SaveContent(aHeader);
+  if not Assigned(Content) then Exit;
+  AddNames(Content.ElementByName[FilePlugins], aNames);
+  for i := 0 to Pred(Content.ElementCount) do
+    if Supports(Content.Elements[i], IwbContainer, Union) and (Union.Name = '') then
+      AddNames(Union.ElementByName['Light plugins'], aLightNames);
+end;
+
+function SaveFormVersionDecider(aMinimum: Integer; aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
+var
+  aType : Integer;
+  Element : IwbElement;
+  Container: IwbContainer;
+begin
+  Result := 0;
+  Container := SaveContent(aElement);
+  if Assigned(Container) then begin
+    Element := Container.ElementByName['Form Version'];
     if Assigned(Element) then begin
       aType := Element.NativeValue;
       if aType>aMinimum then
@@ -390,16 +461,12 @@ function SaveFormVersion55Decider(aBasePtr: Pointer; aEndPtr: Pointer; const aEl
 var
   aType : Integer;
   Element : IwbElement;
-  Container: IwbDataContainer;
+  Container: IwbContainer;
 begin
   Result := 0;
-  if not Assigned(aElement) then Exit;
-  Element := aElement;
-  while Assigned(Element.Container) do
-    Element := Element.Container;
-
-  if Supports(Element, IwbContainer, Container) then begin
-    Element := Container.ElementByPath['Save File Header\Form Version'];
+  Container := SaveContent(aElement);
+  if Assigned(Container) then begin
+    Element := Container.ElementByName['Form Version'];
     if Assigned(Element) then begin
       aType := Element.NativeValue;
       if aType = 55 then
@@ -427,14 +494,14 @@ end;
 
 function SaveFormVersionGreaterThan77Decider(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
 begin
-    Result := SaveFormVersionDecider(78, aBasePtr, aEndPtr, aElement);
+    Result := SaveFormVersionDecider(77, aBasePtr, aEndPtr, aElement);
 end;
 
 function ScreenShotDataCounter(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Cardinal;
 var
   Element : IwbElement;
   Container: IwbDataContainer;
-  BitSize: Integer;
+  BitSize: Cardinal;
 begin
   Result := 0;
   if 1 = SaveVersionGreaterThan11Decider(aBasePtr, aEndPtr, aElement) then
@@ -459,22 +526,17 @@ begin
   end;
 end;
 
-function FileLocationTableCountCounter(aName: String; aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Cardinal;
+function FileLocationTableCountCounter(const aName: string; aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Cardinal;
 var
   Element : IwbElement;
-  Container: IwbDataContainer;
+  Container: IwbContainer;
 begin
   Result := 0;
-  if not Assigned(aElement) then Exit;
-  Element := aElement;
-  while Assigned(Element.Container) do
-    Element := Element.Container;
-
-  if Supports(Element, IwbContainer, Container) then begin
-    Element := Container.ElementByPath['Save File Header\File Location Table\'+aName+' Count'];
-    if Assigned(Element) then begin
+  Container := SaveContent(aElement);
+  if Assigned(Container) then begin
+    Element := Container.ElementByPath['File Location Table\'+aName+' Count'];
+    if Assigned(Element) then
       Result := Element.NativeValue;
-    end;
   end;
 end;
 
@@ -527,7 +589,8 @@ begin
         Result := aType - 1000 + 9 + 15 + 1;
     end;
     if (Result < (1001-1000+9+15+1)) and (Result > 2) then Result := 0; //Others are not decoded yet
-    if Assigned(ChaptersToSkip) and ChaptersToSkip.Find(IntToStr(aType), aType)  then // "Required" time optimisation (can save "hours" if used on 1001)
+    var lSaveContext := Container.SaveContextObj;
+    if Assigned(lSaveContext) and lSaveContext.ChaptersToSkip.Find(IntToStr(aType), aType)  then // "Required" time optimisation (can save "hours" if used on 1001)
       Result := 0;
   end;
 end;
@@ -548,76 +611,59 @@ begin
     Assert(Assigned(Element));
     if Assigned(Element) then begin
       aType := Element.NativeValue;
-      case aType of
-        1: Result := 2;
+      if aType = 1 then
+        Exit(2)
       else
-        Result := 1;
-      end;
+        Exit(1);
     end;
   end;
 end;
 
-var
-  VMTypeCount : Integer = -1;
-
 procedure VMTypeAfterLoad(const aElement: IwbElement);
 begin
-  if VMTypeCount < 0 then begin
-    VMTypeCount := (aElement as IwbContainer).ElementCount;
-    InitializeVMTypeArray(aElement as IwbContainer);
-  end;
+  wbSaveTablesOf(aElement).InitializeVMTypeArray(aElement as IwbContainer);
 end;
-
-var
-  WorldspaceTableCount : Integer = -1;
 
 procedure WorldspaceTableAfterLoad(const aElement: IwbElement);
 begin
-  if WorldspaceTableCount < 0 then begin
-    WorldspaceTableCount := (aElement as IwbContainer).ElementCount;
-    InitializeSaveWorldspaceArray(aElement as IwbContainer);
-  end;
+  wbSaveTablesOf(aElement).InitializeSaveWorldspaceArray(aElement as IwbContainer);
 end;
-
-var
-  RefIDTableCount : Integer = -1;
 
 procedure RefIDTableAfterLoad(const aElement: IwbElement);
 begin
-  if RefIDTableCount < 0 then begin
-    RefIDTableCount := (aElement as IwbContainer).ElementCount;
-    InitializeSaveRefIDArray(aElement as IwbContainer);
-  end;
+  wbSaveTablesOf(aElement).InitializeSaveRefIDArray(aElement as IwbContainer);
 end;
 
-var
-  VMObjectArrayCount         : Integer = -1;
-  VMObjectDetachedArrayCount : Integer = -1;
-
 procedure ObjectTableAfterLoad(const aElement: IwbElement);
+var
+  lTables : IwbSaveTables;
 begin
-  if VMObjectArrayCount < 0 then begin
-    VMObjectArrayCount := (aElement as IwbContainer).ElementCount;
-    InitializeVMObjectArray(aElement as IwbContainer);
+  lTables := wbSaveTablesOf(aElement);
+  if lTables.VMObjectArrayCount < 0 then begin
+    lTables.VMObjectArrayCount := (aElement as IwbContainer).ElementCount;
+    lTables.InitializeVMObjectArray(aElement as IwbContainer);
   end;
 end;
 
 procedure ObjectDetachedTableAfterLoad(const aElement: IwbElement);
+var
+  lTables : IwbSaveTables;
 begin
-  if VMObjectDetachedArrayCount < 0 then begin
-    VMObjectDetachedArrayCount := (aElement as IwbContainer).ElementCount;
-    InitializeVMObjectDetachedArray(aElement as IwbContainer);
+  lTables := wbSaveTablesOf(aElement);
+  if lTables.VMObjectDetachedArrayCount < 0 then begin
+    lTables.VMObjectDetachedArrayCount := (aElement as IwbContainer).ElementCount;
+    lTables.InitializeVMObjectDetachedArray(aElement as IwbContainer);
   end;
 end;
 
-var
-  VMArrayTableCount : Integer = -1;
-
 procedure ArrayTableAfterLoad(const aElement: IwbElement);
+var
+  lTables : IwbSaveTables;
 begin
-  if VMArrayTableCount < 0 then begin
-    VMArrayTableCount := (aElement as IwbContainer).ElementCount;
-    InitializeVMArrayTable(aElement as IwbContainer);
+  lTables := wbSaveTablesOf(aElement);
+  if lTables.VMArrayTableCount < 0 then begin
+    lTables.VMArrayTableCount := (aElement as IwbContainer).ElementCount;
+    lTables.InitializeVMArrayTable(aElement as IwbContainer);
   end;
 end;
 
@@ -630,11 +676,10 @@ begin
   Result := 0;
   if not Assigned(aElement) then Exit;
   Element := wbFindSaveElement('Variable', aElement);
-  Assert(Element.BaseName='Variable');
+  if Element.BaseName <> 'Variable' then Exit;
 
   if Supports(Element, IwbDataContainer, Container) then begin
     Element := Container.ElementByName['Type'];
-    Assert(Assigned(Element));
     if Assigned(Element) then begin
       aType := Element.NativeValue;
       case aType of
@@ -685,13 +730,13 @@ begin
   end;
 end;
 
-var
-  StackTableCount : Integer = -1;
-
 procedure StackTableAfterLoad(const aElement: IwbElement);
+var
+  lTables : IwbSaveTables;
 begin
-  if StackTableCount < 0 then begin
-    StackTableCount := (aElement as IwbContainer).ElementCount;
+  lTables := wbSaveTablesOf(aElement);
+  if lTables.StackTableCount < 0 then begin
+    lTables.StackTableCount := (aElement as IwbContainer).ElementCount;
   end;
 end;
 
@@ -732,9 +777,11 @@ var
   sElement  : IwbElement;
   Element   : IwbElement;
   Container : IwbDataContainer;
+  lTables   : IwbSaveTables;
 
 begin
-  if VMObjectArrayCount<0 then begin
+  lTables := wbSaveTablesOf(aElement);
+  if not Assigned(lTables) or (lTables.VMObjectArrayCount<0) then begin
     Result := 0;
     if not Assigned(aElement) then Exit;
     sElement := wbFindSaveElement('Papyrus Struct', aElement);
@@ -751,16 +798,18 @@ begin
         Inc(Result, Container.ElementCount);
     end;
   end else
-    Result := VMObjectArrayCount+VMObjectDetachedArrayCount;
+    Result := lTables.VMObjectArrayCount+lTables.VMObjectDetachedArrayCount;
 end;
 
 function ArrayContentTableCounter(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Cardinal;
 var
   Element   : IwbElement;
   Container : IwbDataContainer;
+  lTables   : IwbSaveTables;
 
 begin
-  if VMArrayTableCount<0 then begin
+  lTables := wbSaveTablesOf(aElement);
+  if not Assigned(lTables) or (lTables.VMArrayTableCount<0) then begin
     Result := 0;
     if not Assigned(aElement) then Exit;
     Element := wbFindSaveElement('Papyrus Struct', aElement);
@@ -770,18 +819,20 @@ begin
       Element := Container.ElementByName['Array Table'];
       if Supports(Element, IwbDataContainer, Container) then
         Result := Container.ElementCount;
-    end
+    end;
   end else
-    Result := VMArrayTableCount;
+    Result := lTables.VMArrayTableCount;
 end;
 
 function StackContentTableCounter(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Cardinal;
 var
   Element   : IwbElement;
   Container : IwbDataContainer;
+  lTables   : IwbSaveTables;
 
 begin
-  if StackTableCount<0 then begin
+  lTables := wbSaveTablesOf(aElement);
+  if not Assigned(lTables) or (lTables.StackTableCount<0) then begin
     Result := 0;
     if not Assigned(aElement) then Exit;
     Element := wbFindSaveElement('Papyrus Struct', aElement);
@@ -791,9 +842,9 @@ begin
       Element := Container.ElementByPath['Stacks\Stack Table'];
       if Supports(Element, IwbDataContainer, Container) then
         Result := Container.ElementCount;
-    end
+    end;
   end else
-    Result := StackTableCount;
+    Result := lTables.StackTableCount;
 end;
 
 const
@@ -822,7 +873,7 @@ begin
       Exit;
   end;
 
-  if VMArrayTableCount<0 then begin
+  if wbSaveTablesOf(aElement).VMArrayTableCount<0 then begin
     Element := wbFindSaveElement('Papyrus Struct', aElement);
     Assert(Element.BaseName='Papyrus Struct');
 
@@ -837,7 +888,7 @@ begin
             end;
     end;
   end else
-    Result := QueryCountForVMArrayHandle(Handle);
+    Result := wbSaveTablesOf(aElement).VMArrayCount(Handle);
 end;
 
 function ObjectDataTableEntryExtraDecider(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
@@ -855,11 +906,10 @@ begin
     Element := Container.ElementByName['Unknown Flags'];
     if Assigned(Element) then begin
       aFlags := Element.NativeValue;
-      case (aFlags and $4) of
-        4: Result := 1;
+      if (aFlags and $4) = 4 then
+        Exit(1)
       else
-        Result := 0;
-      end;
+        Exit(0);
     end;
   end;
 end;
@@ -988,7 +1038,7 @@ end;
 
 function StackCallBackTypeDecider(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
 var
-  aType     : String;
+  aType     : string;
   Element   : IwbElement;
   Container : IwbDataContainer;
 begin
@@ -1185,7 +1235,7 @@ begin
     Result := 1;
 end;
 
-function HasUnknownS1Decider(aName: String; aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
+function HasUnknownS1Decider(const aName: string; aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
 var
   aValue    : Integer;
   Element   : IwbElement;
@@ -1325,11 +1375,10 @@ begin
     Element := Container.ElementByName['Unknown1000_00000'];
     if Assigned(Element) then begin
       aValue := Element.NativeValue;
-      case aValue of
-        0: Result := 0;
+      if aValue = 0 then
+        Exit(0)
       else
-        Result := 1;
-      end;
+        Exit(1);
     end;
   end;
 end;
@@ -1346,7 +1395,7 @@ begin
     Result := Element.NativeValue;
 end;
 
-function GlobalDataGetChapterTypeName(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): String;
+function GlobalDataGetChapterTypeName(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): string;
 var
   Element    : IwbElement;
   Container : IwbContainer;
@@ -1392,32 +1441,21 @@ begin
 end;
 
 function SaveDataSizer(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement; var CompressedSize: Integer): Cardinal;
-const
-  OffsetLength = -8;
 var
   Element    : IwbElement;
   Container  : IwbDataContainer;
-  BasePtr    : Pointer;
 begin
   Result := 0;
-  Element := aElement;
+  if not Assigned(aElement) then Exit;
+  Element := wbFindSaveElement('Compressed', aElement);
 
   if Supports(Element, IwbDataContainer, Container) then begin
-    BasePtr := Container.DataBasePtr;
-    Element := Container.ElementByPath['Uncompressed Size'];
-    if Assigned(Element) then begin
+    Element := Container.ElementByName['Uncompressed Size'];
+    if Assigned(Element) then
       Result := Element.NativeValue;
-    end else with Container do if IsValidOffset(BasePtr, DataEndPtr, OffsetLength) then begin // we are part a proper structure
-      aBasePtr := PByte(BasePtr) + OffsetLength;
-      Result := PCardinal(aBasePtr)^;
-    end;
-    Element := Container.ElementByPath['Compressed Size'];
-    if Assigned(Element) then begin
+    Element := Container.ElementByName['Compressed Size'];
+    if Assigned(Element) then
       CompressedSize := Element.NativeValue;
-    end else with Container do if IsValidOffset(BasePtr, DataEndPtr, OffsetLength + 4) then begin // we are part a proper structure
-      aBasePtr := PByte(BasePtr) + OffsetLength + 4;
-      CompressedSize := PCardinal(aBasePtr)^;
-    end;
   end else
     CompressedSize := 0;
 end;
@@ -1532,13 +1570,13 @@ begin
     Result := wbChangedFormOffset + (Result and $3F);
 end;
 
-function ChangedFormGetChapterTypeName(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): String;
+function TwbSaveDefTES5Base.ChangedFormGetChapterTypeName(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): string;
 var
   aType : Integer;
 begin
   aType := ChangedFormGetChapterType(aBasePtr, aEndPtr, aElement);
-  if (aType>=wbChangedFormOffset) and (aType < wbChangedFormOffset+wbChangeTypes.NameCount) then
-    Result := wbChangeTypes.Names[aType-wbChangedFormOffset];
+  if (aType>=wbChangedFormOffset) and (aType < wbChangedFormOffset+sdChangeTypes.NameCount) then
+    Result := sdChangeTypes.Names[aType-wbChangedFormOffset];
   if (Pos(' ', Result)>0) and (Length(Result)>1) then
     Result := Copy(Result, Pos(' ', Result)+1, Length(Result));
   if (Pos(' ', Result)>0) and (Length(Result)>1) then
@@ -1547,7 +1585,7 @@ begin
     Result := IntToStr(aType);
 end;
 
-function ChangedFormGetChapterName(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): String;
+function ChangedFormGetChapterName(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): string;
 var
   Element : IwbElement;
 begin
@@ -1589,7 +1627,8 @@ begin
 
   if (Result>=0) and Supports(Element, IwbDataContainer, Container) then begin
     Result := 1 + (Result and $3F);
-    if Assigned(ChaptersToSkip) and ChaptersToSkip.Find(IntToStr(wbChangedFormOffset+Result), aType)  then
+    var lSaveContext := Container.SaveContextObj;
+    if Assigned(lSaveContext) and lSaveContext.ChaptersToSkip.Find(IntToStr(wbChangedFormOffset+Result), aType)  then
       Result := 0;
   end else
     Result := 0;
@@ -1929,14 +1968,12 @@ begin
   Result := ChangedFlagBitXXDecider($80000000, aBasePtr, aEndPtr, aElement);
 end;
 
-var
-  PlayerRefIndex : Cardinal = 0;
-
 function IsActorPlayerDecider(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
 var
   anID      : Integer;
   Element   : IwbElement;
   Container : IwbDataContainer;
+  lTables   : IwbSaveTables;
 begin
   Result := 0;
   if not Assigned(aElement) then Exit;
@@ -1948,11 +1985,12 @@ begin
     if Assigned(Element) then begin
       anID := Element.NativeValue;
       if anID > 0 then begin
-        if PlayerRefIndex = 0 then
+        lTables := wbSaveTablesOf(aElement);
+        if lTables.PlayerRefIndex = 0 then
           if (anID shr 22) = 0 then
-            if GetSaveRefID(anID) = wbPlayerRefID then
-                PlayerRefIndex := anID;
-        if anID = PlayerRefIndex then
+            if lTables.SaveRefID(anID) = wbPlayerRefID then
+                lTables.PlayerRefIndex := anID;
+        if Cardinal(anID) = lTables.PlayerRefIndex then
           Result := 1;
       end;
     end;
@@ -2253,7 +2291,7 @@ begin
     Result := wbBytesToDump div wbBytesToGroup + 1;
 end;
 
-function DataLengthCounter(aName: String; aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement; aModifier: Integer = 0): Cardinal;
+function DataLengthCounter(const aName: string; aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement; aModifier: Integer = 0): Cardinal;
 var
   Element   : IwbElement;
   Container : IwbDataContainer;
@@ -2276,7 +2314,7 @@ begin
   end;
 end;
 
-function DataLengthRemainderCounter(aName: String; aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement; aModifier: Integer = 0): Cardinal;
+function DataLengthRemainderCounter(const aName: string; aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement; aModifier: Integer = 0): Cardinal;
 var
   Element   : IwbElement;
   Container : IwbDataContainer;
@@ -2357,13 +2395,10 @@ begin
   end;
 end;
 
-var
-  LastRegistrationStart : Integer = 0;
-
 function SKSEChaptersDecider(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
 var
   Element   : IwbElement;
-  EValue    : String;
+  EValue    : string;
   Container : IwbDataContainer;
 begin
   Result := 0;
@@ -2378,14 +2413,19 @@ begin
       else if EValue = 'LMOD' then Result := 2
       else if EValue = 'REGS' then Result := 3
       else if EValue = 'REGE' then Result := 4
-      else if EValue = 'MENR' then begin Result :=  5; LastRegistrationStart := Result; end
-      else if EValue = 'KEYR' then begin Result :=  6; LastRegistrationStart := Result; end
-      else if EValue = 'CTLR' then begin Result :=  7; LastRegistrationStart := Result; end
-      else if EValue = 'MCBR' then begin Result :=  8; LastRegistrationStart := Result; end
-      else if EValue = 'CHRR' then begin Result :=  9; LastRegistrationStart := Result; end
-      else if EValue = 'CAMR' then begin Result := 10; LastRegistrationStart := Result; end
-      else if EValue = 'AACT' then begin Result := 11; LastRegistrationStart := Result; end
+      else if EValue = 'MENR' then Result :=  5
+      else if EValue = 'KEYR' then Result :=  6
+      else if EValue = 'CTLR' then Result :=  7
+      else if EValue = 'MCBR' then Result :=  8
+      else if EValue = 'CHRR' then Result :=  9
+      else if EValue = 'CAMR' then Result := 10
+      else if EValue = 'AACT' then Result := 11
       else Result := 12;
+      if (Result >= 5) and (Result <= 11) then begin
+        var lSaveContext := aElement.SaveContextObj;
+        if lSaveContext is TwbSaveContextTES5 then
+          TwbSaveContextTES5(lSaveContext).LastRegistrationStart := Result;
+      end;
     end;
   end;
 end;
@@ -2393,7 +2433,10 @@ end;
 function SKSERegKeyDecider(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
 begin
   Result := 0;
-  case LastRegistrationStart of
+  if not Assigned(aElement) then Exit;
+  var lSaveContext := aElement.SaveContextObj;
+  if not (lSaveContext is TwbSaveContextTES5) then Exit;
+  case TwbSaveContextTES5(lSaveContext).LastRegistrationStart of
     5, 7, 8 : Result := 1;  // String
     6, 11:    Result := 2;  // UInt32
     9, 10:    Result := 3;  // Null
@@ -2403,7 +2446,10 @@ end;
 function SKSERegDataDecider(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
 begin
   Result := 0;
-  case LastRegistrationStart of
+  if not Assigned(aElement) then Exit;
+  var lSaveContext := aElement.SaveContextObj;
+  if not (lSaveContext is TwbSaveContextTES5) then Exit;
+  case TwbSaveContextTES5(lSaveContext).LastRegistrationStart of
     8:
       Result := 1;  // String
     5, 6, 7, 9, 10, 11:
@@ -2411,7 +2457,7 @@ begin
   end;
 end;
 
-procedure DefineTES5SavesS;  // This is all based on current UESP, and HexDump, Triria TESSaveLib and the Runtime
+procedure TwbSaveDefTES5Base.DefineTES5SavesS;  // This is all based on current UESP, and HexDump, Triria TESSaveLib and the Runtime
 var
   wbHeader                   : IwbStructDef;
   wbSaveContent              : IwbStructDef;
@@ -2454,7 +2500,7 @@ var
 
   wbChangeDefaultFlags    : IwbIntegerDef;
   wbCoSaveChunk           : IwbStructDef;
-  wbCoSaveChunks          : IwbArrayDef;
+  wbCoSaveChunks          : IwbValueDef;
   wbCoSavePlugin          : IwbStructDef;
   wbCoSavePlugins         : IwbArrayDef;
   wbChangeFlags000        : IwbIntegerDef;
@@ -2629,7 +2675,7 @@ begin
   ]);
 
   wbVariable := wbStruct('Variable', [
-    wbInteger('Type', itU8, wbPropTypeEnum),
+    wbInteger('Type', itU8, sdPropTypeEnum),
     wbUnion('Value', VariableDecider, [
       wbInteger('Int32', itS32),
       wbStruct('Object', [
@@ -2746,7 +2792,7 @@ begin
 
   wbArrayTableEntry := wbStruct('Array Entry Data', [  // UESP: arrayInfo
     wbInteger('Array Handle', itU32),
-    wbInteger('Array Type', itU8, wbPropTypeEnum),    // valid values : 0 to 5, 0B to 0F
+    wbInteger('Array Type', itU8, sdPropTypeEnum),    // valid values : 0 to 5, 0B to 0F
     wbUnion('Data', ArrayTableEntryOptionalStringDecider, [
       wbNull,
       wbNull,
@@ -3205,14 +3251,14 @@ begin
       ]),
       wbStruct('Papyrus Struct', [
         wbInteger('SkyrimVM_version', itU16)  // FFFF marks an invalid save, 4 seems current max     UESP: header
-        ,wbArray('String Table for Internal VM save data', wbLenString('String', 2), -2, VMTypeAfterLoad)  // UESP strings
+        ,wbArray('String Table for Internal VM save data', wbLenString('String', 2), -2).SetAfterLoad(VMTypeAfterLoad)  // UESP strings
         ,wbArray('Type table for internal VM save data', wbTypeData, -1)  // Type table for internal VM save data  USEP:script
-        ,wbArray('Object Table', wbObjectTableEntry, -1, ObjectTableAfterLoad)  // UESP: scriptInstance
-        ,wbArray('Detached Object Table', wbObjectDetachedTableEntry, -1, ObjectDetachedTableAfterLoad) // UESP: reference
-        ,wbArrayS('Array Table', wbArrayTableEntry, -1, ArrayTableAfterLoad) // UESP: arrayInfo
+        ,wbArray('Object Table', wbObjectTableEntry, -1).SetAfterLoad(ObjectTableAfterLoad)  // UESP: scriptInstance
+        ,wbArray('Detached Object Table', wbObjectDetachedTableEntry, -1).SetAfterLoad(ObjectDetachedTableAfterLoad) // UESP: reference
+        ,wbArrayS('Array Table', wbArrayTableEntry, -1).SetAfterLoad(ArrayTableAfterLoad) // UESP: arrayInfo
         ,wbStruct('Stacks', [
           wbInteger('Next Active Script ID', itU32, wbDumpInteger)                // Part of Stack table
-         ,wbArrayS('Stack Table', wbStackTableEntry, -1, StackTableAfterLoad) // UESP: activeScript
+         ,wbArrayS('Stack Table', wbStackTableEntry, -1).SetAfterLoad(StackTableAfterLoad) // UESP: activeScript
         ])
         ,wbArray('Object Data Table', wbObjectDataTableEntry, ObjectDataTableCounter)     // UESP: scriptData and referenceData
         ,wbArray('Array Content Table', wbArrayElementsTableEntry, ArrayContentTableCounter) // UESP: arrayData
@@ -3353,7 +3399,7 @@ begin
     ,wbByteArray('Unknown', DataQuartetRemainderCounter)
   ]);
 
-  wbChangeTypes := wbKey2Data6Enum([
+  sdChangeTypes := wbKey2Data6Enum([
     '00 (03D : REFR)',
     '01 (03E : ACHR)',
     '02 (03F : PMIS)',
@@ -5262,7 +5308,7 @@ begin
 
   wbUnionCHANGE_FORM_FLAGS := wbUnion('Flags', ChangedFlag00Decider, [wbNull,
     wbStruct('Change Form Flags', [
-      wbInteger('Mask Invert Flags', itU32, wbRecordFlagsFlags),
+      wbInteger('Mask Invert Flags', itU32, sdRecordFlagsFlags),
       wbInteger('Mask Set unk010', itU16)
     ])
   ]);
@@ -5349,7 +5395,7 @@ begin
 
   wbUnionCHANGE_TOPIC_SAIDONCE := wbUnion('Said Once', ChangedFlag31Decider, [wbNull, wbNull]);
 
-  wbUnionCHANGE_QUEST_FLAGS := wbUnion('Quest Flags', ChangedFlag01Decider, [wbNull, wbQuestFlags]);
+  wbUnionCHANGE_QUEST_FLAGS := wbUnion('Quest Flags', ChangedFlag01Decider, [wbNull, sdQuestFlags]);
 
   wbUnionCHANGE_QUEST_SCRIPT_DELAY := wbUnion('Quest Script Delay', ChangedFlag02Decider, [wbNull, wbInteger('Script Delay', itU32)]);
 
@@ -5493,7 +5539,7 @@ begin
 
   wbUnionCHANGE_NPC_SLEEP_OUTFIT := wbUnion('Sleep Outfit', ChangedFlag13Decider, [wbNull, wbRefID('Change Actor Sleep Outfit')]);
 
-  wbUnionCHANGE_NPC_GENDER := wbUnion('Gender', ChangedFlag24Decider, [wbNull, wbInteger('Change Actor Gender', itU8, wbSexEnum)]);
+  wbUnionCHANGE_NPC_GENDER := wbUnion('Gender', ChangedFlag24Decider, [wbNull, wbInteger('Change Actor Gender', itU8, sdSaveSexEnum)]);
 
   wbUnionCHANGE_NPC_RACE := wbUnion('Race', ChangedFlag25Decider, [wbNull,
     wbStruct('Change Actor Race', [
@@ -5631,7 +5677,7 @@ begin
   ]);
 
   wbChangedExtraData := wbArray('Extras', wbStruct('Extra', [
-    wbInteger('Extra Type', itU8, wbExtraTypeEnum),
+    wbInteger('Extra Type', itU8, sdExtraTypeEnum),
     wbUnion('Extra Union', ChangedExtraUnionDecider, [
      wbByteArray('<ERROR BAD CODE ******************>'),
      wbStruct('Extra Unknown 12', [ // 00 Unknown12
@@ -6031,7 +6077,7 @@ begin
     [
       wbRefID('RefID'),
       wbChangeFlags,
-      wbInteger('Type', itU8, wbChangeTypes),
+      wbInteger('Type', itU8, sdChangeTypes),
       wbInteger('Version', itU8),
       wbUnion('Datas', ChangedFormDataLengthDecider, [
         wbStruct('CForm Data', [
@@ -6064,7 +6110,7 @@ begin
     wbLenString('Save Cell', 2),
     wbLenString('Save Duration', 2),
     wbLenString('Player Race Editor ID', 2),
-    wbInteger('Player Sex', itU16, wbSexEnum),
+    wbInteger('Player Sex', itU16, sdSaveSexEnum),
     wbFloat('Player Current Experience'),
     wbFloat('Player LevelUp Experience'),
     wbByteArray('Save Time', 8),
@@ -6089,13 +6135,13 @@ begin
     wbByteArray('Unused', 15 * 4)
   ]); // SSE : still 100 bytes total, so should not have changed
 
-  wbSaveChapters := wbStruct('Save File Chapters', [
+  sdSaveChapters := wbStruct('Save File Chapters', [
      wbArray('Global Data 1', wbGlobalData, [], GlobalData1Counter)
     ,wbArray('Global Data 2', wbGlobalData, [], GlobalData2Counter)
     ,wbArray('Changed Forms', wbChangedForm, [], ChangedFormsCounter)
     ,wbArray('Global Data 3', wbGlobalData, [], GlobalData3Counter)
-    ,wbArray('FormIDs', wbFormID('FormID', cpFormID), -1, RefIDTableAfterLoad)
-    ,wbArray('Visited Worldspace', wbFormID('FormID', cpFormID), -1, WorldspaceTableAfterLoad)
+    ,wbArray('FormIDs', wbLoadOrderFormID('FormID', cpFormID), -1).SetAfterLoad(RefIDTableAfterLoad)
+    ,wbArray('Visited Worldspace', wbLoadOrderFormID('FormID', cpFormID), -1).SetAfterLoad(WorldspaceTableAfterLoad)
     ,wbInteger('Unknown Table Size', itU32)
     ,wbArray('Unknown Table', wbLenString('Unknown', 2), -1)
 //    ,wbByteArray('Unused', SkipCounter) // Lets you skip an arbitrary number of byte, Setable from CommandLine -bts:n
@@ -6105,13 +6151,13 @@ begin
   wbSaveContent := wbStruct('Content', [
      wbInteger('Form Version', itU8)
     ,wbInteger('PluginInfo Size', itU32)
-    ,wbArray(wbFilePlugins, wbLenString('PluginName',  2), -4)
+    ,wbArray(FilePlugins, wbLenString('PluginName',  2), -4)
     ,wbUnion('', SaveFormVersionGreaterThan77Decider, [wbNull, wbArray('Light plugins', wbLenString('LightPluginName', 2), -2)])
     ,wbFileLocationTable
-    ,wbSaveChapters
+    ,sdSaveChapters
   ]);
 
-  wbSaveHeader := wbStruct('Save File Header', [
+  sdSaveHeader := wbStruct('Save File Header', [
      wbString('Magic', 13)
     ,wbInteger('Header Size', itU32)
     ,wbHeader
@@ -6137,7 +6183,7 @@ begin
     ,wbArray('Remaining',  WbByteArray('Unknown', wbBytesToGroup), DumpCounter) // Lets you dump an arbitrary number of quartet, Setable from CommandLine -btd:n
   ]);
 
-  wbCoSaveHeader := wbStruct('CoSave File Header', [
+  sdCoSaveHeader := wbStruct('CoSave File Header', [
      wbString('Magic', 4)
     ,wbInteger('Version', itU32)
     ,wbInteger('SKSE Version', itU16)
@@ -6182,7 +6228,7 @@ begin
   ]);
 //  wbCoSaveChunk.TreeLeaf := True;
 
-  wbCoSaveChunks := wbArray('Chunks', wbCoSaveChunk, wbCoSaveChunkCounter, cpNormal, false, wbDontShowBranch);
+  wbCoSaveChunks := wbArray('Chunks', wbCoSaveChunk, wbCoSaveChunkCounter).SetDontShow(wbDontShowBranch);
   wbCoSavePlugin := wbStructC('Plugin', nil, wbCoSaveArrayType, wbCoSaveArrayTypeName, nil, [
     wbInteger('UID', itU32),
     wbInteger('Chunks count', itU32),
@@ -6193,40 +6239,48 @@ begin
   wbCoSaveChunks.TreeBranch := True;
   wbCoSavePlugins := wbArray('Plugins', wbCoSavePlugin, wbCoSavePluginCounter);
 
-  wbCoSaveChapters := wbStruct('CoSave File Chapters', [
+  sdCoSaveChapters := wbStruct('CoSave File Chapters', [
     wbCoSavePlugins
   ]);
 
-  wbFileChapters := wbSaveChapters;
-  wbFileHeader := wbSaveHeader;
-  wbSaveHeader.TreeHead := True;
-  wbCoSaveHeader.TreeHead := True;
-//  wbSaveHeader.TreeLeaf := True;
-//  wbCoSaveHeader.TreeLeaf := True;
+  sdSaveHeader.TreeHead := True;
+  sdCoSaveHeader.TreeHead := True;
+//  sdSaveHeader.TreeLeaf := True;
+//  sdCoSaveHeader.TreeLeaf := True;
 end;
 
-var
-  ExtractInfoSave:   TByteSet = [4, 5]; // SaveFileChapters that should be initialized before dumping to get more information
-  ExtractInfoCoSave: TByteSet = [];     // CoSaveFileChapters that should be initialized before dumping to get more information
-
-procedure DefineTES5Saves;
+procedure TwbSaveDefTES5Base.Define;
 begin
-  wbFileMagic := 'TESV_SAVEGAME';
-  wbExtractInfo := @ExtractInfoSave;
-  wbFilePlugins := 'Plugins';
-  DefineTES5;
+  FilePlugins := 'Plugins';
   DefineTES5SavesA;
   DefineTES5SavesS;
 end;
 
-procedure SwitchToTES5CoSave;
+procedure TwbSaveDefTES5.Define;
 begin
-  wbFileMagic := 'SKSE';
-  wbExtractInfo := @ExtractInfoCoSave;
-  wbFilePlugins := 'Absolute:44';
-  wbFileChapters := wbCoSaveChapters;
-  wbFileHeader := wbCoSaveHeader;
+  inherited;
+  FileExtension := '.ess';
+  FileMagic := 'TESV_SAVEGAME';
+  sdExtractInfo := [4, 5]; // SaveFileChapters that should be initialized before dumping to get more information
+  ExtractInfo := @sdExtractInfo;
+  FilePluginNames := SavePluginNames;
+  FileChapters := wbStruct('Save File Chapters', []);
+  FileHeader := sdSaveHeader;
+end;
+
+procedure TwbCoSaveDefTES5.Define;
+begin
+  inherited;
+  FileExtension := '.skse';
+  FileMagic := 'SKSE';
+  sdExtractInfo := [];
+  ExtractInfo := @sdExtractInfo;
+  FilePlugins := 'Absolute:44';
+  FilePluginNames := nil;
+  FileChapters := sdCoSaveChapters;
+  FileHeader := sdCoSaveHeader;
 end;
 
 initialization
+  wbRegisterSaveDefs([gmTES5, gmTES5VR, gmEnderal, gmSSE, gmEnderalSE], TwbSaveDefTES5, TwbCoSaveDefTES5, TwbSaveContextTES5);
 end.

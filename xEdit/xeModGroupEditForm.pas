@@ -13,11 +13,21 @@ unit xeModGroupEditForm;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Buttons, CheckLst, Menus,
-  Vcl.Styles.Utils.SystemMenu, VirtualTrees, VirtualEditTree,
-  wbInterface, wbLoadOrder, wbModGroups, Vcl.ExtCtrls,
-  System.UITypes, Vcl.Mask;
+  VirtualTrees.BaseTree,
+  VirtualTrees.Types,
+  System.Classes,
+
+  Vcl.Controls,
+  Vcl.ExtCtrls,
+  Vcl.Forms,
+  Vcl.Mask,
+  Vcl.Menus,
+  Vcl.StdCtrls,
+
+  VirtualTrees,
+
+  wbModGroups,
+  wbHash;
 
 type
   TfrmModGroupEdit = class(TForm)
@@ -47,7 +57,7 @@ type
     ModGroup : PwbModGroup;
 
     procedure AllowCancel;
-    function ShowModal: Integer; override;
+    function ShowModal: Integer; override; final;
   end;
 
   PModGroupItemNodeData = ^TModGroupNodeData;
@@ -62,11 +72,23 @@ implementation
 {$R *.dfm}
 
 uses
+  System.SysUtils,
+  System.UITypes,
+
   Vcl.Clipbrd,
+  Vcl.Dialogs,
+  Vcl.Graphics,
+  Vcl.Styles.Utils.SystemMenu,
+
+  Winapi.Windows,
+
   wbHelpers,
-  xeModuleSelectForm,
+  wbInterface,
+  wbLoadOrder,
+
+  xeInit,
   xeMainForm,
-  StrUtils;
+  xeModuleSelectForm;
 
 procedure TfrmModGroupEdit.FormClose(Sender: TObject; var Action: TCloseAction);
 begin
@@ -228,7 +250,7 @@ begin
   while Assigned(Node) do begin
     NodeData := vstModGroupItems.GetNodeData(Node);
     with NodeData.mgindModGroupItem do
-      if Assigned(mgiModule) then
+      if Assigned(mgiModule) and mgiModule.IsValid then
         if aExclude then
           Exclude(mgiModule.miFlags, mfEphemeralModGroupTagged)
         else
@@ -457,7 +479,7 @@ begin
         vstModGroupItems.Selected[vstModGroupItems.FocusedNode] := True;
       end else begin
         with TfrmModuleSelect.Create(Self) do try
-          AllModules := wbModulesByLoadOrder.FilteredByFlag(mfValid);
+          AllModules := xeContext.ModuleList.ModulesByLoadOrder(False).FilteredByFlag(mfValid);
           SelectFlag := mfTagged;
           FilterFlag := mfEphemeralModGroupTagged;
           AllModules.IncludeAll(mfEphemeralModGroupTagged);

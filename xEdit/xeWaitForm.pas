@@ -13,9 +13,17 @@ unit xeWaitForm;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs,
-  wbInterface, StdCtrls, Buttons, ExtCtrls;
+  System.Classes,
+
+  Vcl.Buttons,
+  Vcl.Controls,
+  Vcl.ExtCtrls,
+  Vcl.Forms,
+  Vcl.StdCtrls,
+
+  Winapi.Windows,
+
+  wbInterface;
 
 type
   TwbProgress = class;
@@ -61,7 +69,7 @@ type
                              aCanCancel   : Boolean;
                              aShowDelay   : Integer;
                              aUpdateDelay : Integer); reintroduce;
-    destructor Destroy; override;
+    destructor Destroy; override; final;
   end;
 
   TwbProgress = class(TInterfacedObject, IwbProgress)
@@ -82,7 +90,7 @@ type
     procedure UpdateStatus(aPosition: Integer; const aStatus: string);
   public
     constructor Create(aWait: TfrmWait; const aCaption, aStatus: string; aMax: Integer);
-    destructor Destroy; override;
+    destructor Destroy; override; final;
   end;
 
 implementation

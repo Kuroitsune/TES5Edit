@@ -1,6 +1,20 @@
 # xEdit
 
-xEdit 4.0.0 by ElminsterAU. Updates since 2012 include TES5Edit/SSEEdit/FO4Edit by Hlp, Zilav and Sharlikran. LOD management by Sheson.
+xEdit by ElminsterAU. The editing and conflict-resolution tool for Bethesda game plugins — Oblivion through Starfield.
+
+## Maintainers and Contributors
+
+**Author and upstream maintainer:** [ElminsterAU](https://github.com/ElminsterAU) (since 2006)
+
+**Co-maintainer:** [robertgk2017](https://github.com/robertgk2017) — record definitions across all supported game formats, BSArch/BSArchPro, core editor fixes; integration point for incoming contributions
+
+**Regular contributors:** [Jonathan Ostrus](https://github.com/jbostrus), [fireundubh](https://github.com/fireundubh), [eckserah](https://github.com/eckserah)
+
+**LOD tooling (xLODGen/DynDOLOD):** Sheson
+
+**Historical maintainers (2012–2019):** Hlp, Zilav, Sharlikran
+
+See the [contributors graph](https://github.com/TES5Edit/TES5Edit/graphs/contributors) and [whatsnew.md](whatsnew.md) for per-release attribution.
 
 ## GitHub Issue Tracker
 
@@ -62,9 +76,11 @@ Getting started with xEdit development requires a properly configured Delphi env
 
 ### Install Delphi
 
-If you don't already have a Delphi environment, we recommend using [Delphi 12 Community Edition](https://www.embarcadero.com/products/delphi/starter).
+If you don't already have a Delphi environment, we recommend using [Delphi 13 Community Edition](https://www.embarcadero.com/products/delphi/starter).
 
 ### Install Dependencies
+
+The JCL and JVCL installers need the command-line compiler, which the Community Edition does not include, so the steps below build and install their packages from the IDE instead.
 
 - Download and install [Project Magician](https://www.uweraabe.de/Blog/downloads/download-info/project-magician/).
 - Download and install [DDevExtensions](https://github.com/DelphiPraxis/DDevExtensions/releases).
@@ -75,25 +91,25 @@ If you don't already have a Delphi environment, we recommend using [Delphi 12 Co
   - **enable** the _Do not store the Explicit properties into the DFM_ option.
 - Exit Delphi.
 - Clone the xEdit repo (if you haven't already) and initialize submodules (run `git submodule update --init --recursive` from the git root).
-- Navigate to the _External\jcl\jcl\source\include\\_ directory and copy **jcl.template.inc** to **jcld29win32.inc**. To build xEdit 64 bit, copy **jcl.template.inc** again, to **jcld29win64.inc**
-- Open _External\jcl\jcl\packages\JclPackagesD290.groupproj_.
+- Copy **jcld37win32.inc** from the _External\jcl-inc\\_ directory to the _External\jcl\jcl\source\include\\_ directory.
+- Open _External\jcl\jcl\packages\JclPackagesD370.groupproj_.
 - Build All, then install all packages (non-runtime packages with green icons).
 - Restart Delphi.
-- Open _External\jvcl\jvcl\packages\D29 Packages.groupproj_.
+- Open _External\jvcl\jvcl\packages\D37 Packages.groupproj_.
 - Navigate to Tools &rarr; Options.
 - Under Language &rarr; Delphi, add the below paths to the _Library_ option:
-  - _{TES5Edit repo}\External\jcl\jcl\lib\d29\win32_
+  - _{TES5Edit repo}\External\jcl\jcl\lib\d37\win32_
   - _{TES5Edit repo}\External\jcl\jcl\source\include_
 - Build All, then install all packages (non-runtime packages with green icons).
 - Restart Delphi.
 - Navigate to Tools &rarr; Options.
 - Under Language &rarr; Delphi, add the below path to the _Library_ option:
-  - _{TES5Edit repo}\External\jvcl\jvcl\lib\d29\win32_
+  - _{TES5Edit repo}\External\jvcl\jvcl\lib\d37\win32_
 - Restart Delphi.
-- Open _External\VirtualTrees\Packages\RAD Studio 12\VirtualTreeView.groupproj_.
-- Build All, then install **VirtualTreesD29.bpl**.
-- Open _External\FileContainer\FileContainer29.groupproj_.
-- Build All, then install **FileContainerD29.bpl**.
+- Open _External\VirtualTrees\Packages\RAD Studio 13\VirtualTreeView.groupproj_.
+- Build All, then install **VirtualTreesD370.bpl**.
+- Open _External\FileContainer\FileContainer37.groupproj_.
+- Build All, then install **FileContainerD37.bpl**.
 
 ### Important Note
 
@@ -120,7 +136,7 @@ All xEdit executable files can support all game modes. To choose which mode to u
 | Fallout 4           | `FO4Edit.exe`       | -FO4         |
 | Fallout 4 VR        | `FO4VREdit.exe`     | -FO4VR       |
 | Fallout 76          | `FO76Edit.exe`      | -FO76        |
-| Starfield           | `SF16Edit.exe`      | -SF1         |
+| Starfield           | `SF1Edit.exe`       | -SF1         |
 
 ## xEdit Updates
 

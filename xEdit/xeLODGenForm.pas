@@ -13,8 +13,16 @@ unit xeLODGenForm;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, CheckLst, Menus, IniFiles, wbInterface, StrUtils;
+  System.Classes,
+
+  Vcl.CheckLst,
+  Vcl.Controls,
+  Vcl.ExtCtrls,
+  Vcl.Forms,
+  Vcl.Menus,
+  Vcl.StdCtrls,
+
+  wbInterface;
 
 type
   TfrmLODGen = class(TForm)
@@ -94,8 +102,17 @@ implementation
 {$R *.dfm}
 
 uses
-  xeMainForm,
-  wbLOD;
+  System.StrUtils,
+  System.SysUtils,
+
+  Vcl.Dialogs,
+
+  Winapi.Windows,
+
+  wbLOD,
+
+  xeInit,
+  xeMainForm;
 
 procedure TfrmLODGen.btnSplitTreesLODClick(Sender: TObject);
 var
@@ -108,7 +125,7 @@ end;
 
 procedure TfrmLODGen.cbBuildAtlasClick(Sender: TObject);
 begin
-  if not cbBuildAtlas.Checked and wbIsFallout3 then begin
+  if not cbBuildAtlas.Checked and xeContext.GameDefObj.IsFallout3 then begin
     cbBuildAtlas.Checked := True;
     ShowMessage('Fallout 3 and New Vegas LODs won''t work without combined atlas of LOD textures');
   end;
@@ -125,9 +142,10 @@ end;
 
 procedure TfrmLODGen.cbObjectsLODClick(Sender: TObject);
 begin
+  var lGameDef := xeContext.GameDefObj;
   gbObjectsOptions.Enabled := cbObjectsLOD.Checked;
   gbObjectsOptions.Visible := cbObjectsLOD.Checked;
-  if wbIsFallout3 then begin
+  if lGameDef.IsFallout3 then begin
     cmbAtlasTextureSize.Enabled := False;
     cmbAtlasTextureUVRange.Enabled := False;
     cbNoTangents.Enabled := False;
@@ -136,15 +154,16 @@ begin
     lblLODX2.Visible := True; edLODX2.Visible := True;
     lblLODY2.Visible := True; edLODY2.Visible := True;
   end;
-  if not wbIsFallout4 then
+  if not lGameDef.IsFallout4 then
     cmbCompSpecular.Enabled := False;
   cmbTreesLODBrightness.Enabled := cbTreesLOD.Checked;
-  cbTrees3D.Enabled := wbIsSkyrim and cbTreesLOD.Checked;
+  cbTrees3D.Enabled := lGameDef.IsSkyrim and cbTreesLOD.Checked;
 end;
 
 procedure TfrmLODGen.cmbCompDiffuseChange(Sender: TObject);
 begin
-  if not wbIsFallout4 and (cmbCompDiffuse.Text <> 'DXT1') then begin
+  var lGameDef := xeContext.GameDefObj;
+  if not lGameDef.IsFallout4 and (cmbCompDiffuse.Text <> 'DXT1') then begin
     Label15.Enabled := False;
     cmbDefaultAlphaThreshold.Enabled := False;
   end
@@ -152,7 +171,7 @@ begin
     Label15.Enabled := True;
     cmbDefaultAlphaThreshold.Enabled := True;
   end;
-  if wbIsFallout4 and MatchStr(cmbCompDiffuse.Text, ['8888', 'DXT3', 'DXT5']) then
+  if lGameDef.IsFallout4 and MatchStr(cmbCompDiffuse.Text, ['8888', 'DXT3', 'DXT5']) then
     cbUseAlphaThreshold.Enabled := True
   else
     cbUseAlphaThreshold.Enabled := False;

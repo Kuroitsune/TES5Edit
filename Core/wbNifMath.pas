@@ -10,9 +10,6 @@ unit wbNifMath;
 
 interface
 
-uses
-  SysUtils;
-
 type
   TMatrix33 = array [0..2, 0..2] of Double;
 
@@ -153,9 +150,10 @@ procedure CalculateTangentsBitangents2(
 implementation
 
 uses
-  Math,
-  wbMeshOptimize;
+  System.Math,
+  System.SysUtils,
 
+  wbMeshOptimize;
 
 class operator TQuaternion.Multiply(const A, B: TQuaternion): TQuaternion;
 begin
@@ -195,8 +193,8 @@ end;
 
 procedure TVector2.ValidateNan;
 begin
-  if Math.IsNan(x) then x := 0;
-  if Math.IsNan(y) then y := 0;
+  if IsNan(x) then x := 0;
+  if IsNan(y) then y := 0;
 end;
 
 class operator TVector3.Multiply(const A: TVector3; const B: Double): TVector3;
@@ -297,9 +295,9 @@ end;
 
 procedure TVector3.ValidateNan;
 begin
-  if Math.IsNan(x) then x := 0;
-  if Math.IsNan(y) then y := 0;
-  if Math.IsNan(z) then z := 0;
+  if IsNan(x) then x := 0;
+  if IsNan(y) then y := 0;
+  if IsNan(z) then z := 0;
 end;
 
 class operator TTransform.Multiply(const A: TVector3; const B: TTransform): TVector3;
@@ -795,7 +793,7 @@ begin
 
   for tr := Low(triangles) to High(triangles) do begin
     tri := @triangles[tr];
-    if (tri[0] >= Length(verts)) or (tri[1] >= Length(verts)) or (tri[2] >= Length(verts)) then
+    if (tri[0] >= Cardinal(Length(verts))) or (tri[1] >= Cardinal(Length(verts))) or (tri[2] >= Cardinal(Length(verts))) then
       raise Exception.CreateFmt('Triangle (%d, %d, %d) exceeds the number of vertices %d', [tri[0], tri[1], tri[2], Length(verts)]);
 
     i1 := tri[0];
@@ -883,7 +881,7 @@ begin
 
   for i := Low(triangles) to High(triangles) do begin
     tri := @triangles[i];
-    if (tri[0] >= Length(verts)) or (tri[1] >= Length(verts)) or (tri[2] >= Length(verts)) then
+    if (tri[0] >= Cardinal(Length(verts))) or (tri[1] >= Cardinal(Length(verts))) or (tri[2] >= Cardinal(Length(verts))) then
       raise Exception.CreateFmt('Triangle (%d, %d, %d) exceeds the number of vertices %d', [tri[0], tri[1], tri[2], Length(verts)]);
 
     triVertex[0] := @verts[tri[0]];

@@ -13,9 +13,20 @@ unit xeLocalizationForm;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, VirtualTrees, VirtualEditTree, ExtDlgs, Menus,
-  SynEdit, SynMemo, xeMainForm, IniFiles;
+  VirtualTrees.Types,
+  System.Classes,
+  System.IniFiles,
+
+  Vcl.Controls,
+  Vcl.Dialogs,
+  Vcl.ExtCtrls,
+  Vcl.ExtDlgs,
+  Vcl.Forms,
+  Vcl.Menus,
+  Vcl.StdCtrls,
+
+  VirtualTrees,
+  VirtualEditTree;
 
 type
   TfrmLocalization = class(TForm)
@@ -50,7 +61,7 @@ type
   public
     Settings: TMemIniFile;
     { Public declarations }
-    procedure EditValue(aFileName: string; ID: integer);
+    procedure EditValue(const aStringsFileName: string; aID: Cardinal);
   end;
 
 var
@@ -61,8 +72,15 @@ implementation
 {$R *.dfm}
 
 uses
+  System.SysUtils,
+
+  Vcl.Graphics,
+
   wbHelpers,
-  wbLocalization;
+  wbInterface,
+
+  xeInit,
+  xeMainForm;
 
 type
   TTreeData = record
@@ -79,7 +97,7 @@ begin
   xeApplyFontAndScale(Self);
 
   vetStrings.NodeDataSize := SizeOf(TTreeData);
-  vetStrings.RootNodeCount := wbLocalizationHandler.Count;
+  vetStrings.RootNodeCount := xeContext.LocalizationHandler.Count;
   pnlControls.Visible := false;
 end;
 
@@ -168,7 +186,7 @@ begin
   Data := Sender.GetNodeData(Node);
   if ParentNode = nil then begin
     Data.ID := 0;
-    Data.lFile := wbLocalizationHandler[Node.Index];
+    Data.lFile := xeContext.LocalizationHandler[Node.Index];
     if Data.lFile.Count > 0 then
       Include(InitialStates, ivsHasChildren);
   end else begin
@@ -204,18 +222,16 @@ begin
   vetStrings.Invalidate;
 end;
 
-procedure TfrmLocalization.EditValue(aFileName: string; ID: integer);
+procedure TfrmLocalization.EditValue(const aStringsFileName: string; aID: Cardinal);
 var
   Data: PTreeData;
   Node: PVirtualNode;
-  s: string;
 begin
-  s := ChangeFileExt(aFileName, '') + '_';
   Node := vetStrings.GetFirst;
   while Assigned(Node) do begin
     Data := vetStrings.GetNodeData(Node);
-    if Data.ID = ID then
-      if s = Copy(Data.lFile.Name , 0, length(s)) then begin
+    if Data.ID = aID then
+      if SameText(Data.lFile.Name, aStringsFileName) then begin
         vetStrings.FocusedNode := Node;
         vetStrings.Selected[vetStrings.FocusedNode] := True;
         vetStrings.ScrollIntoView(Node, True);

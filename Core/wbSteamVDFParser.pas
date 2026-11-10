@@ -11,7 +11,6 @@ unit wbSteamVDFParser;
 interface
 
 uses
-  System.SysUtils,
   System.Classes,
   System.Generics.Collections;
 
@@ -24,7 +23,7 @@ type
     ParentNode: TSteamVDFNode;
   public
     constructor Create;
-    destructor Destroy; override;
+    destructor Destroy; override; final;
     property Name: string read FName write FName;
     property Value: string read FValue write FValue;
     property Children: TObjectList<TSteamVDFNode> read FChildren;
@@ -40,7 +39,7 @@ type
     procedure ParseNode(const Lines: TStringList; var Index: Integer; ParentNode: TSteamVDFNode);
   public
     constructor Create;
-    destructor Destroy; override;
+    destructor Destroy; override; final;
     procedure LoadFromFile(const FileName: string);
     function FindNodeByPath(const KeyPath: string): TSteamVDFNode;
     function GetValueByPath(const KeyPath: string): string;
@@ -48,12 +47,15 @@ type
 
   function GetSteamInstallFolder: string;
   function GetSteamLibraryListFile: string;
-  function GetInstallPathBySteamID(SteamID: string): string;
+  function GetInstallPathBySteamID(const SteamID: string): string;
+
 implementation
 
 Uses
-  Windows,
-  Registry;
+  System.SysUtils,
+  System.Win.Registry,
+
+  Winapi.Windows;
 
 { TSteamVDFParser }
 
@@ -232,7 +234,7 @@ begin
 end;
 
 // Returns empty string if it could not locate the game path.
-function GetInstallPathBySteamID(SteamID: string): string;
+function GetInstallPathBySteamID(const SteamID: string): string;
 var
   SteamParser: TSteamVDFParser;
   LibraryFolder: string;

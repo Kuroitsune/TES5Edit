@@ -13,147 +13,142 @@ unit wbDefinitionsTES5;
 interface
 
 uses
+  wbDefinitionsCommon,
   wbInterface;
 
-var
-  wbBipedObjectFlags: IwbFlagsDef;
-  wbPKDTInterruptFlags: IwbFlagsDef;
+type
+  TwbGameDefTES5 = class(TwbGameDefCommon)
+  private
+    wbBipedObjectFlags: IwbFlagsDef;
+    wbPKDTInterruptFlags: IwbFlagsDef;
 
-  wbPlayerActionEnum: IwbEnumDef;
-  wbArmorTypeEnum: IwbEnumDef;
-  wbAttackAnimationEnum: IwbEnumDef;
-  wbBipedObjectEnum: IwbEnumDef;
-  wbCastEnum: IwbEnumDef;
-  wbCastingSourceEnum: IwbEnumDef;
-  wbDeliveryEnum: IwbEnumDef;
-  wbEmotionTypeEnum: IwbEnumDef;
-  wbEntryPointsEnum: IwbEnumDef;
-  wbEventFunctionEnum: IwbEnumDef;
-  wbEventMemberEnum: IwbEnumDef;
-  wbFormTypeEnum: IwbEnumDef;
-  wbFurnitureAnimEnum: IwbEnumDef;
-  wbLocationEnum: IwbEnumDef;
-  wbMapMarkerEnum: IwbEnumDef;
-  wbMiscStatEnum: IwbEnumDef;
-  wbObjectTypeEnum: IwbEnumDef;
-  wbPropTypeEnum: IwbEnumDef;
-  wbQuestTypeEnum: IwbEnumDef;
-  wbSkillEnum: IwbEnumDef;
-  wbSoundLevelEnum: IwbEnumDef;
-  wbTintMaskTypeEnum: IwbEnumDef;
-  wbVatsValueFunctionEnum: IwbEnumDef;
-  wbWardStateEnum: IwbEnumDef;
-  wbWeaponAnimTypeEnum: IwbEnumDef;
+    wbPlayerActionEnum: IwbEnumDef;
+    wbArmorTypeEnum: IwbEnumDef;
+    wbAttackAnimationEnum: IwbEnumDef;
+    wbBipedObjectEnum: IwbEnumDef;
+    wbCastEnum: IwbEnumDef;
+    wbCastingSourceEnum: IwbEnumDef;
+    wbDeliveryEnum: IwbEnumDef;
+    wbEmotionTypeEnum: IwbEnumDef;
+    wbEntryPointsEnum: IwbEnumDef;
+    wbFormTypeEnum: IwbEnumDef;
+    wbFurnitureAnimEnum: IwbEnumDef;
+    wbLocationEnum: IwbEnumDef;
+    wbMapMarkerEnum: IwbEnumDef;
+    wbMiscStatEnum: IwbEnumDef;
+    wbObjectTypeEnum: IwbEnumDef;
+    wbQuestTypeEnum: IwbEnumDef;
+    wbSkillEnum: IwbEnumDef;
+    wbSoundLevelEnum: IwbEnumDef;
+    wbTintMaskTypeEnum: IwbEnumDef;
+    wbVatsValueFunctionEnum: IwbEnumDef;
+    wbWardStateEnum: IwbEnumDef;
+    wbWeaponAnimTypeEnum: IwbEnumDef;
 
-procedure DefineTES5;
+    wbEDID: IwbSubRecordDef;
+    wbCOED: IwbSubRecordDef;
+    wbXLCM: IwbSubRecordDef;
+    wbDEST: IwbSubRecordStructDef;
+    wbDODT: IwbSubRecordDef;
+    wbSPLO: IwbSubRecordDef;
+    wbSPLOs: IwbSubRecordArrayDef;
+    wbCNTO: IwbRecordMemberDef;
+    wbCNTOs: IwbSubRecordArrayDef;
+    wbCNTONoReach: IwbRecordMemberDef;
+    wbCNTOsNoReach: IwbSubRecordArrayDef;
+    wbAIDT: IwbRecordMemberDef;
+    wbCSDT: IwbSubRecordStructDef;
+    wbCSDTs: IwbSubRecordArrayDef;
+    wbFULL: IwbSubRecordDef;
+    wbFULLReq: IwbSubRecordDef;
+    wbDESC: IwbSubRecordDef;
+    wbDESCReq: IwbSubRecordDef;
+    wbXSCL: IwbSubRecordDef;
+    wbMODD: IwbRecordMemberDef;
+    wbMODS: IwbSubRecordDef;
+    wbMO2S: IwbSubRecordDef;
+    wbMO3S: IwbSubRecordDef;
+    wbMO4S: IwbSubRecordDef;
+    wbConditions: IwbRecordMemberDef;
+    wbXESP: IwbSubRecordDef;
+    wbICON: IwbSubRecordStructDef;
+    wbICONReq: IwbRecordMemberDef;
+    wbICO2: IwbSubRecordStructDef;
+    wbActorValue: IwbIntegerDef;
+    wbETYP: IwbSubRecordDef;
+    wbETYPReq: IwbSubRecordDef;
+    wbEFID: IwbSubRecordDef;
+    wbEFIT: IwbRecordMemberDef;
+    wbEffectsReq: IwbSubRecordArrayDef;
+    wbFirstPersonFlagsU32: IwbValueDef;
+    wbBODT: IwbSubRecordDef;
+    wbBOD2: IwbSubRecordDef;
+    wbBODTBOD2: IwbRecordMemberDef;
+    wbScriptEntry: IwbValueDef;
+    wbScriptPropertyObject: IwbUnionDef;
+    wbPLDT: IwbSubRecordDef;
+    wbPLVD: IwbSubRecordDef;
+    wbAttackData: IwbSubRecordStructDef;
+    wbLLCT: IwbSubRecordDef;
+    wbLVLD: IwbSubRecordDef;
+    wbVMAD: IwbSubRecordDef;
+    wbVMADFragmentedPERK: IwbSubRecordDef;
+    wbVMADFragmentedPACK: IwbSubRecordDef;
+    wbVMADFragmentedQUST: IwbSubRecordDef;
+    wbVMADFragmentedSCEN: IwbSubRecordDef;
+    wbVMADFragmentedINFO: IwbSubRecordDef;
+    wbCOCT: IwbSubRecordDef;
+    wbCITC: IwbSubRecordDef;
+    wbCITCReq: IwbSubRecordDef;
+    wbDMDSs: IwbSubRecordDef;
+    wbMO5S: IwbSubRecordDef;
+    wbSPCT: IwbSubRecordDef;
+    wbTints: IwbSubRecordArrayDef;
+    wbRACE_DATAFlags01: IwbValueDef;
+    wbPhonemeTargets: IwbSubRecordDef;
+    wbNoseMorphFlags: IwbValueDef;
+    wbBrowMorphFlags: IwbValueDef;
+    wbEyesMorphFlags01: IwbValueDef;
+    wbEyesMorphFlags02: IwbValueDef;
+    wbLipMorphFlags: IwbValueDef;
+    wbPHWT: IwbSubRecordStructDef;
+    wbMorphs: IwbSubRecordStructDef;
+    wbPDTO: IwbSubRecordDef;
+    wbPDTOs: IwbSubRecordArrayDef;
+    wbNull: IwbValueDef;
+    wbYNAM: IwbSubRecordDef;
+    wbZNAM: IwbSubRecordDef;
+    wbNVNM: IwbSubRecordDef;
+    wbFactionRank: IwbRecordMemberDef;
+    wbSubtypeNamesEnum: IwbEnumDef;
+  protected
+    gdEventFunctionEnum : IwbEnumDef;
+    gdEventMemberEnum   : IwbEnumDef;
+
+    function ConditionEventToStr(aInt: Int64; const aElement: IwbElement; aType: TwbCallbackType): string;
+    function ConditionEventToInt(const aString: string; const aElement: IwbElement): Int64;
+    function EPFDActorValueToStr(aInt: Int64; const aElement: IwbElement; aType: TwbCallbackType): string;
+    function EPFDActorValueToInt(const aString: string; const aElement: IwbElement): Int64;
+
+    function wbGenericModel(aRequired: Boolean = False; aDontShow: TwbDontShowCallback = nil): IwbRecordMemberDef;
+    procedure ReferenceRecord(const aSignature: TwbSignature; const aName: string);
+
+    procedure Define; override; final;
+  end;
 
 implementation
 
 uses
-  Types,
-  Classes,
-  SysUtils,
-  Math,
-  Variants,
-  IOUtils,
-  wbHelpers,
-  wbDefinitionsCommon,
-  wbDefinitionsSignatures;
+  System.Classes,
+  System.IOUtils,
+  System.SysUtils,
+  System.Variants,
+
+  wbDefinitionsSignatures,
+  wbHelpers;
 
 type
   TVarRecs = array of TVarRec;
-
-var
-  wbEDID: IwbSubRecordDef;
-  wbCOED: IwbSubRecordDef;
-  wbXLCM: IwbSubRecordDef;
-  wbDEST: IwbSubRecordStructDef;
-  wbDODT: IwbSubRecordDef;
-  wbSPLO: IwbSubRecordDef;
-  wbSPLOs: IwbSubRecordArrayDef;
-  wbCNTO: IwbRecordMemberDef;
-  wbCNTOs: IwbSubRecordArrayDef;
-  wbCNTONoReach: IwbRecordMemberDef;
-  wbCNTOsNoReach: IwbSubRecordArrayDef;
-  wbAIDT: IwbRecordMemberDef;
-  wbCSDT: IwbSubRecordStructDef;
-  wbCSDTs: IwbSubRecordArrayDef;
-  wbFULL: IwbSubRecordDef;
-  wbFULLReq: IwbSubRecordDef;
-  wbDESC: IwbSubRecordDef;
-  wbDESCReq: IwbSubRecordDef;
-  wbXSCL: IwbSubRecordDef;
-  wbMODD: IwbRecordMemberDef;
-  wbMODS: IwbSubRecordDef;
-  wbMO2S: IwbSubRecordDef;
-  wbMO3S: IwbSubRecordDef;
-  wbMO4S: IwbSubRecordDef;
-  wbConditions: IwbRecordMemberDef;
-  wbXESP: IwbSubRecordDef;
-  wbICON: IwbSubRecordStructDef;
-  wbICONReq: IwbSubRecordStructDef;
-  wbICO2: IwbSubRecordStructDef;
-  wbActorValue: IwbIntegerDef;
-  wbETYP: IwbSubRecordDef;
-  wbETYPReq: IwbSubRecordDef;
-  wbEFID: IwbSubRecordDef;
-  wbEFIT: IwbSubRecordDef;
-  wbEffectsReq: IwbSubRecordArrayDef;
-  wbFirstPersonFlagsU32: IwbValueDef;
-  wbBODT: IwbSubRecordDef;
-  wbBOD2: IwbSubRecordDef;
-  wbBODTBOD2: IwbRecordMemberDef;
-  wbScriptEntry: IwbValueDef;
-  wbScriptFlags: IwbIntegerDef;
-  wbScriptPropertyObject: IwbUnionDef;
-  wbScriptProperty: IwbValueDef;
-  wbScriptProperties: IwbArrayDef;
-  wbScriptFragments: IwbValueDef;
-  wbScriptFragmentsQuest: IwbValueDef;
-  wbScriptFragmentsInfo: IwbValueDef;
-  wbScriptFragmentsPack: IwbValueDef;
-  wbScriptFragmentsScen: IwbValueDef;
-  wbPLDT: IwbSubRecordDef;
-  wbPLVD: IwbSubRecordDef;
-  wbAttackData: IwbSubRecordStructDef;
-  wbLLCT: IwbSubRecordDef;
-  wbLVLD: IwbSubRecordDef;
-  wbVMAD: IwbSubRecordDef;
-  wbVMADFragmentedPERK: IwbSubRecordDef;
-  wbVMADFragmentedPACK: IwbSubRecordDef;
-  wbVMADFragmentedQUST: IwbSubRecordDef;
-  wbVMADFragmentedSCEN: IwbSubRecordDef;
-  wbVMADFragmentedINFO: IwbSubRecordDef;
-  wbCOCT: IwbSubRecordDef;
-  wbCITC: IwbSubRecordDef;
-  wbCITCReq: IwbSubRecordDef;
-  wbMGEFData: IwbSubRecordStructDef;
-  wbMGEFType: IwbIntegerDef;
-  wbDMDSs: IwbSubRecordDef;
-  wbMO5S: IwbSubRecordDef;
-  wbSPCT: IwbSubRecordDef;
-  wbTints: IwbSubRecordArrayDef;
-  wbRACE_DATAFlags01: IwbValueDef;
-  wbPhonemeTargets: IwbSubRecordDef;
-  wbNoseMorphFlags: IwbValueDef;
-  wbBrowMorphFlags: IwbValueDef;
-  wbEyesMorphFlags01: IwbValueDef;
-  wbEyesMorphFlags02: IwbValueDef;
-  wbLipMorphFlags: IwbValueDef;
-  wbPHWT: IwbSubRecordStructDef;
-  wbMorphs: IwbSubRecordStructDef;
-  wbPDTO: IwbSubRecordDef;
-  wbPDTOs: IwbSubRecordArrayDef;
-  wbNull: IwbValueDef;
-  wbYNAM: IwbSubRecordDef;
-  wbZNAM: IwbSubRecordDef;
-  wbTVDT: IwbSubRecordDef;
-  wbNVNM: IwbSubRecordDef;
-  wbStaticPart: IwbRecordMemberDef;
-  s: string;
-  wbMenuButton: IwbRecordMemberDef;
-  wbFactionRank: IwbRecordMemberDef;
-  wbSubtypeNamesEnum: IwbEnumDef;
 
 type
   TConditionParameterType = (
@@ -743,7 +738,7 @@ begin
   end;
 end;
 
-function wbConditionEventToStr(aInt: Int64; const aElement: IwbElement; aType: TwbCallbackType): string;
+function TwbGameDefTES5.ConditionEventToStr(aInt: Int64; const aElement: IwbElement; aType: TwbCallbackType): string;
 var
   slMember: TStringList;
 begin
@@ -754,14 +749,14 @@ begin
     ctEditType: Result := 'ComboBox';
     ctToSortKey: Result := IntToHex(aInt, 8);
     ctToStr, ctToSummary, ctToEditValue: begin
-      Result := wbEventFunctionEnum.ToEditValue(EventFunction, nil);
-      Result := Result + ':' + wbEventMemberEnum.ToEditValue(EventMember, nil);
+      Result := gdEventFunctionEnum.ToEditValue(EventFunction, nil);
+      Result := Result + ':' + gdEventMemberEnum.ToEditValue(EventMember, nil);
     end;
     ctCheck: begin
-      var s1 := wbEventFunctionEnum.Check(EventFunction, nil);
+      var s1 := gdEventFunctionEnum.Check(EventFunction, nil);
       if s1 <> '' then
         s1 := 'EventFunction' + s1;
-      var s2 := wbEventMemberEnum.Check(EventMember, nil);
+      var s2 := gdEventMemberEnum.Check(EventMember, nil);
       if s2 <> '' then
         s2 := 'EventMember' + s2;
       if (s1 <> '') or (s2 <> '') then
@@ -769,11 +764,11 @@ begin
     end;
     ctEditInfo: begin
       slMember := TStringList.Create;
-      slMember.AddStrings(wbEventMemberEnum.EditInfo[nil]);
+      slMember.AddStrings(gdEventMemberEnum.EditInfo[nil]);
       with TStringList.Create do try
-        for var i := 0 to Pred(wbEventFunctionEnum.NameCount) do
+        for var i := 0 to Pred(gdEventFunctionEnum.NameCount) do
           for var j := 0 to Pred(slMember.Count) do
-            Add(wbEventFunctionEnum.Names[i] + ':' + slMember[j]);
+            Add(gdEventFunctionEnum.Names[i] + ':' + slMember[j]);
         Sort;
         Result := CommaText;
       finally
@@ -783,15 +778,15 @@ begin
   end;
 end;
 
-function wbConditionEventToInt(const aString: string; const aElement: IwbElement): Int64;
+function TwbGameDefTES5.ConditionEventToInt(const aString: string; const aElement: IwbElement): Int64;
 var
   EventFunction: Integer;
   EventMember: Integer;
 begin
   var i := Pos(':', aString);
   if i > 0 then begin
-    EventFunction := wbEventFunctionEnum.FromEditValue(Copy(aString, 1, i-1), nil);
-    EventMember := wbEventMemberEnum.FromEditValue(Copy(aString, i+1, Length(aString)), nil);
+    EventFunction := gdEventFunctionEnum.FromEditValue(Copy(aString, 1, i-1), nil);
+    EventMember := gdEventMemberEnum.FromEditValue(Copy(aString, i+1, Length(aString)), nil);
   end
   else begin
     EventFunction := 0;
@@ -886,21 +881,23 @@ begin
   Result := Container.ElementByName['Parameter #1'].NativeValue;
 end;
 
-function wbGenericModel(aRequired: Boolean = False; aDontShow: TwbDontShowCallback = nil): IwbRecordMemberDef;
+function TwbGameDefTES5.wbGenericModel(aRequired: Boolean = False; aDontShow: TwbDontShowCallback = nil): IwbRecordMemberDef;
 begin
   Result :=
     wbRStructSK([0], 'Model', [
       wbString(MODL, 'Model FileName', 0, cpNormal, True),
-      wbMODT,
+      wbModelInfo(MODT),
       wbMODS
-    ], [], cpNormal, aRequired, aDontShow, True)
-    .SetSummaryKey([0])
-    .IncludeFlag(dfSummaryMembersNoName)
-    .IncludeFlag(dfSummaryNoSortKey)
-    .IncludeFlag(dfCollapsed, wbCollapseModels);
+    ]).SetSummaryKey([0])
+      .SetUnordered
+      .SetDontShow(aDontShow)
+      .SetRequired(aRequired)
+      .IncludeFlag(dfSummaryMembersNoName)
+      .IncludeFlag(dfSummaryNoSortKey)
+      .IncludeFlag(dfCollapsed, clpModels in DefineOptions.Collapse);
 end;
 
-function wbEPFDActorValueToStr(aInt: Int64; const aElement: IwbElement; aType: TwbCallbackType): string;
+function TwbGameDefTES5.EPFDActorValueToStr(aInt: Int64; const aElement: IwbElement; aType: TwbCallbackType): string;
 var
   AsCardinal : Cardinal;
   AsFloat    : Single;
@@ -909,21 +906,21 @@ begin
   AsFloat := PSingle(@AsCardinal)^;
   aInt := Round(AsFloat);
   case aType of
-    ctToStr, ctToSummary: Result := wbActorValueEnum.ToString(aInt, aElement, aType = ctToSummary);
-    ctToSortKey: Result := wbActorValueEnum.ToSortKey(aInt, aElement);
-    ctCheck: Result := wbActorValueEnum.Check(aInt, aElement);
-    ctToEditValue: Result := wbActorValueEnum.ToEditValue(aInt, aElement);
+    ctToStr, ctToSummary: Result := ActorValueEnum.ToString(aInt, aElement, aType = ctToSummary);
+    ctToSortKey: Result := ActorValueEnum.ToSortKey(aInt, aElement);
+    ctCheck: Result := ActorValueEnum.Check(aInt, aElement);
+    ctToEditValue: Result := ActorValueEnum.ToEditValue(aInt, aElement);
     ctEditType: Result := 'ComboBox';
-    ctEditInfo: Result := wbActorValueEnum.EditInfo[aElement].ToCommaText;
+    ctEditInfo: Result := ActorValueEnum.EditInfo[aElement].ToCommaText;
   end;
 end;
 
-function wbEPFDActorValueToInt(const aString: string; const aElement: IwbElement): Int64;
+function TwbGameDefTES5.EPFDActorValueToInt(const aString: string; const aElement: IwbElement): Int64;
 var
   AsCardinal : Cardinal;
   AsFloat    : Single;
 begin
-  AsFloat := wbActorValueEnum.FromEditValue(aString, aElement);
+  AsFloat := ActorValueEnum.FromEditValue(aString, aElement);
   PSingle(@AsCardinal)^ := AsFloat;
   Result := AsCardinal;
 end;
@@ -1013,13 +1010,13 @@ var
   Container : IwbContainer;
   Group     : IwbGroupRecord;
 begin
-  if not wbSortINFO then
+  if not Assigned(aElement) then
+    Exit;
+
+  if not aElement.ContextObj.Settings.SortINFO then
     Exit;
 
   if VarSameValue(aOldValue, aNewValue) then
-    Exit;
-
-  if not Assigned(aElement) then
     Exit;
 
   Container := aElement.Container;
@@ -1030,29 +1027,6 @@ begin
     end;
     Container := Container.Container;
   end;
-end;
-
-procedure wbMESGDNAMAfterSet(const aElement: IwbElement; const aOldValue, aNewValue: Variant);
-var
-  OldValue, NewValue : Integer;
-  Container          : IwbContainerElementRef;
-begin
-  if VarSameValue(aOldValue, aNewValue) then
-    Exit;
-
-  if not Supports(aElement.Container, IwbContainerElementRef, Container) then
-    Exit;
-
-  OldValue := Integer(aOldValue) and 1;
-  NewValue := Integer(aNewValue) and 1;
-
-  if NewValue = OldValue then
-    Exit;
-
-  if NewValue = 1 then
-    Container.RemoveElement('TNAM')
-  else
-    Container.Add('TNAM', True);
 end;
 
 procedure wbGMSTEDIDAfterSet(const aElement: IwbElement; const aOldValue, aNewValue: Variant);
@@ -1103,11 +1077,6 @@ begin
 
   if OldOrdered <> NewOrdered then
     Container.RemoveElement('FormIDs');
-end;
-
-procedure wbAfterSet(const aElement: IwbElement; const aOldValue, aNewValue: Variant);
-begin
-  Exit;
 end;
 
 {>>> Needs revision for Skyrim <<<}
@@ -1175,34 +1144,14 @@ begin
 end;
 
 function wbMGEFAssocItemDecider(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
-var
-  Container     : IwbContainer;
-  Archtype      : Variant;
-  DataContainer : IwbDataContainer;
-  Element       : IwbElement;
-const
-  OffsetArchtype = 56;
-
 begin
   Result := 0;
-  if not wbTryGetContainerFromUnion(aElement, Container) then
+  var lContainer: IwbContainer;
+  if not wbTryGetContainerFromUnion(aElement, lContainer) then
     Exit;
 
-  VarClear(ArchType);
-  Element := Container.ElementByName['Archtype'];
-
-  if Assigned(Element) then
-    ArchType := Element.NativeValue
-  else if Supports(Container, IwbDataContainer, DataContainer) and
-          DataContainer.IsValidOffset(aBasePtr, aEndPtr, OffsetArchtype) then begin // we are part a proper structure
-      aBasePtr := PByte(aBasePtr) + OffsetArchtype;
-      ArchType := PCardinal(aBasePtr)^;
-    end;
-
-  if VarIsEmpty(ArchType) then
-    Exit;
-
-  case Integer(ArchType) of
+  var lArchetype := lContainer.ElementNativeValues['Archetype'];
+  case Integer(lArcheType) of
     12: Result := 1; // Light
     17: Result := 2; // Bound Item
     18: Result := 3; // Summon Creature
@@ -1213,68 +1162,6 @@ begin
     39: Result := 7; // Enhance Weapon
     40: Result := 4; // Spawn Hazard
     46: Result := 6; // Vampire Lord
-  end;
-end;
-
-procedure wbMGEFAssocItemAfterSet(const aElement: IwbElement; const aOldValue, aNewValue: Variant);
-var
-  Container : IwbContainer;
-  Element   : IwbElement;
-begin
-  if not wbTryGetContainerFromUnion(aElement, Container) then
-    Exit;
-
-  if not (aNewValue <> 0) then
-    Exit;
-
-  Element := Container.ElementByName['Archtype'];
-  if Assigned(Element) and (Element.NativeValue = 0) then
-      Element.NativeValue := $FF; // Signals ArchType that it should not mess with us on the next change!
-        // I assume this will alo protect Second AV Weight (The two actor values are after ArchType)
-end;
-
-procedure wbMGEFAV2WeightAfterSet(const aElement: IwbElement; const aOldValue, aNewValue: Variant);
-var
-  Container : IwbContainer;
-  Element   : IwbElement;
-begin
-  if not wbTryGetContainerFromUnion(aElement, Container) then
-    Exit;
-
-  if not (aNewValue <> 0.0) then
-    Exit;
-
-  Element := Container.ElementByName['Archtype'];
-  if Assigned(Element) and (Element.NativeValue = 0) then
-      Element.NativeValue := $FF; // Signals ArchType that it should not mess with us on the next change!
-end;
-
-procedure wbMGEFArchtypeAfterSet(const aElement: IwbElement; const aOldValue, aNewValue: Variant);
-var
-  Container: IwbContainerElementRef;
-begin
-  if VarSameValue(aOldValue, aNewValue) then
-    Exit;
-
-  if not Supports(aElement, IwbContainerElementRef, Container) then
-    Exit;
-
-  if (aNewValue < $FF) and (aOldValue < $FF) then begin
-    Container.ElementNativeValues['..\Assoc. Item'] := 0;
-    case Integer(aNewValue) of
-      06: Container.ElementNativeValues['..\Actor Value'] := 00;//Agression
-      07: Container.ElementNativeValues['..\Actor Value'] := 01;//Confidence
-      08: Container.ElementNativeValues['..\Actor Value'] := 00;//Agression
-      11: Container.ElementNativeValues['..\Actor Value'] := 54;//Invisibility
-      21: Container.ElementNativeValues['..\Actor Value'] := 53;//Paralysis
-      24: Container.ElementNativeValues['..\Actor Value'] := 01;//Confidence
-      38: Container.ElementNativeValues['..\Actor Value'] := 01;//Confidence
-      42: Container.ElementNativeValues['..\Actor Value'] := 01;//Confidence
-    else
-      Container.ElementNativeValues['..\Actor Value'] := -1;
-    end;
-    Container.ElementNativeValues['..\Second Actor Value'] := -1;
-    Container.ElementNativeValues['..\Second AV Weight'] := 0.0;
   end;
 end;
 
@@ -1360,165 +1247,24 @@ begin
   end;
 end;
 
-procedure wbScriptPropertyTypeAfterSet(const aElement: IwbElement; const aOldValue, aNewValue: Variant);
-var
-  Container : IwbContainerElementRef;
-begin
-  if aOldValue <> aNewValue then
-    if Supports(aElement.Container, IwbContainerElementRef, Container) then
-      Container.ElementByName['Value'].SetToDefault;
-end;
-
-{>>> For VMAD <<<}
-function wbScriptFragmentExistsDecider(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
-var
-  Container  : IwbContainer;
-  MainRecord : IwbMainRecord;
-begin
-  Result := 0;
-  if not wbTryGetContainerFromUnion(aElement, Container) then
-    Exit;
-
-  while Assigned(Container) and (Container.ElementType <> etMainRecord) do
-    Container := Container.Container;
-
-  if not Assigned(Container) then Exit;
-
-  // TODO: should this assume there's a MainRecord?
-  Supports(Container, IwbMainRecord, MainRecord);
-
-  if MainRecord.Signature = INFO then
-    Result := 1
-  else if MainRecord.Signature = PACK then
-    Result := 2
-  else if MainRecord.Signature = PERK then
-    Result := 3
-  else if MainRecord.Signature = QUST then
-    Result := 4
-  else if MainRecord.Signature = SCEN then
-    Result := 5;
-end;
-
-{>>> For VMAD <<<}
-function wbScriptFragmentsInfoCounter(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Cardinal;
-var
-  Container     : IwbContainer;
-  F             : Integer;
-  i             : Integer;
-begin
-  Result := 0;
-  if aElement.ElementType = etValue then
-    Container := aElement.Container
-  else
-    Container := aElement as IwbContainer;
-  if not Assigned(Container) then Exit;
-  while Assigned(Container) and (Container.Name <> 'Script Fragments') do
-    Container := Container.Container;
-  if not Assigned(Container) then Exit;
-
-  F := Container.ElementByName['Flags'].NativeValue;
-  for i := 0 to 2 do begin
-    if (F and 1) = 1 then
-      Inc(Result);
-    F := F shr 1;
-  end;
-
-  for i := 3 to 7 do begin
-    if (F and 1) = 1 then begin
-      Inc(Result);
-    if wbHasProgressCallback then
-      wbProgressCallback('==='+aElement.Name+'       ['+Container.Name+':'+Container.Path+'] = unknown info VMAD flag bit '+IntToStr(i));
-  end;
-    F := F shr 1;
-  end;
-end;
-
-{>>> For VMAD <<<}
-function wbScriptFragmentsSceneCounter(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Cardinal;
-var
-  Container     : IwbContainer;
-  F             : Integer;
-  i             : Integer;
-begin
-  Result := 0;
-  if aElement.ElementType = etValue then
-    Container := aElement.Container
-  else
-    Container := aElement as IwbContainer;
-  if not Assigned(Container) then Exit;
-  while Assigned(Container) and (Container.Name <> 'Script Fragments') do
-    Container := Container.Container;
-  if not Assigned(Container) then Exit;
-
-  F := Container.ElementByName['Flags'].NativeValue;
-  for i := 0 to 2 do begin
-    if (F and 1) = 1 then
-      Inc(Result);
-    F := F shr 1;
-  end;
-
-  for i := 3 to 7 do begin
-    if (F and 1) = 1 then begin
-      Inc(Result);
-  if wbHasProgressCallback then
-      wbProgressCallback('==='+aElement.Name+'       ['+Container.Name+':'+Container.Path+'] = unknown scene VMAD flag bit '+IntToStr(i));
-  end;
-    F := F shr 1;
-  end;
-end;
-
-{>>> For VMAD <<<}
-function wbScriptFragmentsPackCounter(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Cardinal;
-var
-  Container     : IwbContainer;
-  F             : Integer;
-  i             : Integer;
-begin
-  Result := 0;
-  if aElement.ElementType = etValue then
-    Container := aElement.Container
-  else
-    Container := aElement as IwbContainer;
-  if not Assigned(Container) then Exit;
-  while Assigned(Container) and (Container.Name <> 'Script Fragments') do
-    Container := Container.Container;
-  if not Assigned(Container) then Exit;
-
-  F := Container.ElementByName['Flags'].NativeValue;
-  for i := 0 to 7 do begin
-    if (F and 1) = 1 then
-      Inc(Result);
-    F := F shr 1;
-  end;
-end;
-
 function wbBOOKTeachesDecider(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
-var
-  Container: IwbContainer;
-  i: Int64;
 begin
   Result := 0;
-  if not wbTryGetContainerFromUnion(aElement, Container) then
+  var lContainer: IwbContainer;
+  if not wbTryGetContainerFromUnion(aElement, lContainer) then
     Exit;
 
-  i := Container.ElementByName['Flags'].NativeValue;
-  if i and $00000004 <> 0 then Result := 1;
-end;
-
-function wbMESGTNAMDontShow(const aElement: IwbElement): Boolean;
-var
-  Container  : IwbContainerElementRef;
-  MainRecord : IwbMainRecord;
-begin
-  Result := False;
-  if not Supports(aElement, IwbMainRecord, MainRecord) then
-    Exit;
-
-  if not Supports(aElement, IwbContainerElementRef, Container) then
-    Exit;
-
-  if Integer(Container.ElementNativeValues['DNAM']) and 1 <> 0 then
-    Result := True;
+  var lFlagsValue : Int64 := lContainer.ElementByName['Flags'].NativeValue;
+  if (lFlagsValue and $1) <> 0 then
+  begin
+    aElement.Def.Name := 'Skill';
+    Exit(1);
+  end
+  else if (lFlagsValue and $4) <> 0 then
+  begin
+    aElement.Def.Name := 'Spell';
+    Exit(2);
+  end;
 end;
 
 function wbEPFDDontShow(const aElement: IwbElement): Boolean;
@@ -1576,7 +1322,7 @@ begin
   Result := False;
   Element := aElement;
   MainRecord := nil;
-  
+
   while Assigned(Element) and not Supports(Element, IwbMainRecord, MainRecord) do
     Element := Element.Container;
 
@@ -1800,7 +1546,7 @@ var
 begin
   Exit; {>>> Looks like causes problems with Dawnguard.esm <<<}
 
-  if wbBeginInternalEdit then try
+  if aElement.ContextObj.BeginInternalEdit then try
     if not Supports(aElement, IwbMainRecord, MainRecord) then
       Exit;
 
@@ -1828,7 +1574,7 @@ procedure wbARMAAfterLoad(const aElement: IwbElement);
   MainRecord    : IwbMainRecord;}
 begin
   wbReplaceBODTwithBOD2(aElement);
-  {if wbBeginInternalEdit then try
+  {if aElement.ContextObj.BeginInternalEdit then try
     if not Supports(aElement, IwbMainRecord, MainRecord) then
       Exit;
     if MainRecord.ElementNativeValues['DNAM\Weight slider - Male'] = 0 then
@@ -1845,7 +1591,7 @@ var
   Container  : IwbContainerElementRef;
   MainRecord : IwbMainRecord;
 begin
-  if wbBeginInternalEdit then try
+  if aElement.ContextObj.BeginInternalEdit then try
     if not wbTryGetContainerWithValidMainRecord(aElement, Container, MainRecord) then
       Exit;
 
@@ -1872,7 +1618,7 @@ var
   MainRecord : IwbMainRecord;
   Flags      : Cardinal;
 begin
-  if wbBeginInternalEdit then try
+  if aElement.ContextObj.BeginInternalEdit then try
     if not Supports(aElement, IwbContainerElementRef, Container) then
       Exit;
 
@@ -1961,7 +1707,7 @@ var
   DataSubRec   : IwbSubrecord;
   Flags        : Byte;
 begin
-  if wbBeginInternalEdit then try
+  if aElement.ContextObj.BeginInternalEdit then try
     if not wbTryGetContainerWithValidMainRecord(aElement, Container, MainRecord) then
       Exit;
 
@@ -1995,36 +1741,6 @@ begin
   end;
 end;
 
-procedure wbMESGAfterLoad(const aElement: IwbElement);
-var
-  Container    : IwbContainerElementRef;
-  MainRecord   : IwbMainRecord;
-  IsMessageBox : Boolean;
-  HasTimeDelay : Boolean;
-begin
-  if wbBeginInternalEdit then try
-    if not wbTryGetContainerWithValidMainRecord(aElement, Container, MainRecord) then
-      Exit;
-
-    IsMessageBox := (Integer(Container.ElementNativeValues['DNAM']) and 1) = 1;
-    HasTimeDelay := Container.ElementExists['TNAM'];
-
-    if not (IsMessageBox = HasTimeDelay) then
-      Exit;
-    
-    if IsMessageBox then
-      Container.RemoveElement('TNAM')
-    else begin
-      if not Container.ElementExists['DNAM'] then
-        Container.Add('DNAM', True);
-      Container.ElementNativeValues['DNAM'] := Integer(Container.ElementNativeValues['DNAM']) or 1;
-    end;
-  finally
-    wbEndInternalEdit;
-  end;
-end;
-
-
 {>>>
   Updated, but not called for Skyrim
   Why is it required to fix particle counts? Because 1 pass = 79 particles?
@@ -2036,7 +1752,7 @@ end;
 //  FullParticleBirthRatio : Extended;
 //  PersistantParticleCount : Extended;
 //begin
-//  if wbBeginInternalEdit then try
+//  if aElement.ContextObj.BeginInternalEdit then try
 //    if not Supports(aElement, IwbContainerElementRef, Container) then
 //      Exit;
 //
@@ -2077,7 +1793,7 @@ var
   ActorValue: Variant;
   MainRecord: IwbMainRecord;
 begin
-  if wbBeginInternalEdit then try
+  if aElement.ContextObj.BeginInternalEdit then try
     if not Supports(aElement, IwbContainerElementRef, Container) then
       Exit;
 
@@ -2141,25 +1857,6 @@ begin
     wbProgressCallback('"'+Container.Name+'" does not contain an element named Type');
 end;
 
-procedure wbPackageDataInputValueTypeAfterSet(const aElement: IwbElement; const aOldValue, aNewValue: Variant);
-var
-  Container : IwbContainerElementRef;
-  Value     : IwbElement;
-begin
-  if aOldValue <> aNewValue then
-    if Supports(aElement.Container, IwbContainerElementRef, Container) then begin
-      Value := Container.ElementByPath['CNAM'];
-      if Assigned(Value) then
-        if (aNewValue = 'Bool') or (aNewValue = 'Int') or (aNewValue = 'Float') or (aNewValue = 'ObjectList') then
-          Value.SetToDefault
-        else
-          Value.Remove
-      else
-        if (aNewValue = 'Bool') or (aNewValue = 'Int') or (aNewValue = 'Float') or (aNewValue = 'ObjectList') then
-          Container.Add('CNAM');
-    end;
-end;
-
 function wbREFRRecordFlagsDecider(const aElement: IwbElement): Integer;
 begin
   Result := 0;
@@ -2212,40 +1909,19 @@ begin
     Result := 6
   else if lSig = MSTT then
     Result := 7
-  else if lSig = STAT then
+  else if lSig = SCOL then
     Result := 8
+  else if lSig = STAT then
+    Result := 9
   else if lSig = TREE then
-    Result := 9;
+    Result := 10;
 end;
-
-type
-  TFaceGenFeature = record
-    RaceID  : String;
-    Female  : Boolean;
-    Entries : array of record
-      Index: Cardinal;
-      Name : String;
-    end;
-  end;
-  PFaceGenFeature = ^TFaceGenFeature;
-
-var
-  // cache of race specific tint layers
-  TintLayers: array of TFaceGenFeature;
 
 function wbTintLayerToStr(aInt: Int64; const aElement: IwbElement; aType: TwbCallbackType): string;
 
-  function GetCached(const aRaceID: string; aFemale: boolean): PFaceGenFeature;
-  var
-    i: integer;
+  function GetCached(const aRaceID: string; aFemale: boolean): PwbFaceGenFeature;
   begin
-    Result := nil;
-    if Length(TintLayers) <> 0 then
-      for i := Low(TintLayers) to High(TintLayers) do
-        if (TintLayers[i].Female = aFemale) and (TintLayers[i].RaceID = aRaceID) then begin
-          Result := @TintLayers[i];
-          Break;
-        end;
+    Result := aElement.ContextObj.FaceGenCache.Cached(fgkTintLayers, aRaceID, aFemale);
   end;
 
 var
@@ -2255,7 +1931,7 @@ var
   Female, Female2   : Boolean;
   RaceID, EntryName : string;
   s                 : string;
-  Cache             : PFaceGenFeature;
+  Cache             : PwbFaceGenFeature;
   Index             : Cardinal;
   i, j              : integer;
 begin
@@ -2296,10 +1972,7 @@ begin
     for i := 0 to 1 do begin
 
       Female2 := i = 1;
-      SetLength(TintLayers, Succ(Length(TintLayers)));
-      Cache := @TintLayers[Pred(Length(TintLayers))];
-      Cache.RaceID := RaceID;
-      Cache.Female := Female2;
+      Cache := aElement.ContextObj.FaceGenCache.Append(fgkTintLayers, RaceID, Female2);
 
       if not Female2 then
         Element := Race.ElementByPath['Head Data\Male Head Data\Tint Masks']
@@ -2391,25 +2064,32 @@ begin
   if not Assigned(aElement) then
     Exit;
 
-  if VarSameValue(aOldValue, aNewValue) then
+  if not (gcCommunityShaders in aElement.GameDefObj.Capabilities) then
     Exit;
 
-  if not wbCS then
+  if VarSameValue(aOldValue and $4000, aNewValue and $4000) then
+    Exit;
+
+  var lContainer := aElement.Container as IwbContainerElementRef;
+  if not Assigned(lContainer) then
     Exit;
 
   var lMainRecord := aElement.ContainingMainRecord;
   if not Assigned(lMainRecord) then
     Exit;
 
-  if wbBeginInternalEdit then try
-    if ((aOldValue and $4000) <> (aNewValue and $4000)) then begin
-      var lFNAMValue := lMainRecord.ElementNativeValues['FNAM'];
-      lMainRecord.RemoveElement('FNAM');
-      lMainRecord.Add('FNAM', True);
-      lMainRecord.ElementBySignature[FNAM].NativeValue := lFNAMValue;
-    end;
-  finally
-    wbEndInternalEdit;
+  var lFalloff := lContainer.ElementByMemoryOrder[4];
+  var lFOV := lContainer.ElementByMemoryOrder[5];
+  var lFNAM := lMainRecord.ElementBySignature[FNAM];
+
+  if (aNewValue and $4000) = 0 then begin
+    lFalloff.Def.Name := 'Falloff Exponent';
+    lFOV.Def.Name := 'FOV';
+    lFNAM.Def.Name := 'Fade Value';
+  end else begin
+    lFalloff.Def.Name := 'Inverse Square Falloff';
+    lFOV.Def.Name := 'Size';
+    lFNAM.Def.Name := 'Intensity';
   end;
 end;
 
@@ -2419,7 +2099,7 @@ begin
   if not Assigned(aElement) then
     Exit;
 
-  if not wbCS then
+  if not (gcCommunityShaders in aElement.GameDefObj.Capabilities) then
     Exit;
 
   var lMainRecord := aElement.ContainingMainRecord;
@@ -2438,69 +2118,68 @@ begin
     Exit(1);
 end;
 
-  procedure ReferenceRecord(aSignature: TwbSignature; const aName: string);
-  begin
-    wbRefRecord(aSignature, aName,
-      wbFlags(wbFlagsList([
-        7, 'Turn Off Fire',
-       10, 'Persistent',
-       11, 'Initially Disabled',
-       28, 'Reflected By Auto Water',
-       29, 'Don''t Havok Settle',
-       30, 'No Respawn'
-      ], True, True)), [
-      wbEDID,
-      wbVMAD,
-      wbFormIDCk(NAME, 'Projectile', [PROJ, HAZD]),
-      wbFormIDCk(XEZN, 'Encounter Zone', [ECZN]),
-      wbOwnership([XRGD]),
-      wbFloat(XHTW, 'Head-Tracking Weight'),
-      wbFloat(XFVC, 'Favor Cost'),
-      wbRArrayS('Reflected/Refracted By',
-        wbStructSK(XPWR, [0], 'Water', [
-          wbFormIDCk('Reference', [REFR]),
-          wbInteger('Type', itU32, wbFlags([
-            'Reflection',
-            'Refraction'
-          ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
-        ], cpNormal, False, nil, 1)
-      ),
-      wbRArrayS('Linked References', wbStructSK(XLKR, [0], 'Linked Reference', [
-        wbFormIDCk('Keyword/Ref', [KYWD, PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA, NULL]),
-        wbFormIDCk('Ref', [PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA])
-      ], cpNormal, False, nil, 1)),
-      wbRStruct('Activate Parents', [
-        wbInteger(XAPD, 'Flags', itU8, wbFlags([
-          'Parent Activate Only'
-        ], True)).IncludeFlag(dfCollapsed, wbCollapseFlags),
-        wbRArrayS('Activate Parent Refs',
-          wbStructSK(XAPR, [0], 'Activate Parent Ref', [
-            wbFormIDCk('Reference', [PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA]),
-            wbFloat('Delay')
-          ])
-        )
-      ]),
-      wbXESP,
-      wbFormIDCk(XEMI, 'Emittance', [LIGH, REGN]),
-      wbFormIDCk(XMBR, 'MultiBound Reference', [REFR]),
-      wbEmpty(XIS2, 'Ignored by Sandbox'),
-      wbArray(XLRT, 'Location Ref Type', wbFormIDCk('Ref', [LCRT, NULL])),
-      wbFormIDCk(XLRL, 'Location Reference', [LCRT, LCTN, NULL], False, cpBenignIfAdded),
-      wbXLOD,
-      wbXSCL,
-      wbDataPosRot
-    ], True).SetAddInfo(wbPlacedAddInfo);
-  end;
-
-procedure DefineTES5;
+procedure TwbGameDefTES5.ReferenceRecord(const aSignature: TwbSignature; const aName: string);
 begin
-  DefineCommon;
+  RegisterRefRecordDef(aSignature, aName,
+    wbFlags(wbFlagsList([
+    7,  'Turn Off Fire',
+    10, 'Persistent',
+    11, 'Initially Disabled',
+    28, 'Reflected By Auto Water',
+    29, 'Don''t Havok Settle',
+    30, 'No Respawn'
+    ], True, True)), [
+    wbEDID,
+    wbVMAD,
+    wbFormIDCk(NAME, 'Projectile', [PROJ, HAZD]),
+    wbFormIDCk(XEZN, 'Encounter Zone', [ECZN]),
+    wbOwnership([XRGD]),
+    wbFloat(XHTW, 'Head-Tracking Weight'),
+    wbFloat(XFVC, 'Favor Cost'),
+    wbRArrayS('Reflected/Refracted By',
+      wbStructSK(XPWR, [0], 'Water', [
+        wbFormIDCk('Reference', [REFR]),
+        wbInteger('Type', itU32, wbFlags([
+          'Reflection',
+          'Refraction'
+        ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
+      ]).SetOptionalFrom(1)
+    ),
+    wbRArrayS('Linked References', wbStructSK(XLKR, [0], 'Linked Reference', [
+      wbFormIDCk('Keyword/Ref', [KYWD, PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA, NULL]),
+      wbFormIDCk('Ref', [PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA])
+    ]).SetOptionalFrom(1)),
+    wbRStruct('Activate Parents', [
+      wbInteger(XAPD, 'Parent Activate Only', itU8, wbBoolEnum),
+      wbRArrayS('Activate Parent Refs',
+        wbStructSK(XAPR, [0], 'Activate Parent Ref', [
+          wbFormIDCk('Reference', [PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA]),
+          wbFloat('Delay')
+        ])
+      )
+    ]),
+    wbXESP,
+    wbFormIDCk(XEMI, 'Emittance', [LIGH, REGN]),
+    wbFormIDCk(XMBR, 'MultiBound Reference', [REFR]),
+    wbEmpty(XIS2, 'Ignored by Sandbox'),
+    wbArray(XLRT, 'Location Ref Type', wbFormIDCk('Ref', [LCRT, NULL])),
+    wbFormIDCk(XLRL, 'Location Reference', [LCRT, LCTN, NULL], False, cpBenignIfAdded),
+    wbXLOD,
+    wbXSCL,
+    wbVec3PosRot(DATA).SetRequired
+  ]).SetAddInfo(wbPlacedAddInfo)
+    .SetUnordered;
+end;
 
-  wbRecordFlags := wbInteger('Record Flags', itU32, wbFlags(wbFlagsList([])));
+procedure TwbGameDefTES5.Define;
+var
+  s: string;
+begin
+  gdRecordFlags := wbInteger('Record Flags', itU32, wbFlags(wbFlagsList([])));
 
-  wbMainRecordHeader := wbRecordHeader(wbRecordFlags);
+  gdMainRecordHeader := wbRecordHeader(RecordFlags);
 
-  wbSizeOfMainRecordStruct := 24;
+  gdSizeOfMainRecordStruct := 24;
 
   wbNull := wbUnused(-255);
   wbLLCT := wbInteger(LLCT, 'Count', itU8, nil, cpBenign);
@@ -2527,9 +2206,16 @@ begin
       wbStructExSK(CNTO, [0], [1], 'Item', [
         wbFormIDCk('Item', [ARMO, AMMO, APPA, MISC, WEAP, BOOK, LVLI, KEYM, ALCH, INGR, LIGH, SLGM, SCRL]),
         wbInteger('Count', itS32).SetDefaultNativeValue(1)
-      ]),
+      ])
+      .SetSummaryKeyOnValue([1, 0])
+      .SetSummaryPrefixSuffixOnValue(0, '', '')
+      .SetSummaryPrefixSuffixOnValue(1, '', 'x')
+      .SetSummaryDelimiterOnValue(' ')
+      .IncludeFlagOnValue(dfSummaryNoSortKey)
+      .IncludeFlagOnValue(dfSummaryMembersNoName)
+      .IncludeFlag(dfCollapsed, clpItems in DefineOptions.Collapse),
       wbCOED
-    ]).SetToStr(wbItemToStr).IncludeFlag(dfCollapsed, wbCollapseItems);
+    ]).IncludeFlag(dfCollapsed, clpItems in DefineOptions.Collapse);
   wbCOCT := wbInteger(COCT, 'Count', itU32, nil, cpBenign);
   wbCNTOs := wbRArrayS('Items', wbCNTO).SetCountPath('COCT');
 
@@ -2538,9 +2224,16 @@ begin
       wbStructExSK(CNTO, [0], [1], 'Item', [
         wbFormIDCkNoReach('Item', [ARMO, AMMO, APPA, MISC, WEAP, BOOK, LVLI, KEYM, ALCH, INGR, LIGH, SLGM, SCRL]),
         wbInteger('Count', itS32).SetDefaultNativeValue(1)
-      ]),
+      ])
+      .SetSummaryKeyOnValue([1, 0])
+      .SetSummaryPrefixSuffixOnValue(0, '', '')
+      .SetSummaryPrefixSuffixOnValue(1, '', 'x')
+      .SetSummaryDelimiterOnValue(' ')
+      .IncludeFlagOnValue(dfSummaryNoSortKey)
+      .IncludeFlagOnValue(dfSummaryMembersNoName)
+      .IncludeFlag(dfCollapsed, clpItems in DefineOptions.Collapse),
       wbCOED
-    ]).SetToStr(wbItemToStr).IncludeFlag(dfCollapsed, wbCollapseItems);
+    ]).IncludeFlag(dfCollapsed, clpItems in DefineOptions.Collapse);
   wbCNTOsNoReach := wbRArrayS('Items', wbCNTONoReach).SetCountPath('COCT');
 
   wbArmorTypeEnum := wbEnum([
@@ -2622,7 +2315,7 @@ begin
     {0x80000000} '61 - FX01'
   ], True);
 
-  wbFirstPersonFlagsU32 := wbInteger('First Person Flags', itU32, wbBipedObjectFlags).IncludeFlag(dfCollapsed, wbCollapseFlags);
+  wbFirstPersonFlagsU32 := wbInteger('First Person Flags', itU32, wbBipedObjectFlags).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse);
 
   wbBODT := wbStruct(BODT, 'Body Template', [
     wbFirstPersonFlagsU32,
@@ -2635,10 +2328,10 @@ begin
       {0x00000020}'Unknown 6',
       {0x00000040}'Unknown 7',
       {0x00000080}'Unknown 8'
-    ], True)).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ], True)).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbUnused(3),
     wbInteger('Armor Type', itU32, wbArmorTypeEnum)
-  ], cpNormal, False, nil, 3);
+  ]).SetOptionalFrom(3);
 
   wbBOD2 := wbStruct(BOD2, 'Biped Body Template', [
     wbFirstPersonFlagsU32,
@@ -2661,7 +2354,7 @@ begin
           {0x00000020}'Unknown 6',
           {0x00000040}'Unknown 7',
           {0x00000080}'Unknown 8'
-        ], True)).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        ], True)).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
         wbUnused,
         wbInteger('Armor Type', itU32, wbArmorTypeEnum)
       ], cpNormal, True)
@@ -2679,13 +2372,14 @@ begin
           {0x00000020}'Unknown 6',
           {0x00000040}'Unknown 7',
           {0x00000080}'Unknown 8'
-        ], True)).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        ], True)).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
         wbUnused(3),
         wbInteger('Armor Type', itU32, wbArmorTypeEnum)
-      ], cpNormal, True, nil, 3)
+      ]).SetOptionalFrom(3)
         .SetSummaryKeyOnValue([3, 0])
         .SetSummaryPrefixSuffixOnValue(0, '(', ')')
         .IncludeFlagOnValue(dfSummaryMembersNoName)
+        .SetRequired
     ]).SetRequired;
 
   wbDODT := wbStruct(DODT, 'Decal Data', [
@@ -2704,12 +2398,12 @@ begin
       {0x02}'Alpha - Blending',
       {0x04}'Alpha - Testing',
       {0x08}'No Subtextures'
-    ], True)).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ], True)).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbByteArray('Unknown', 2),
     wbByteColors('Color')
   ]);
 
-  wbIgnoreRecords.Add(XXXX);
+  IgnoreRecords.Add(XXXX);
 
   wbSoundLevelEnum := wbEnum([
      'Loud',
@@ -2887,7 +2581,7 @@ begin
     'Break'
   ]);
 
-  wbEventFunctionEnum := wbEnum([
+  gdEventFunctionEnum := wbEnum([
     'GetIsID',
     'IsInList',
     'GetValue',
@@ -2897,7 +2591,7 @@ begin
 
   // Event member names and availability are different depending on event type
   // Using generic names for the last 3 of them: Form, Value1, Value2
-  wbEventMemberEnum := wbEnum([], [
+  gdEventMemberEnum := wbEnum([], [
     $0000, 'None',
     $3152, 'Actor 1',        //R1
     $3252, 'Actor 2',        //R2
@@ -2924,44 +2618,24 @@ begin
     {9} 'Crossbow'
   ]);
 
-  wbEDID := wbStringKC(EDID, 'Editor ID', 0, cpOverride);
+  wbEDID := wbStringKC(EDID, 'Editor ID', 0, cpOverride).IncludeFlag(dfKeepInPartialForm) as IwbSubRecordDef;
   wbFULL := wbLStringKC(FULL, 'Name', 0, cpTranslate);
   wbFULLReq := wbLStringKC(FULL, 'Name', 0, cpTranslate, True);
   wbDESC := wbLStringKC(DESC, 'Description', 0, cpTranslate);
   wbDESCReq := wbLStringKC(DESC, 'Description', 0, cpTranslate, True);
-  wbXSCL := wbFloat(XSCL, 'Scale', cpNormal, False, 1, -1, nil, wbNormalizeToRange(0.0, 10.0));
+  wbXSCL := wbFloat(XSCL, 'Scale').SetNormalizer(wbNormalizeToRange(0.0, 10.0));
 
-  wbPropTypeEnum := wbEnumSummary([
-    {00} 'None', '',
-    {01} 'Object', '',
-    {02} 'String', '',
-    {03} 'Int32', '',
-    {04} 'Float', '',
-    {05} 'Bool', '',
-    {06} '', '',
-    {07} '', '',
-    {08} '', '',
-    {09} '', '',
-    {10} '', '',
-    {11} 'Array of Object', 'Object[]',
-    {12} 'Array of String', 'String[]',
-    {13} 'Array of Int32', 'Int32[]',
-    {14} 'Array of Float', 'Float[]',
-    {15} 'Array of Bool', 'Bool[]'
-  ]);
-
-  wbScriptFlags := wbInteger('Flags', itU8, wbEnum([
-    {0x00} 'Local',
-    {0x01} 'Inherited',
-    {0x02} 'Removed',
-    {0x03} 'Inherited and Removed'
-  ]));
+  var wbScriptObjectSignatures : TwbSignatures := [
+    AACT,ACHR,ACTI,ALCH,AMMO,APPA,ARMO,ASTP,AVIF,BOOK,CELL,CLAS,CONT,DIAL,DOOR,ECZN,EFSH,ENCH,EXPL,FACT,FLOR,FLST,FURN,GLOB,HAZD,IDLE,IMAD,INGR,IPDS,KEYM,KYWD,LCRT,LCTN,LIGH,LVLI,LVLN,MESG,MGEF,MISC,MUSC,NPC_,OTFT,PACK,PERK,PHZD,PLYR,PROJ,QUST,RACE,REFR,RFCT,SCEN,SCRL,SHOU,SLGM,SNCT,SNDR,SOUN,SPEL,SPGD,STAT,TACT,TREE,TXST,VTYP,WEAP,WOOP,WRLD,WTHR,NULL
+  ];
 
   wbScriptPropertyObject := wbUnion('Object Union', wbScriptObjFormatDecider, [
     wbStructSK([2, 1], 'Object v2', [
-      wbInteger('Unused', itU16, nil, cpIgnore),
-      wbInteger('Alias', itS16, wbScriptObjectAliasToStr, wbAliasToInt).SetDefaultEditValue('None'),
-      wbFormID('FormID')
+      wbUnused(2),
+      wbInteger('Alias', itS16, wbScriptObjectAliasToStr, wbAliasToInt)
+        .SetDefaultEditValue('None')
+        .SetLinksToCallback(wbScriptObjectAliasLinksTo),
+      wbFormIDCk('FormID', wbScriptObjectSignatures, True).SetFormIDFilter(wbVMADObjectFilter)
     ], [2, 1, 0])
       .SetSummaryKey([1, 2])
       .SetSummaryMemberPrefixSuffix(2, '', '')
@@ -2970,267 +2644,272 @@ begin
       .IncludeFlag(dfSummaryMembersNoName)
       .IncludeFlag(dfSummaryNoSortKey),
     wbStructSK([0, 1], 'Object v1', [
-      wbFormID('FormID'),
-      wbInteger('Alias', itS16, wbScriptObjectAliasToStr, wbAliasToInt).SetDefaultEditValue('None'),
-      wbInteger('Unused', itU16, nil, cpIgnore)
-    ])
-      .SetSummaryKey([1, 0])
+      wbFormIDCk('FormID', wbScriptObjectSignatures, True).SetFormIDFilter(wbVMADObjectFilter),
+      wbInteger('Alias', itS16, wbScriptObjectAliasToStr, wbAliasToInt)
+        .SetDefaultEditValue('None')
+        .SetLinksToCallback(wbScriptObjectAliasLinksTo),
+      wbUnused(2)
+    ]).SetSummaryKey([1, 0])
       .SetSummaryMemberPrefixSuffix(0, '', '')
       .SetSummaryMemberPrefixSuffix(1, 'Alias[', '] on')
       .SetSummaryDelimiter(' ')
       .IncludeFlag(dfSummaryMembersNoName)
   ]);
 
-  wbScriptProperty :=
-    wbStructSK([0], 'Property', [
-      wbLenString('propertyName', 2),
-      wbInteger('Type', itU8, wbPropTypeEnum, cpNormal, False, nil, wbScriptPropertyTypeAfterSet),
-      wbInteger('Flags', itU8, wbEnum([
-        {0x00} '',
-        {0x01} 'Edited',
-        {0x02} '',
-        {0x03} 'Removed'
-      ])).SetDefaultEditValue('Edited'),
-      wbUnion('Value', wbScriptPropertyDecider, [
-       {00} wbNull,
-       {01} wbScriptPropertyObject,
-       {02} wbLenString('String', 2).OverrideEncoding(wbEncodingVMAD),
-       {03} wbInteger('Int32', itS32),
-       {04} wbFloat('Float'),
-       {05} wbInteger('Bool', itU8, wbBoolEnum),
-       {11} wbArray('Array of Object', wbScriptPropertyObject, -1),
-       {12} wbArray('Array of String', wbLenString('Element', 2).OverrideEncoding(wbEncodingVMAD), -1),
-       {13} wbArray('Array of Int32', wbInteger('Element', itS32), -1),
-       {14} wbArray('Array of Float', wbFloat('Element'), -1),
-       {15} wbArray('Array of Bool', wbInteger('Element', itU8, wbBoolEnum), -1)
-      ])
-    ])
-    .SetSummaryKey([1, 3])
-    .SetSummaryMemberPrefixSuffix(0, '', ':')
-    .SetSummaryMemberPrefixSuffix(3, '= ', '')
-    .IncludeFlag(dfSummaryMembersNoName)
-    .IncludeFlag(dfCollapsed, wbCollapseScriptProperties);
-
-  wbScriptProperties :=
-    wbArrayS('Properties', wbScriptProperty, -2, cpNormal, False, nil, nil, nil, wbCanAddScriptProperties)
-    .SetSummaryPassthroughMaxLength(80)
-    .SetSummaryPassthroughMaxDepth(1);
-
   wbScriptEntry := wbStructSK([0], 'Script', [
     wbLenString('ScriptName', 2),
-    wbScriptFlags,
-    wbScriptProperties
-  ])
-  .SetSummaryKey([2])
-  .SetSummaryMemberPrefixSuffix(2, '(', ')')
-  .SetSummaryDelimiter('')
-  .IncludeFlag(dfCollapsed, wbCollapseScriptEntry)
-  .IncludeFlag(dfSummaryMembersNoName);
-
-  wbScriptFragmentsInfo := wbStruct('Script Fragments', [
-    wbInteger('Extra bind data version', itS8).SetDefaultNativeValue(2),
-    wbInteger('Flags', itU8, wbFlags([
-      {1} 'OnBegin',
-      {2} 'OnEnd'
-    ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
-    wbLenString('FileName', 2),
-    wbArray('Fragments',  // Do NOT sort, ordered OnBegin, OnEnd
-      wbStruct('Fragment', [
-        wbInteger('Unknown', itS8),
-        wbLenString('ScriptName', 2),
-        wbLenString('FragmentName', 2)
-      ])
-      .SetSummaryKey([1, 2])
-      .SetSummaryMemberPrefixSuffix(1, '', ':')
-      .SetSummaryDelimiter('')
-      .IncludeFlag(dfSummaryMembersNoName)
-      .IncludeFlag(dfCollapsed, wbCollapseFragments)
-    , [], wbScriptFragmentsInfoCounter)
-  ])
-  .SetSummaryKey([1, 2, 3])
-  .IncludeFlag(dfSummaryMembersNoName);
-
-  wbScriptFragmentsPack := wbStruct('Script Fragments', [
-    wbInteger('Extra bind data version', itS8).SetDefaultNativeValue(2),
-    wbInteger('Flags', itU8, wbFlags([
-      {1} 'OnBegin',
-      {2} 'OnEnd',
-      {4} 'OnChange'
-    ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
-    wbLenString('FileName', 2),
-    wbArray('Fragments',  // Do NOT sort, ordered OnBegin, OnEnd, OnChange
-      wbStruct('Fragment', [
-        wbInteger('Unknown', itS8),
-        wbLenString('ScriptName', 2),
-        wbLenString('FragmentName', 2)
-      ])
-      .SetSummaryKey([1, 2])
-      .SetSummaryMemberPrefixSuffix(1, '', ':')
-      .SetSummaryDelimiter('')
-      .IncludeFlag(dfSummaryMembersNoName)
-      .IncludeFlag(dfCollapsed, wbCollapseFragments)
-    , [], wbScriptFragmentsPackCounter)
-  ])
-  .SetSummaryKey([1, 2, 3])
-  .IncludeFlag(dfSummaryMembersNoName);
-
-  wbScriptFragmentsQuest := wbStruct('Script Fragments', [
-    wbInteger('Extra bind data version', itS8).SetDefaultNativeValue(2),
-    wbInteger('FragmentCount', itU16, nil, cpBenign),
-    wbLenString('FileName', 2),
-    wbArrayS('Fragments',
-      wbStructSK([0, 2], 'Fragment', [
-        wbInteger('Quest Stage', itU16),
-        wbInteger('Unknown', itS16),
-        wbInteger('Quest Stage Index', itS32),
-        wbInteger('Unknown', itS8),
-        wbLenString('ScriptName', 2),
-        wbLenString('FragmentName', 2)
-      ])
-      .SetSummaryKey([4, 5])
-      .SetSummaryMemberPrefixSuffix(0, '[', '/')
-      .SetSummaryMemberPrefixSuffix(2, '', ']')
-      .SetSummaryMemberPrefixSuffix(4, ' ', ':')
-      .SetSummaryDelimiter('')
-      .IncludeFlag(dfSummaryMembersNoName)
-      .IncludeFlag(dfCollapsed, wbCollapseFragments)
-    ).SetCountPath('FragmentCount', True)
-  ])
-  .SetSummaryKey([2, 3])
-  .IncludeFlag(dfSummaryMembersNoName);
-
-  wbScriptFragmentsScen := wbStruct('Script Fragments', [
-    wbInteger('Extra bind data version', itS8).SetDefaultNativeValue(2),
-    wbInteger('Flags', itU8, wbFlags([
-      {1} 'OnBegin',
-      {2} 'OnEnd'
-    ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
-    wbLenString('FileName', 2),
-    wbArray('Fragments',  // Do NOT sort, ordered OnBegin, OnEnd
-      wbStruct('Fragment', [
-        wbInteger('Unknown', itS8),
-        wbLenString('ScriptName', 2),
-        wbLenString('FragmentName', 2)
-      ])
-      .SetSummaryKey([1, 2])
-      .SetSummaryMemberPrefixSuffix(1, '', ':')
-      .SetSummaryDelimiter('')
-      .IncludeFlag(dfSummaryMembersNoName)
-      .IncludeFlag(dfCollapsed, wbCollapseFragments)
-    , [], wbScriptFragmentsSceneCounter),
-    wbArray('Phase Fragments',
-      wbStructSK([0, 1], 'Phase Fragment', [
-        wbInteger('Phase Flag', itU8, wbFlags([
-          {1} 'OnStart',
-          {2} 'OnCompletion'
-        ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
-        wbInteger('Phase Index', itU8),
-        wbInteger('Unknown', itS16),
-        wbInteger('Unknown', itS8),
-        wbInteger('Unknown', itS8),
-        wbLenString('ScriptName', 2),
-        wbLenString('FragmentName', 2)
-      ])
-      .SetSummaryKey([5, 6])
-      .SetSummaryMemberPrefixSuffix(0, '[', ':')
-      .SetSummaryMemberPrefixSuffix(1, '', ']')
-      .SetSummaryMemberPrefixSuffix(5, ' ', ':')
-      .SetSummaryDelimiter('')
-      .IncludeFlag(dfSummaryMembersNoName)
-      .IncludeFlag(dfCollapsed, wbCollapseFragments)
-    , -2)
-  ])
-  .SetSummaryKey([1, 2, 3, 4])
-  .IncludeFlag(dfSummaryMembersNoName);
-
-  wbScriptFragments := wbStruct('Script Fragments', [
-    wbInteger('Extra bind data version', itS8).SetDefaultNativeValue(2),
-    wbLenString('FileName', 2),
-    wbArrayS('Fragments',
-      wbStructSK([0], 'Fragment', [
-        wbInteger('Fragment Index', itU16),
-        wbInteger('Unknown', itS16),
-        wbInteger('Unknown', itS8),
-        wbLenString('ScriptName', 2),
-        wbLenString('FragmentName', 2)
-      ])
-      .SetSummaryKey([3, 4])
-      .SetSummaryMemberPrefixSuffix(0, '[', ']')
-      .SetSummaryMemberPrefixSuffix(3, ' ', ':')
-      .SetSummaryDelimiter('')
-      .IncludeFlag(dfSummaryMembersNoName)
-      .IncludeFlag(dfCollapsed, wbCollapseFragments)
-    , -2)
-  ])
-  .SetSummaryKey([1, 2])
-  .IncludeFlag(dfSummaryMembersNoName);
+    wbInteger('Flags', itU8,
+      wbEnum([
+      {0} 'Local',
+      {1} 'Inherited',
+      {2} 'Removed',
+      {3} 'Inherited and Removed'
+      ])),
+    wbArrayS('Properties',
+      wbStructSK([0], 'Property', [
+        wbLenString('propertyName', 2),
+        wbInteger('Type', itU8,
+          wbEnumSummary([
+          {0} 'None', '',
+          {1} 'Object', '',
+          {2} 'String', '',
+          {3} 'Int32', '',
+          {4} 'Float', '',
+          {5} 'Bool', ''
+          ], [
+          11, 'Array of Object', 'Object[]',
+          12, 'Array of String', 'String[]',
+          13, 'Array of Int32', 'Int32[]',
+          14, 'Array of Float', 'Float[]',
+          15, 'Array of Bool', 'Bool[]'
+          ])
+        ).SetAfterSet(wbScriptPropertyTypeAfterSet),
+        wbInteger('Flags', itU8,
+          wbEnum([
+          {0} '',
+          {1} 'Edited',
+          {2} '',
+          {3} 'Removed'
+          ])
+        ).SetDefaultEditValue('Edited'),
+        wbUnion('Value', wbScriptPropertyDecider, [
+         {0}  wbNull,
+         {1}  wbScriptPropertyObject,
+         {2}  wbLenString('String', 2).OverrideEncoding(wbEncodingVMAD),
+         {3}  wbInteger('Int32', itS32),
+         {4}  wbFloat('Float'),
+         {5}  wbInteger('Bool', itU8, wbBoolEnum),
+         {11} wbArray('Array of Object', wbScriptPropertyObject, -1),
+         {12} wbArray('Array of String', wbLenString('Element', 2).OverrideEncoding(wbEncodingVMAD), -1),
+         {13} wbArray('Array of Int32', wbInteger('Element', itS32), -1),
+         {14} wbArray('Array of Float', wbFloat('Element'), -1),
+         {15} wbArray('Array of Bool', wbInteger('Element', itU8, wbBoolEnum), -1)
+        ])
+      ]).SetSummaryKey([1, 3])
+        .SetSummaryMemberPrefixSuffix(0, '', ':')
+        .SetSummaryMemberPrefixSuffix(3, '= ', '')
+        .IncludeFlag(dfSummaryMembersNoName)
+        .IncludeFlag(dfCollapsed, clpScriptProperties in DefineOptions.Collapse),
+    -2).SetSummaryPassthroughMaxLength(80)
+       .SetSummaryPassthroughMaxDepth(1)
+  ]).SetSummaryKey([2])
+    .SetSummaryMemberPrefixSuffix(2, '(', ')')
+    .SetSummaryDelimiter('')
+    .IncludeFlag(dfCollapsed, clpScriptEntry in DefineOptions.Collapse)
+    .IncludeFlag(dfSummaryMembersNoName);
 
   {>>> http://www.uesp.net/wiki/Tes5Mod:Mod_File_Format/VMAD_Field <<<}
-  var wbVMADScripts :=
-    wbArrayS('Scripts', wbScriptEntry, -2, cpNormal, False, nil, nil, nil, wbCanAddScripts)
-    .SetSummaryPassthroughMaxLength(100);
-
   var wbVMADVersion :=
-    wbInteger('Version', itS16, nil, cpIgnore).SetDefaultNativeValue(5);
+    wbInteger('Version', itS16, nil, cpIgnore)
+      .SetDefaultNativeValue(5)
+      .IncludeFlag(dfSkipImplicitEdit);
+
   var wbVMADObjectFormat :=
-    wbInteger('Object Format', itS16, nil, cpIgnore).SetDefaultNativeValue(2);
+    wbInteger('Object Format', itS16, nil, cpIgnore)
+      .SetDefaultNativeValue(2)
+      .IncludeFlag(dfSkipImplicitEdit);
+
+  var wbVMADScripts :=
+    wbArrayS('Scripts', wbScriptEntry, -2).SetSummaryPassthroughMaxLength(100);
 
   wbVMAD := wbStruct(VMAD, 'Virtual Machine Adapter', [
     wbVMADVersion,
     wbVMADObjectFormat,
     wbVMADScripts
-  ])
-  .SetSummaryKeyOnValue([2]);
-
-  wbVMADFragmentedPERK := wbStruct(VMAD, 'Virtual Machine Adapter', [
-    wbVMADVersion,
-    wbVMADObjectFormat,
-    wbVMADScripts,
-    wbScriptFragments
-  ], cpNormal, False, nil, 3)
-  .SetSummaryKeyOnValue([2, 3]);
-
-  wbVMADFragmentedPACK := wbStruct(VMAD, 'Virtual Machine Adapter', [
-    wbVMADVersion,
-    wbVMADObjectFormat,
-    wbVMADScripts,
-    wbScriptFragmentsPack
-  ], cpNormal, False, nil, 3)
-  .SetSummaryKeyOnValue([2, 3]);
-
-  wbVMADFragmentedQUST := wbStruct(VMAD, 'Virtual Machine Adapter', [
-    wbVMADVersion,
-    wbVMADObjectFormat,
-    wbVMADScripts,
-    wbScriptFragmentsQuest,
-    wbArrayS('Aliases', wbStructSK([0], 'Alias', [
-      wbScriptPropertyObject.IncludeFlag(dfCollapsed, wbCollapseOther),
-      wbVMADVersion,
-      wbVMADObjectFormat,
-      wbArrayS('Alias Scripts', wbScriptEntry, -2)
-    ]).SetSummaryKey([0, 3])
-      .SetSummaryMemberPrefixSuffix(3, 'Script:(', ')')
-      .SetSummaryDelimiter(' ')
-      .IncludeFlag(dfSummaryMembersNoName)
-    , -2)
-  ], cpNormal, False, nil, 3)
-  .SetSummaryKeyOnValue([2, 3, 4]);
-
-  wbVMADFragmentedSCEN := wbStruct(VMAD, 'Virtual Machine Adapter', [
-    wbVMADVersion,
-    wbVMADObjectFormat,
-    wbVMADScripts,
-    wbScriptFragmentsScen
-  ], cpNormal, False, nil, 3)
-  .SetSummaryKeyOnValue([2, 3]);
+  ]).SetSummaryKeyOnValue([2]);
 
   wbVMADFragmentedINFO := wbStruct(VMAD, 'Virtual Machine Adapter', [
     wbVMADVersion,
     wbVMADObjectFormat,
     wbVMADScripts,
-    wbScriptFragmentsInfo
-  ], cpNormal, False, nil, 3)
-  .SetSummaryKeyOnValue([2, 3]);
+    wbStruct('Script Fragments', [
+      wbInteger('Extra bind data version', itS8).SetDefaultNativeValue(2),
+      wbInteger('Flags', itU8,
+        wbFlags([
+        {0} 'OnBegin',
+        {1} 'OnEnd'
+        ])
+      ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+      wbLenString('FileName', 2),
+      wbArray('Fragments',  // Do NOT sort, ordered OnBegin, OnEnd
+        wbStruct('Fragment', [
+          wbUnknown(1),
+          wbLenString('ScriptName', 2),
+          wbLenString('FragmentName', 2)
+        ]).SetSummaryKey([1, 2])
+          .SetSummaryMemberPrefixSuffix(1, '', ':')
+          .SetSummaryDelimiter('')
+          .IncludeFlag(dfSummaryMembersNoName)
+          .IncludeFlag(dfCollapsed, clpFragments in DefineOptions.Collapse),
+      [], wbScriptFragmentsInfoCounter)
+    ]).SetSummaryKey([1, 2, 3])
+      .IncludeFlag(dfSummaryMembersNoName)
+  ]).SetOptionalFrom(3)
+    .SetSummaryKeyOnValue([2, 3]);
+
+  wbVMADFragmentedPACK := wbStruct(VMAD, 'Virtual Machine Adapter', [
+    wbVMADVersion,
+    wbVMADObjectFormat,
+    wbVMADScripts,
+    wbStruct('Script Fragments', [
+      wbInteger('Extra bind data version', itS8).SetDefaultNativeValue(2),
+      wbInteger('Flags', itU8,
+        wbFlags([
+        {0} 'OnBegin',
+        {1} 'OnEnd',
+        {2} 'OnChange'
+        ])
+      ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+      wbLenString('FileName', 2),
+      wbArray('Fragments',  // Do NOT sort, ordered OnBegin, OnEnd, OnChange
+        wbStruct('Fragment', [
+          wbUnknown(1),
+          wbLenString('ScriptName', 2),
+          wbLenString('FragmentName', 2)
+        ]).SetSummaryKey([1, 2])
+          .SetSummaryMemberPrefixSuffix(1, '', ':')
+          .SetSummaryDelimiter('')
+          .IncludeFlag(dfSummaryMembersNoName)
+          .IncludeFlag(dfCollapsed, clpFragments in DefineOptions.Collapse),
+      [], wbScriptFragmentsPackCounter)
+    ]).SetSummaryKey([1, 2, 3])
+      .IncludeFlag(dfSummaryMembersNoName)
+  ]).SetOptionalFrom(3)
+    .SetSummaryKeyOnValue([2, 3]);
+
+  wbVMADFragmentedPERK := wbStruct(VMAD, 'Virtual Machine Adapter', [
+    wbVMADVersion,
+    wbVMADObjectFormat,
+    wbVMADScripts,
+    wbStruct('Script Fragments', [
+      wbInteger('Extra bind data version', itS8).SetDefaultNativeValue(2),
+      wbLenString('FileName', 2),
+      wbArrayS('Fragments',
+        wbStructSK([0], 'Fragment', [
+          wbInteger('Fragment Index', itU32),
+          wbUnknown(1),
+          wbLenString('ScriptName', 2),
+          wbLenString('FragmentName', 2)
+        ]).SetSummaryKey([2, 3])
+          .SetSummaryMemberPrefixSuffix(0, '[', ']')
+          .SetSummaryMemberPrefixSuffix(2, ' ', ':')
+          .SetSummaryDelimiter('')
+          .IncludeFlag(dfArrayCanBeEmpty)
+          .IncludeFlag(dfCollapsed, clpFragments in DefineOptions.Collapse)
+          .IncludeFlag(dfSummaryMembersNoName),
+      -2)
+    ]).SetSummaryKey([1, 2])
+      .IncludeFlag(dfSummaryMembersNoName)
+  ]).SetOptionalFrom(3)
+    .SetSummaryKeyOnValue([2, 3]);
+
+  wbVMADFragmentedQUST := wbStruct(VMAD, 'Virtual Machine Adapter', [
+    wbVMADVersion,
+    wbVMADObjectFormat,
+    wbVMADScripts,
+    wbStruct('Script Fragments', [
+      wbInteger('Extra bind data version', itS8).SetDefaultNativeValue(2),
+      wbInteger('FragmentCount', itU16, nil, cpBenign).IncludeFlag(dfSkipImplicitEdit),
+      wbLenString('FileName', 2),
+      wbArrayS('Fragments',
+        wbStructSK([0, 1], 'Fragment', [
+          wbInteger('Quest Stage', itU32),
+          wbInteger('Log Entry', itU32),
+          wbUnknown(1),
+          wbLenString('ScriptName', 2),
+          wbLenString('FragmentName', 2)
+        ]).SetSummaryKey([3, 4])
+          .SetSummaryMemberPrefixSuffix(0, '[', '/')
+          .SetSummaryMemberPrefixSuffix(1, '', ']')
+          .SetSummaryMemberPrefixSuffix(3, ' ', ':')
+          .SetSummaryDelimiter('')
+          .IncludeFlag(dfSummaryMembersNoName)
+          .IncludeFlag(dfCollapsed, clpFragments in DefineOptions.Collapse)
+      ).SetCountPath('FragmentCount', True)
+    ]).SetSummaryKey([2, 3])
+      .IncludeFlag(dfSummaryMembersNoName),
+    wbArrayS('Aliases',
+      wbStructSK([0], 'Alias', [
+        wbScriptPropertyObject.IncludeFlag(dfCollapsed, clpOther in DefineOptions.Collapse),
+        wbVMADVersion,
+        wbVMADObjectFormat,
+        wbArrayS('Alias Scripts', wbScriptEntry, -2)
+      ]).SetSummaryKey([0, 3])
+        .SetSummaryMemberPrefixSuffix(3, 'Script:(', ')')
+        .SetSummaryDelimiter(' ')
+        .IncludeFlag(dfSummaryMembersNoName),
+    -2)
+  ]).SetOptionalFrom(3)
+    .SetSummaryKeyOnValue([2, 3, 4]);
+
+  wbVMADFragmentedSCEN := wbStruct(VMAD, 'Virtual Machine Adapter', [
+    wbVMADVersion,
+    wbVMADObjectFormat,
+    wbVMADScripts,
+    wbStruct('Script Fragments', [
+      wbInteger('Extra bind data version', itS8).SetDefaultNativeValue(2),
+      wbInteger('Flags', itU8,
+        wbFlags([
+        {0} 'OnBegin',
+        {1} 'OnEnd'
+        ])
+      ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+      wbLenString('FileName', 2),
+      wbArray('Fragments',  // Do NOT sort, ordered OnBegin, OnEnd
+        wbStruct('Fragment', [
+          wbUnknown(1),
+          wbLenString('ScriptName', 2),
+          wbLenString('FragmentName', 2)
+        ]).SetSummaryKey([1, 2])
+          .SetSummaryMemberPrefixSuffix(1, '', ':')
+          .SetSummaryDelimiter('')
+          .IncludeFlag(dfSummaryMembersNoName)
+          .IncludeFlag(dfCollapsed, clpFragments in DefineOptions.Collapse),
+      [], wbScriptFragmentsSceneCounter),
+      wbArrayS('Phase Fragments',
+        wbStructSK([1, 0], 'Phase Fragment', [
+          wbInteger('Phase Flag', itU8,
+            wbFlags([
+            {0} 'OnStart',
+            {1} 'OnCompletion'
+            ])
+          ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+          wbInteger('Phase Index', itU32),
+          wbUnknown(1),
+          wbLenString('ScriptName', 2),
+          wbLenString('FragmentName', 2)
+        ]).SetSummaryKey([3, 4])
+          .SetSummaryMemberPrefixSuffix(0, '', ']')
+          .SetSummaryMemberPrefixSuffix(1, '[', ':')
+          .SetSummaryMemberPrefixSuffix(3, ' ', ':')
+          .SetSummaryDelimiter('')
+          .IncludeFlag(dfSummaryMembersNoName)
+          .IncludeFlag(dfCollapsed, clpFragments in DefineOptions.Collapse),
+      -2)
+    ]).SetSummaryKey([1, 2, 3, 4])
+      .IncludeFlag(dfSummaryMembersNoName)
+  ]).SetOptionalFrom(3)
+    .SetSummaryKeyOnValue([2, 3]);
 
   wbAttackData := wbRStructSK([1], 'Attack', [
     wbStruct(ATKD, 'Attack Data', [
@@ -3270,7 +2949,7 @@ begin
         {0x20000000} 'Unknown 29',
         {0x40000000} 'Unknown 30',
         {0x80000000} 'Override Data'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbFloat('Attack Angle'),
       wbFloat('Strike Angle'),
       wbFloat('Stagger'),
@@ -3334,7 +3013,7 @@ begin
       'Torso',
       'Right Hand',
       'Left Hand'
-    ])).IncludeFlag(dfCollapsed, wbCollapseFlags);
+    ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse);
 
   wbDMDSs := wbArrayS(DMDS, 'Alternate Textures', wbAlternateTexture, -1);
 
@@ -3346,7 +3025,7 @@ begin
       wbByteArray('Unknown', 2)
     ]).SetSummaryKeyOnValue([0])
       .SetSummaryPrefixSuffixOnValue(0,'Health ','')
-      .IncludeFlag(dfCollapsed, wbCollapseDestruction),
+      .IncludeFlag(dfCollapsed, clpDestruction in DefineOptions.Collapse),
     wbRArray('Stages',
       wbRStruct('Stage', [
         wbStruct(DSTD, 'Destruction Stage Data', [
@@ -3358,7 +3037,7 @@ begin
             'Disable',
             'Destroy',
             'Ignore External Dmg'
-          ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+          ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
           wbInteger('Self Damage per Second', itS32),
           wbFormIDCk('Explosion', [EXPL, NULL]),
           wbFormIDCk('Debris', [DEBR, NULL]),
@@ -3369,17 +3048,15 @@ begin
         .SetSummaryDelimiterOnValue(', ')
         .IncludeFlagOnValue(dfSummaryExcludeNULL)
         .IncludeFlagOnValue(dfSummaryMembersNoName)
-        .IncludeFlag(dfCollapsed, wbCollapseDestruction),
+        .IncludeFlag(dfCollapsed, clpDestruction in DefineOptions.Collapse),
         wbRStructSK([0], 'Model', [
           wbString(DMDL, 'Model FileName'),
-          wbDMDT,
+          wbModelInfo(DMDT),
           wbDMDSs
-        ], [], cpNormal, False, nil)
-          .SetSummaryKey([0])
-          .IncludeFlag(dfCollapsed, wbCollapseModels),
+        ]).SetSummaryKey([0])
+          .IncludeFlag(dfCollapsed, clpModels in DefineOptions.Collapse),
         wbEmpty(DSTF, 'End Marker', cpNormal, True)
-      ], [], cpNormal, False, nil)
-        .SetSummaryKey([0, 1])
+      ]).SetSummaryKey([0, 1])
         .IncludeFlag(dfSummaryMembersNoName)
     )
   ]);
@@ -3389,8 +3066,114 @@ begin
     wbInteger('Flags', itU8, wbFlags([
       'Set Enable State to Opposite of Parent',
       'Pop In'
-    ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbUnused(3)
+  ]);
+
+  wbSubtypeNamesEnum := wbEnum([], [
+    Sig2Int('ACAC'), 'ActorCollidewithActor',
+    Sig2Int('ACYI'), 'AcceptYield',
+    Sig2Int('AGRE'), 'Agree',
+    Sig2Int('ALIL'), 'AlertIdle',
+    Sig2Int('ALKL'), 'AllyKilled',
+    Sig2Int('ALTC'), 'AlertToCombat',
+    Sig2Int('ALTN'), 'AlertToNormal',
+    Sig2Int('ASKF'), 'Ask Favor',
+    Sig2Int('ASKG'), 'Ask Gift',
+    Sig2Int('ASNC'), 'AssaultNC',
+    Sig2Int('ASSA'), 'Assault',
+    Sig2Int('ATCK'), 'Attack',
+    Sig2Int('AVTH'), 'AvoidThreat',
+    Sig2Int('BAEX'), 'BarterExit',
+    Sig2Int('BASH'), 'Bash',
+    Sig2Int('BLED'), 'BleedOut',
+    Sig2Int('BLOC'), 'Block',
+    Sig2Int('BREA'), 'EnterSprintBreath',
+    Sig2Int('BRIB'), 'Bribe',
+    Sig2Int('COLO'), 'CombatToLost',
+    Sig2Int('COTN'), 'CombatToNormal',
+    Sig2Int('CUST'), 'Custom',
+    Sig2Int('DEOB'), 'DestroyObject',
+    Sig2Int('DETH'), 'Death',
+    Sig2Int('DFDA'), 'DetectFriendDie',
+    Sig2Int('ENBZ'), 'EnterBowZoomBreath',
+    Sig2Int('EXBZ'), 'ExitBowZoomBreath',
+    Sig2Int('FAVO'), 'Favor',
+    Sig2Int('FEXT'), 'ExitFavorState',
+    Sig2Int('FIWE'), 'ShootBow',
+    Sig2Int('FLAT'), 'Flatter',
+    Sig2Int('FLEE'), 'Flee',
+    Sig2Int('FMAT'), 'FlyingMountAcceptTarget',
+    Sig2Int('FMDR'), 'FlyingMountDestinationReached',
+    Sig2Int('FMLX'), 'FlyingMountLand',
+    Sig2Int('FMNT'), 'FlyingMountNoTarget',
+    Sig2Int('FMRT'), 'FlyingMountRejectTarget',
+    Sig2Int('FMXL'), 'FlyingMountCancelLand',
+    Sig2Int('FOLL'), 'Follow',
+    Sig2Int('FRJT'), 'Reject',
+    Sig2Int('FVDL'), 'Custom?',
+    Sig2Int('GBYE'), 'Goodbye',
+    Sig2Int('GIFF'), 'Gift',
+    Sig2Int('GRNT'), 'CombatGrunt',
+    Sig2Int('GRST'), 'GroupStrategy',
+    Sig2Int('HELO'), 'Hello',
+    Sig2Int('HIT_'), 'Hit',
+    Sig2Int('IDAT'), 'SharedInfo',
+    Sig2Int('IDLE'), 'Idle',
+    Sig2Int('INTI'), 'Intimidate',
+    Sig2Int('JUMP'), 'Jump',
+    Sig2Int('KNOO'), 'KnockOverObject',
+    Sig2Int('LOIL'), 'LostIdle',
+    Sig2Int('LOOB'), 'LockedObject',
+    Sig2Int('LOTC'), 'LostToCombat',
+    Sig2Int('LOTN'), 'LostToNormal',
+    Sig2Int('LWBS'), 'LeaveWaterBreath',
+    Sig2Int('MREF'), 'MoralRefusal',
+    Sig2Int('MUNC'), 'MurderNC',
+    Sig2Int('MURD'), 'Murder',
+    Sig2Int('NOTA'), 'NormalToAlert',
+    Sig2Int('NOTC'), 'NormalToCombat',
+    Sig2Int('NOTI'), 'NoticeCorpse',
+    Sig2Int('OBCO'), 'ObserveCombat',
+    Sig2Int('OUTB'), 'OutofBreath',
+    Sig2Int('PCPS'), 'PlayerCastProjectileSpell',
+    Sig2Int('PCSH'), 'PlayerShout',
+    Sig2Int('PCSS'), 'PlayerCastSelfSpell',
+    Sig2Int('PFGT'), 'ForceGreet',
+    Sig2Int('PICC'), 'PickpocketCombat',
+    Sig2Int('PICN'), 'PickpocketNC',
+    Sig2Int('PICT'), 'PickpocketTopic',
+    Sig2Int('PIRN'), 'PlayerinIronSights',
+    Sig2Int('POAT'), 'PowerAttack',
+    Sig2Int('PURS'), 'PursueIdleTopic',
+    Sig2Int('RCEX'), 'RechargeExit',
+    Sig2Int('RECH'), 'Recharge',
+    Sig2Int('REEX'), 'RepairExit',
+    Sig2Int('REFU'), 'Refuse',
+    Sig2Int('REPA'), 'Repair',
+    Sig2Int('RUMO'), 'Rumors',
+    Sig2Int('SCEN'), 'Scene',
+    Sig2Int('SERU'), 'ServiceRefusal',
+    Sig2Int('SHOW'), 'Show',
+    Sig2Int('SHRE'), 'Show Relationships',
+    Sig2Int('STEA'), 'Steal',
+    Sig2Int('STFN'), 'StealFromNC',
+    Sig2Int('STOF'), 'StandonFurniture',
+    Sig2Int('SWMW'), 'SwingMeleeWeapon',
+    Sig2Int('TAUT'), 'Taunt',
+    Sig2Int('TITG'), 'TimeToGo',
+    Sig2Int('TRAI'), 'Training',
+    Sig2Int('TRAN'), 'TrespassAgainstNC',
+    Sig2Int('TRAV'), 'Travel',
+    Sig2Int('TRES'), 'Trespass',
+    Sig2Int('TREX'), 'TrainingExit',
+    Sig2Int('VPEL'), 'VoicePowerEndLong',
+    Sig2Int('VPES'), 'VoicePowerEndShort',
+    Sig2Int('VPSL'), 'VoicePowerStartLong',
+    Sig2Int('VPSS'), 'VoicePowerStartShort',
+    Sig2Int('WTCR'), 'WereTransformCrime',
+    Sig2Int('YIEL'), 'Yield',
+    Sig2Int('ZKEY'), 'ZKeyObject'
   ]);
 
   wbPDTO :=
@@ -3401,11 +3184,11 @@ begin
       ])),
       wbUnion('Data', wbTypeDecider, [
         wbFormIDCk('Topic', [DIAL, NULL]),
-        wbString('Subtype', 4)
+        wbInteger('Subtype', itU32, wbSubtypeNamesEnum)
       ])
     ]);
 
-  wbPDTOs := wbRArray('Topic', wbPDTO, cpNormal, False, nil);
+  wbPDTOs := wbRArray('Topic', wbPDTO);
 
   wbXLCM := wbInteger(XLCM, 'Level Modifier', itS32, wbEnum([
     'Easy',
@@ -3414,10 +3197,7 @@ begin
     'Very Hard'
   ]));
 
-  wbTVDT := wbByteArray(TVDT, 'Occlusion Data', 0, cpNormal);
-//  wbTVDT := wbArray(TVDT, 'Occlusion Data', wbInteger('Unknown', itS32)),
-
-  wbRefRecord(ACHR, 'Placed NPC',
+  RegisterRefRecordDef(ACHR, 'Placed NPC',
     wbFlags(wbFlagsList([
       9, 'Starts Dead',
      10, 'Persistent',
@@ -3461,19 +3241,17 @@ begin
 
     {--- Extra ---}
     wbInteger(XCNT, 'Count', itS32),
-    wbFloat(XRDS, 'Radius'),
+    wbFloat(XRDS, 'Radius', cpNormal, False, 1, 2),
     wbFloat(XHLP, 'Health'),
 
     wbRArrayS('Linked References', wbStructSK(XLKR, [0], 'Linked Reference', [
       wbFormIDCk('Keyword/Ref', [KYWD, PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA, NULL]),
       wbFormIDCk('Ref', [PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA])
-    ], cpNormal, False, nil, 1)),
+    ]).SetOptionalFrom(1)),
 
     {--- Activate Parents ---}
     wbRStruct('Activate Parents', [
-      wbInteger(XAPD, 'Flags', itU8, wbFlags([
-        'Parent Activate Only'
-      ], True)).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      wbInteger(XAPD, 'Parent Activate Only', itU8, wbBoolEnum),
       wbRArrayS('Activate Parent Refs',
         wbStructSK(XAPR, [0], 'Activate Parent Ref', [
           wbFormIDCk('Reference', [PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA]),
@@ -3488,7 +3266,7 @@ begin
       wbByteColors('Link End Color')
     ]),
     wbXLOD,
-    wbFormIDCk(XLCN, 'Persist Location', [LCTN]),
+    wbFormIDCk(XLCN, 'Persist Location', [LCTN]).SetToStr(wbREFRPersistLocToStr),
     wbFormIDCk(XLRL, 'Location Reference', [LCRT, LCTN, NULL], False, cpBenignIfAdded),
     wbEmpty(XIS2, 'Ignored by Sandbox'),
     wbArray(XLRT, 'Location Ref Type', wbFormIDCk('Ref', [LCRT, NULL])),
@@ -3513,10 +3291,12 @@ begin
 
     {--- 3D Data ---}
     wbXSCL,
-    wbDATAPosRot
-  ], True).SetAddInfo(wbPlacedAddInfo);
+    wbVec3PosRot(DATA).SetRequired
+  ]).SetAddInfo(wbPlacedAddInfo)
+    .SetToStr(wbACHRToStr)
+    .SetUnordered;
 
-  wbRecord(ACTI, 'Activator',
+  RegisterRecordDef(ACTI, 'Activator',
     wbFlags(wbFlagsList([
       6, 'Has Tree LOD',
       8, 'Must Update Anims',
@@ -3536,7 +3316,7 @@ begin
        .SetFlagHasDontShow(30, wbFlagNavmeshGroundDontShow), [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbDEST,
@@ -3549,11 +3329,11 @@ begin
     wbInteger(FNAM, 'Flags', itU16, wbFlags([
       'No Displacement',
       'Ignored by Sandbox'
-    ])).SetRequired.IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ])).SetRequired.IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbFormIDCk(KNAM, 'Interaction Keyword', [KYWD])
   ]);
 
-  wbRecord(TACT, 'Talking Activator',
+  RegisterRecordDef(TACT, 'Talking Activator',
     wbFlags(wbFlagsList([
       9, 'Hidden From Local Map',
      16, 'Random Anim Start',
@@ -3561,7 +3341,7 @@ begin
     ]), [17]), [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbDEST,
@@ -3575,17 +3355,18 @@ begin
   wbICON := wbRStruct('Icon', [
     wbString(ICON, 'Large Icon FileName', 0, cpNormal, True),
     wbString(MICO, 'Small Icon FileName')
-  ], [], cpNormal, False, nil, True);
+  ]).SetUnordered;
 
   wbICONReq := wbRStruct('Icon', [
     wbString(ICON, 'Large Icon FileName', 0, cpNormal, True),
     wbString(MICO, 'Small Icon FileName')
-  ], [], cpNormal, True, nil, True);
+  ]).SetUnordered
+    .SetRequired;
 
   wbICO2 := wbRStruct('Icon 2 (female)', [
     wbString(ICO2, 'Large Icon FileName', 0, cpNormal, True),
     wbString(MIC2, 'Small Icon FileName')
-  ], [], cpNormal, False, nil, True);
+  ]).SetUnordered;
 
   wbVatsValueFunctionEnum :=
     wbEnum([
@@ -3612,7 +3393,7 @@ begin
       {20} 'Casting Type Is'
     ]);
 
-  wbActorValueEnum :=
+  gdActorValueEnum :=
     wbEnum([
     {00} 'Aggression',
     {01} 'Confidence',
@@ -3783,33 +3564,26 @@ begin
       ]);
 
   wbSkillEnum :=
-    wbEnum([
-      'Unknown 1',
-      'Unknown 2',
-      'Unknown 3',
-      'Unknown 4',
-      'Unknown 5',
-      'Unknown 6',
-      'One Handed',
-      'Two Handed',
-      'Archery',
-      'Block',
-      'Smithing',
-      'Heavy Armor',
-      'Light Armor',
-      'Pickpocket',
-      'Lockpicking',
-      'Sneak',
-      'Alchemy',
-      'Speech',
-      'Alteration',
-      'Conjuration',
-      'Destruction',
-      'Illusion',
-      'Restoration',
-      'Enchanting'
-    ], [
-    -1, 'None'
+    wbEnum([], [
+    -1, 'None',
+    6,  'One Handed',
+    7,  'Two Handed',
+    8,  'Archery',
+    9,  'Block',
+    10, 'Smithing',
+    11, 'Heavy Armor',
+    12, 'Light Armor',
+    13, 'Pickpocket',
+    14, 'Lockpicking',
+    15, 'Sneak',
+    16, 'Alchemy',
+    17, 'Speech',
+    18, 'Alteration',
+    19, 'Conjuration',
+    20, 'Destruction',
+    21, 'Illusion',
+    22, 'Restoration',
+    23, 'Enchanting'
     ]);
 
   wbCastEnum := wbEnum([
@@ -3833,7 +3607,7 @@ begin
     'Instant'
   ]);
 
-  wbActorValue := wbInteger('Actor Value', itS32, wbActorValueEnum);
+  wbActorValue := wbInteger('Actor Value', itS32, ActorValueEnum);
 
   wbETYP := wbFormIDCk(ETYP, 'Equipment Type', [EQUP, NULL]);
   wbETYPReq := wbFormIDCk(ETYP, 'Equipment Type', [EQUP, NULL], False, cpNormal, True);
@@ -4065,7 +3839,8 @@ begin
       wbFloat('Magnitude', cpNormal, True),
       wbInteger('Area', itU32),
       wbInteger('Duration', itU32)
-    ], cpNormal, True, nil, -1, wbEFITAfterLoad);
+    ]).SetAfterLoad(wbEFITAfterLoad)
+      .SetRequired;
 
   var wbConditionVATSValueParameters : array of IwbValueDef := [
     {0}  wbFormIDCkNoReach('Weapon', [WEAP]),
@@ -4073,7 +3848,7 @@ begin
     {2}  wbFormIDCkNoReach('Target', [NPC_]),
     {3}  wbFormIDCkNoReach('Target List', [FLST], [NPC_]),
     {4}  wbByteArray('Unknown', 4, cpIgnore),
-    {5}  wbInteger('Target Part', itS32, wbActorValueEnum),
+    {5}  wbInteger('Target Part', itS32, ActorValueEnum),
     {6}  wbInteger('VATS Action', itU32,
            wbEnum([
              {0}  'Unarmed Attack',
@@ -4136,13 +3911,13 @@ begin
     {3} wbInteger('Integer', itS32),
     {4} wbInteger('String', itU32, wbConditionStringToStr, wbConditionStringToInt, cpIgnore),
     {5} wbInteger('Alias', itS32, wbConditionAliasToStr, wbAliasToInt),
-    {6} wbInteger('Event', itU32, wbConditionEventToStr, wbConditionEventToInt),
+    {6} wbInteger('Event', itU32, ConditionEventToStr, ConditionEventToInt),
     {7} wbInteger('Packdata ID', itU32),
     {8} wbInteger('Quest Stage', itS32, wbConditionQuestStageToStr, wbQuestStageToInt),
     {9} wbUnion('VATS Value Param', wbConditionVATSValueParamDecider, wbConditionVATSValueParameters),
 
     //Enums
-    {10} wbInteger('Actor Value', itS32, wbActorValueEnum),
+    {10} wbInteger('Actor Value', itS32, ActorValueEnum),
     {11} wbInteger('Alignment', itU32, wbAlignmentEnum),
     {12} wbInteger('Axis', itU32, wbAxisEnum),
     {13} wbInteger('Casting Source', itU32, wbCastingSourceEnum),
@@ -4180,7 +3955,7 @@ begin
     {43} wbFormIDCkNoReach('Location', [LCTN]),
     {44} wbFormIDCkNoReach('Location Ref Type', [LCRT]),
     {45} wbFormIDCkNoReach('Magic Effect', [MGEF]),
-    {46} wbFormIDCkNoReach('Owner', [FACT,NPC_]),
+    {46} wbFormIDCkNoReach('Owner', [FACT,NPC_,NULL]).SetToStr(wbConditionOwnerToStr),
     {47} wbFormIDCkNoReach('Package', [PACK]),
     {48} wbFormIDCkNoReach('Perk', [PERK]),
     {49} wbFormIDCkNoReach('Quest', [QUST]),
@@ -4197,7 +3972,7 @@ begin
   wbConditions :=
     wbRArray('Conditions',
       wbRStructSK([0,1,2], 'Condition', [
-      {0} wbStructSK(CTDA, [3,5,6], '', [
+      {0} wbStructSK(CTDA, [3,5,6,7], '', [
           {0} wbInteger('Type', itU8, wbConditionTypeToStr, wbConditionTypeToInt).SetAfterSet(wbConditionTypeAfterSet),
           {1} wbUnused(3),
           {2} wbUnion('Comparison Value', wbConditionCompValueDecider, [
@@ -4250,7 +4025,7 @@ begin
       {1} wbString(CIS1, 'Parameter #1'),
       {2} wbString(CIS2, 'Parameter #2')
       ]).SetToStr(wbConditionToStr)
-        .IncludeFlag(dfCollapsed, wbCollapseConditions)
+        .IncludeFlag(dfCollapsed, clpConditions in DefineOptions.Collapse)
     ).SetCountPath(CITC);
 
   wbYNAM := wbFormIDCk(YNAM, 'Sound - Pick Up', [SNDR]);
@@ -4268,12 +4043,13 @@ begin
   wbEffectsReq :=
     wbRArray('Effects', wbEffect, cpNormal, True);
 
-  wbRecord(ALCH, 'Ingestible',
+  RegisterRecordDef(ALCH, 'Ingestible',
     wbFlags(wbFlagsList([
       29, 'Medicine'
     ])), [
     wbEDID,
-    wbOBND(True),
+    wbVMAD,
+    wbObjectBounds,
     wbFULL,
     wbKeywords,
     wbDESC,
@@ -4305,7 +4081,7 @@ begin
         {0x00008000} 'Unknown 16',
         {0x00010000} 'Medicine',
         {0x00020000} 'Poison'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbFormID('Addiction'),
       wbFloat('Addiction Chance'),
       wbFormIDCk('Sound - Consume', [SNDR,NULL])
@@ -4313,12 +4089,13 @@ begin
     wbEffectsReq
   ]);
 
-  wbRecord(AMMO, 'Ammunition',
+  RegisterRecordDef(AMMO, 'Ammunition',
     wbFlags(wbFlagsList([
       2, 'Non-Playable'
     ])), [
     wbEDID,
-    wbOBND(True),
+    wbVMAD,
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbICON,
@@ -4334,26 +4111,26 @@ begin
           'Ignores Normal Weapon Resistance',
           'Non-Playable',
           'Non-Bolt'
-        ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
         wbFloat('Damage'),
         wbInteger('Value', itU32),
         wbFloat('Weight')
-      ], cpNormal, True, nil, 4),
+      ]).SetOptionalFrom(4),
       wbStruct(DATA, 'Data', [
         wbFormIDCk('Projectile', [PROJ, NULL]),
         wbInteger('Flags', itU32, wbFlags([
           'Ignores Normal Weapon Resistance',
           'Non-Playable',
           'Non-Bolt'
-        ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
         wbFloat('Damage'),
         wbInteger('Value', itU32)
-      ], cpNormal, True)
-    ),
+      ])
+    ).SetRequired,
     wbString(ONAM, 'Short Name')
   ]);
 
-  wbRecord(ANIO, 'Animated Object',
+  RegisterRecordDef(ANIO, 'Animated Object',
     wbFlags(wbFlagsList([
       9, 'Unknown 9' // always present in updated records, not in Skyrim.esm
     ]), [9]), [
@@ -4362,7 +4139,7 @@ begin
     wbString(BNAM, 'Unload Event')
   ]).SetSummaryKey([1]);
 
-  wbRecord(ARMO, 'Armor',
+  RegisterRecordDef(ARMO, 'Armor',
     wbFlags(wbFlagsList([
       2, 'Non-Playable',
       6, 'Shield',
@@ -4371,7 +4148,7 @@ begin
     ])), [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbEnchantment,
     wbRStruct('Male', [
@@ -4404,9 +4181,9 @@ begin
     ], cpNormal, True),
     wbInteger(DNAM, 'Armor Rating', itS32, wbDiv(100), cpNormal, True),
     wbFormIDCk(TNAM, 'Template Armor', [ARMO])
-  ], False, nil, cpNormal, False, wbARMOAfterLoad);
+  ]).SetAfterLoad(wbARMOAfterLoad);
 
-  wbRecord(ARMA, 'Armor Addon', [
+  RegisterRecordDef(ARMA, 'Armor Addon', [
     wbEDID,
     wbBODTBOD2,
     wbFormIDCk(RNAM, 'Race', [RACE]),
@@ -4417,11 +4194,11 @@ begin
       wbInteger('Weight slider - Male', itU8, wbFlags([
         {0x01} 'Unknown 0',
         {0x02} 'Enabled'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbInteger('Weight slider - Female', itU8, wbFlags([
         {0x01} 'Unknown 0',
         {0x02} 'Enabled'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbByteArray('Unknown', 2),
       wbInteger('Detection Sound Value', itU8),
       wbByteArray('Unknown', 1),
@@ -4444,12 +4221,13 @@ begin
     wbRArrayS('Additional Races', wbFormIDCK(MODL, 'Race', [RACE, NULL])),
     wbFormIDCk(SNDD, 'Footstep Sound', [FSTS, NULL]),
     wbFormIDCk(ONAM, 'Art Object', [ARTO])
-  ], False, nil, cpNormal, False, wbARMAAfterLoad).SetSummaryKey([4]);
+  ]).SetSummaryKey([4])
+    .SetAfterLoad(wbARMAAfterLoad);
 
-  wbRecord(BOOK, 'Book', [
+  RegisterRecordDef(BOOK, 'Book', [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbICON,
@@ -4459,27 +4237,28 @@ begin
     wbZNAM,
     wbKeywords,
     wbStruct(DATA, 'Data', [
-      wbInteger('Flags', itU8, wbFlags([
-       {0x01} 'Teaches Skill',
-       {0x02} 'Can''t be Taken',
-       {0x04} 'Teaches Spell',
-       {0x08} 'Unknown 4',
-       {0x10} 'Unknown 5',
-       {0x20} 'Unknown 6',
-       {0x40} 'Unknown 7',
-       {0x80} 'Unknown 8'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
-      wbInteger('Type', itU8, wbEnum([], [
-        0, 'Book/Tome', 255, 'Note/Scroll'
-      ])),
+      wbInteger('Flags', itU8,
+        wbFlags([
+        {0} 'Teaches Skill',
+        {1} 'Can''t be Taken',
+        {2} 'Teaches Spell'
+        ])
+      ).SetAfterSet(wbBOOKDataFlagsAfterSet)
+       .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+      wbInteger('Type', itU8,
+        wbEnum([], [
+        0, 'Book/Tome',
+        255, 'Note/Scroll'
+        ])),
       wbUnused(2),
       wbUnion('Teaches', wbBOOKTeachesDecider, [
-        wbInteger('Skill', itS32, wbSkillEnum),
+        wbUnused(4),
+        wbInteger('Skill', itS32, wbSkillEnum).SetDefaultNativeValue(-1),
         wbFormIDCk('Spell', [SPEL])
-      ]),
+      ]).SetDontShow(wbBookTeachesDontSHow),
       wbInteger('Value', itU32),
       wbFloat('Weight')
-    ], cpNormal, True),
+    ]).SetRequired,
     wbFormIDCk(INAM, 'Inventory Art', [STAT]),
     wbLString(CNAM, 'Description', 0, cpTranslate)
   ]);
@@ -4504,7 +4283,7 @@ begin
   ReferenceRecord(PHZD, 'Placed Hazard');
   ReferenceRecord(PMIS, 'Placed Missile');
 
-  wbRecord(CELL, 'Cell',
+  RegisterRecordDef(CELL, 'Cell',
     wbFlags(wbFlagsList([
       10, 'Persistent',
       14, 'Partial Form',
@@ -4525,7 +4304,7 @@ begin
       wbFlags(wbSparseFlags([
       0, 'Is Interior Cell',
       1, 'Has Water',
-      2, 'Can Travel From Here',
+      2, 'Can''t Travel From Here',
       3, 'No LOD Water',
       5, 'Public Area',
       6, 'Hand Changed',
@@ -4535,7 +4314,7 @@ begin
       ], False, 16))
     ).SetAfterSet(wbCELLDATAAfterSet)
      .SetRequired
-     .IncludeFlag(dfCollapsed, wbCollapseFlags),
+     .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbCellGrid,
     wbStruct(XCLL, 'Lighting', [
       wbByteColors('Ambient Color'),
@@ -4565,21 +4344,25 @@ begin
         {0x00000100}'Fog Power',
         {0x00000200}'Fog Max',
         {0x00000400}'Light Fade Distances'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
-    ], cpNormal, False, nil, 11)
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
+    ]).SetOptionalFrom(11)
       .SetDontShow(wbCellExteriorDontShow)
       .SetIsRemovable(wbCellLightingIsRemovable),
 
-    wbTVDT,
+    wbByteArray(TVDT, 'Terrain Visibility Data'),
     wbMHDTCELL,
     wbFormIDCk(LTMP, 'Lighting Template', [LGTM, NULL], False, cpNormal, True),
     wbByteArray(LNAM, 'Unknown', 0, cpIgnore), // leftover flags, they are now in XCLC
 
     {>>> XCLW sometimes has $FF7FFFFF and causes invalid floation point <<<}
-    wbFloat(XCLW, 'Water Height', cpNormal, False, 1, -1, nil, nil, 0, wbCELLXCLWGetConflictPriority),
+    wbFloat(XCLW, 'Water Height').SetGetCP(wbCELLXCLWGetConflictPriority),
     //wbByteArray(XCLW, 'Water Height', 4),
     wbString(XNAM, 'Water Noise Texture'),
-    wbArrayS(XCLR, 'Regions', wbFormIDCk('Region', [REGN])),
+    wbArrayS(XCLR, 'Regions',
+      wbFormIDCk('Region', [REGN])
+        .SetFormIDFilter(wbCELLRegionFilter)
+        .SetToStr(wbCELLRegionToStr)
+    ).SetDontShow(wbCellInteriorDontShow),
     wbFormIDCk(XLCN, 'Location', [LCTN]),
     wbRStruct('Water Current Velocities', [
       wbRUnion('', [
@@ -4593,7 +4376,7 @@ begin
         ])
       ).SetCountPathOnValue('[0]', False)
        .SetRequired
-       .IncludeFlag(dfCollapsed, wbCollapseOther)
+       .IncludeFlag(dfCollapsed, clpOther in DefineOptions.Collapse)
        .IncludeFlag(dfNotAlignable)
     ]),
     wbFormIDCk(XCWT, 'Water', [WATR]),
@@ -4605,12 +4388,12 @@ begin
     wbFormIDCk(XEZN, 'Encounter Zone', [ECZN]),
     wbFormIDCk(XCMO, 'Music Type', [MUSC]),
     wbFormIDCk(XCIM, 'Image Space', [IMGS])
-  ], True)
-    .SetAddInfo(wbCellAddInfo)
+  ]).SetAddInfo(wbCellAddInfo)
+    .SetUnordered
     .SetAfterLoad(wbCELLAfterLoad);
 
 
-  wbRecord(CLAS, 'Class', [
+  RegisterRecordDef(CLAS, 'Class', [
     wbEDID,
     wbFULLReq,
     wbDESCReq,
@@ -4669,7 +4452,7 @@ begin
     ], cpNormal, True)
   ]);
 
-  wbRecord(CLMT, 'Climate', [
+  RegisterRecordDef(CLMT, 'Climate', [
     wbEDID,
     wbArrayS(WLST, 'Weather Types', wbStructSK([0], 'Weather Type', [
       wbFormIDCk('Weather', [WTHR, NULL]),
@@ -4682,7 +4465,7 @@ begin
     wbClimateTiming(wbClmtTime, wbClmtMoonsPhaseLength)
   ]);
 
-  wbRecord(SPGD, 'Shader Particle Geometry', [
+  RegisterRecordDef(SPGD, 'Shader Particle Geometry', [
     wbEDID,
     wbStruct(DATA, 'Data', [
       wbFloat('Gravity Velocity'),
@@ -4700,11 +4483,12 @@ begin
       ])),
       wbInteger('Box Size', itU32),
       wbFloat('Particle Density')
-    ], cpNormal, True, nil, 10),
+    ]).SetOptionalFrom(10)
+      .SetRequired,
     wbString(ICON, 'Particle Texture')
   ]);
 
-  wbRecord(RFCT, 'Visual Effect', [
+  RegisterRecordDef(RFCT, 'Visual Effect', [
     wbEDID,
     wbStruct(DATA, 'Effect Data', [
       wbFormIDCK('Effect Art', [ARTO, NULL]),
@@ -4713,11 +4497,11 @@ begin
         {0x00000001}'Rotate to Face Target',
         {0x00000002}'Attach to Camera',
         {0x00000004}'Inherit Rotation'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
     ], cpNormal, True)
   ]);
 
-  wbRecord(CONT, 'Container',
+  RegisterRecordDef(CONT, 'Container',
     wbFlags(wbFlagsList([
       15, 'Has Distant LOD',
       16, 'Random Anim Start',
@@ -4730,7 +4514,7 @@ begin
        .SetFlagHasDontShow(30, wbFlagNavmeshGroundDontShow), [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbCOCT,
@@ -4741,7 +4525,7 @@ begin
         {0x01} 'Allow Sounds When Animation',
         {0x02} 'Respawns',
         {0x04} 'Show Owner'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbFloat('Weight')
     ], cpNormal, True),
     wbFormIDCk(SNAM, 'Sound - Open', [SNDR]),
@@ -4818,7 +4602,7 @@ begin
     255, ' DEFAULT'
   ]);
 
-  wbRecord(CSTY, 'Combat Style',
+  RegisterRecordDef(CSTY, 'Combat Style',
     wbFlags(wbFlagsList([
       19, 'Allow Dual Wielding'
     ])), [
@@ -4835,7 +4619,8 @@ begin
       wbFloat('Equipment Score Mult - Unarmed'),
       wbFloat('Equipment Score Mult - Staff'),
       wbFloat('Avoid Threat Chance')
-    ], cpNormal, True, nil, 0),
+    ]).SetOptionalFrom(0)
+      .SetRequired,
     wbUnknown(CSMD, cpIgnore),
     wbStruct(CSME, 'Melee', [
       wbFloat('Attack Staggered Mult'),
@@ -4846,13 +4631,15 @@ begin
       wbFloat('Bash Attack Mult'),
       wbFloat('Bash Power Attack Mult'),
       wbFloat('Special Attack Mult')
-    ], cpNormal, True, nil, 0),
+    ]).SetOptionalFrom(0)
+      .SetRequired,
     wbStruct(CSCR, 'Close Range', [
       wbFloat('Circle Mult'),
       wbFloat('Fallback Mult'),
       wbFloat('Flank Distance'),
       wbFloat('Stalk Time')
-    ], cpNormal, True, nil, 0),
+    ]).SetOptionalFrom(0)
+      .SetRequired,
     wbStruct(CSLR, 'Long Range', [
       wbFloat('Strafe Mult')
     ]).SetRequired,
@@ -4865,138 +4652,31 @@ begin
       wbFloat('Perch Attack Chance'),
       wbFloat('Perch Attack Time'),
       wbFloat('Flying Attack Chance')
-    ], cpNormal, True, nil, 0),
+    ]).SetOptionalFrom(0)
+      .SetRequired,
     wbInteger(DATA, 'Flags', itU32, wbFlags([
       {0x01} 'Dueling',
       {0x02} 'Flanking',
       {0x04} 'Allow Dual Wielding'
-    ])).SetRequired.IncludeFlag(dfCollapsed, wbCollapseFlags)
+    ])).SetRequired.IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
   ]);
 
-  wbSubtypeNamesEnum := wbEnum([], [
-    Sig2Int('ACAC'), 'ActorCollidewithActor',
-    Sig2Int('ACYI'), 'AcceptYield',
-    Sig2Int('AGRE'), 'Agree',
-    Sig2Int('ALIL'), 'AlertIdle',
-    Sig2Int('ALKL'), 'AllyKilled',
-    Sig2Int('ALTC'), 'AlertToCombat',
-    Sig2Int('ALTN'), 'AlertToNormal',
-    Sig2Int('ASKF'), 'Ask Favor',
-    Sig2Int('ASKG'), 'Ask Gift',
-    Sig2Int('ASNC'), 'AssaultNC',
-    Sig2Int('ASSA'), 'Assault',
-    Sig2Int('ATCK'), 'Attack',
-    Sig2Int('AVTH'), 'AvoidThreat',
-    Sig2Int('BAEX'), 'BarterExit',
-    Sig2Int('BASH'), 'Bash',
-    Sig2Int('BLED'), 'BleedOut',
-    Sig2Int('BLOC'), 'Block',
-    Sig2Int('BREA'), 'EnterSprintBreath',
-    Sig2Int('BRIB'), 'Bribe',
-    Sig2Int('COLO'), 'CombatToLost',
-    Sig2Int('COTN'), 'CombatToNormal',
-    Sig2Int('CUST'), 'Custom',
-    Sig2Int('DEOB'), 'DestroyObject',
-    Sig2Int('DETH'), 'Death',
-    Sig2Int('DFDA'), 'DetectFriendDie',
-    Sig2Int('ENBZ'), 'EnterBowZoomBreath',
-    Sig2Int('EXBZ'), 'ExitBowZoomBreath',
-    Sig2Int('FAVO'), 'Favor',
-    Sig2Int('FEXT'), 'ExitFavorState',
-    Sig2Int('FIWE'), 'ShootBow',
-    Sig2Int('FLAT'), 'Flatter',
-    Sig2Int('FLEE'), 'Flee',
-    Sig2Int('FMAT'), 'FlyingMountAcceptTarget',
-    Sig2Int('FMDR'), 'FlyingMountDestinationReached',
-    Sig2Int('FMLX'), 'FlyingMountLand',
-    Sig2Int('FMNT'), 'FlyingMountNoTarget',
-    Sig2Int('FMRT'), 'FlyingMountRejectTarget',
-    Sig2Int('FMXL'), 'FlyingMountCancelLand',
-    Sig2Int('FOLL'), 'Follow',
-    Sig2Int('FRJT'), 'Reject',
-    Sig2Int('FVDL'), 'Custom?',
-    Sig2Int('GBYE'), 'Goodbye',
-    Sig2Int('GIFF'), 'Gift',
-    Sig2Int('GRNT'), 'CombatGrunt',
-    Sig2Int('GRST'), 'GroupStrategy',
-    Sig2Int('HELO'), 'Hello',
-    Sig2Int('HIT_'), 'Hit',
-    Sig2Int('IDAT'), 'SharedInfo',
-    Sig2Int('IDLE'), 'Idle',
-    Sig2Int('INTI'), 'Intimidate',
-    Sig2Int('JUMP'), 'Jump',
-    Sig2Int('KNOO'), 'KnockOverObject',
-    Sig2Int('LOIL'), 'LostIdle',
-    Sig2Int('LOOB'), 'LockedObject',
-    Sig2Int('LOTC'), 'LostToCombat',
-    Sig2Int('LOTN'), 'LostToNormal',
-    Sig2Int('LWBS'), 'LeaveWaterBreath',
-    Sig2Int('MREF'), 'MoralRefusal',
-    Sig2Int('MUNC'), 'MurderNC',
-    Sig2Int('MURD'), 'Murder',
-    Sig2Int('NOTA'), 'NormalToAlert',
-    Sig2Int('NOTC'), 'NormalToCombat',
-    Sig2Int('NOTI'), 'NoticeCorpse',
-    Sig2Int('OBCO'), 'ObserveCombat',
-    Sig2Int('OUTB'), 'OutofBreath',
-    Sig2Int('PCPS'), 'PlayerCastProjectileSpell',
-    Sig2Int('PCSH'), 'PlayerShout',
-    Sig2Int('PCSS'), 'PlayerCastSelfSpell',
-    Sig2Int('PFGT'), 'ForceGreet',
-    Sig2Int('PICC'), 'PickpocketCombat',
-    Sig2Int('PICN'), 'PickpocketNC',
-    Sig2Int('PICT'), 'PickpocketTopic',
-    Sig2Int('PIRN'), 'PlayerinIronSights',
-    Sig2Int('POAT'), 'PowerAttack',
-    Sig2Int('PURS'), 'PursueIdleTopic',
-    Sig2Int('RCEX'), 'RechargeExit',
-    Sig2Int('RECH'), 'Recharge',
-    Sig2Int('REEX'), 'RepairExit',
-    Sig2Int('REFU'), 'Refuse',
-    Sig2Int('REPA'), 'Repair',
-    Sig2Int('RUMO'), 'Rumors',
-    Sig2Int('SCEN'), 'Scene',
-    Sig2Int('SERU'), 'ServiceRefusal',
-    Sig2Int('SHOW'), 'Show',
-    Sig2Int('SHRE'), 'Show Relationships',
-    Sig2Int('STEA'), 'Steal',
-    Sig2Int('STFN'), 'StealFromNC',
-    Sig2Int('STOF'), 'StandonFurniture',
-    Sig2Int('SWMW'), 'SwingMeleeWeapon',
-    Sig2Int('TAUT'), 'Taunt',
-    Sig2Int('TITG'), 'TimeToGo',
-    Sig2Int('TRAI'), 'Training',
-    Sig2Int('TRAN'), 'TrespassAgainstNC',
-    Sig2Int('TRAV'), 'Travel',
-    Sig2Int('TRES'), 'Trespass',
-    Sig2Int('TREX'), 'TrainingExit',
-    Sig2Int('VPEL'), 'VoicePowerEndLong',
-    Sig2Int('VPES'), 'VoicePowerEndShort',
-    Sig2Int('VPSL'), 'VoicePowerStartLong',
-    Sig2Int('VPSS'), 'VoicePowerStartShort',
-    Sig2Int('WTCR'), 'WereTransformCrime',
-    Sig2Int('YIEL'), 'Yield',
-    Sig2Int('ZKEY'), 'ZKeyObject'
-  ]);
-
-  wbRecord(DIAL, 'Dialog Topic',
+  RegisterRecordDef(DIAL, 'Dialog Topic',
     wbFlags(wbFlagsList([
       14, 'Partial Form'
     ]), [14]), [
     wbEDID,
-    wbFULL
-      .SetAfterLoad(wbDialogueTextAfterLoad)
-      .SetAfterSet(wbDialogueTextAfterSet),
+    wbFULL.IncludeFlagOnValue(dfStringTrim),
     wbFloat(PNAM, 'Priority')
       .SetDefaultNativeValue(50)
       .SetRequired,
-    wbFormIDCk(BNAM, 'Branch', [DLBR,NULL]),
-    wbFormIDCkNoReach(QNAM, 'Quest', [QUST,NULL]),
+    wbFormIDCk(BNAM, 'Branch', [DLBR]),
+    wbFormIDCkNoReach(QNAM, 'Quest', [QUST]).SetToStr(wbDIALQuestToStr),
     wbStruct(DATA, 'Data', [
       wbInteger('Do All Before Repeating', itU8, wbBoolEnum),
       wbInteger('Category', itU8,
         wbEnum([
-        {0} 'Topic',
+        {0} 'Player',
         {1} 'Favor',
         {2} 'Scene',
         {3} 'Combat',
@@ -5133,7 +4813,7 @@ begin
     wbINOA
   ]).SetAddInfo(wbDIALAddInfo);
 
-  wbRecord(DOOR, 'Door',
+  RegisterRecordDef(DOOR, 'Door',
     wbFlags(wbFlagsList([
       15, 'Has Distant LOD',
       16, 'Random Anim Start',
@@ -5142,7 +4822,7 @@ begin
     ])), [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbDEST,
@@ -5156,11 +4836,11 @@ begin
       'Minimal Use',
       'Sliding',
       'Do Not Open in Combat Search'
-    ]), cpNormal, True).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ]), cpNormal, True).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbRArrayS('Random teleport destinations', wbFormIDCk(TNAM, 'Destination', [CELL, WRLD]))
   ]);
 
-  wbRecord(EFSH, 'Effect Shader', [
+  RegisterRecordDef(EFSH, 'Effect Shader', [
     wbEDID,
     wbString(ICON, 'Fill Texture'),
     wbString(ICO2, 'Particle Shader Texture'),
@@ -5178,7 +4858,7 @@ begin
         {5} 'Affect Skin Only',
         {6} 'Ignore Alpha',
         {7} 'Project UVs'
-        ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbUnused(3),
       wbInteger('Membrane Shader - Source Blend Mode', itU32, wbBlendModeEnum),
       wbInteger('Membrane Shader - Blend Operation', itU32, wbBlendOpEnum),
@@ -5187,7 +4867,7 @@ begin
       wbFloat('Fill/Texture Effect - Alpha Fade In Time'),
       wbFloat('Fill/Texture Effect - Full Alpha Time'),
       wbFloat('Fill/Texture Effect - Alpha Fade Out Time'),
-      wbFloat('Fill/Texture Effect - Presistent Alpha Ratio'),
+      wbFloat('Fill/Texture Effect - Persistent Alpha Ratio'),
       wbFloat('Fill/Texture Effect - Alpha Pulse Amplitude'),
       wbFloat('Fill/Texture Effect - Alpha Pulse Frequency'),
       wbFloat('Fill/Texture Effect - Texture Animation Speed (U)'),
@@ -5306,17 +4986,18 @@ begin
         {22} 'Unknown 22',
         {23} 'Unknown 23',
         {24} 'Use Blood Geometry'
-        ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbFloat('Fill/Texture Effect - Texture Scale (U)'),
       wbFloat('Fill/Texture Effect - Texture Scale (V)'),
       wbInteger('Scene Graph Emit Depth Limit (unused)', itU16),
       wbUnused(2)
-    ], cpNormal, True, nil, 0)
-  ], False, nil, cpNormal, False, nil {wbEFSHAfterLoad});
+    ]).SetOptionalFrom(0)
+      .SetRequired
+  ]);
 
-  wbRecord(ENCH, 'Enchantment', [
+  RegisterRecordDef(ENCH, 'Enchantment', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbStruct(ENIT, 'Effect Data', [
       wbInteger('Enchantment Cost', itS32),
@@ -5325,7 +5006,7 @@ begin
         'No Auto-Calc',
         '',
         'Extend Duration On Recast'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbInteger('Cast Type', itU32, wbCastEnum),
       wbInteger('Enchantment Amount', itS32),
       wbInteger('Delivery', itU32, wbDeliveryEnum),
@@ -5337,11 +5018,12 @@ begin
       wbFloat('Charge Time'),
       wbFormIDCk('Base Enchantment', [ENCH, NULL]),
       wbFormIDCk('Worn Restrictions', [FLST, NULL])
-    ], cpNormal, True, nil, 8),
+    ]).SetOptionalFrom(8)
+      .SetRequired,
     wbEffectsReq
   ]);
 
-  wbRecord(EYES, 'Eyes',
+  RegisterRecordDef(EYES, 'Eyes',
     wbFlags(wbFlagsList([
       2, 'Non-Playable'
     ])), [
@@ -5357,7 +5039,7 @@ begin
       {0x20}'Unknown 6',
       {0x40}'Unknown 7',
       {0x80}'Unknown 8'
-    ]), cpNormal, True).IncludeFlag(dfCollapsed, wbCollapseFlags)
+    ]), cpNormal, True).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
   ]);
 
   wbFactionRank :=
@@ -5372,48 +5054,29 @@ begin
       .SetSummaryMemberPrefixSuffix(2, 'F-Title: "', '"')
       .SetSummaryDelimiter(', ')
       .IncludeFlag(dfSummaryNoSortKey)
-      .IncludeFlag(dfCollapsed, wbCollapseFactionRanks);
+      .IncludeFlag(dfCollapsed, clpFactionRanks in DefineOptions.Collapse);
 
-  wbRecord(FACT, 'Faction', [
+  RegisterRecordDef(FACT, 'Faction', [
     wbEDID,
     wbFULL,
     wbFactionRelations,
-    wbStruct(DATA, 'Flags', [
-      wbInteger('Flags', itU32, wbFlags([
-        {0x00000001}'Hidden From NPC',
-        {0x00000002}'Special Combat',
-        {0x00000004}'Unknown 3',
-        {0x00000008}'Unknown 4',
-        {0x00000010}'Unknown 5',
-        {0x00000020}'Unknown 6',
-        {0x00000040}'Track Crime',
-        {0x00000080}'Ignore Crimes: Murder',
-        {0x00000100}'Ignore Crimes: Assault',
-        {0x00000200}'Ignore Crimes: Stealing',
-        {0x00000400}'Ignore Crimes: Trespass',
-        {0x00000800}'Do Not Report Crimes Against Members',
-        {0x00001000}'Crime Gold - Use Defaults',
-        {0x00002000}'Ignore Crimes: Pickpocket',
-        {0x00004000}'Vendor',
-        {0x00008000}'Can Be Owner',
-        {0x00010000}'Ignore Crimes: Werewolf',
-        {0x00020000}'Unknown 18',
-        {0x00040000}'Unknown 19',
-        {0x00080000}'Unknown 20',
-        {0x00100000}'Unknown 21',
-        {0x00200000}'Unknown 22',
-        {0x00400000}'Unknown 23',
-        {0x00800000}'Unknown 24',
-        {0x01000000}'Unknown 25',
-        {0x02000000}'Unknown 26',
-        {0x04000000}'Unknown 27',
-        {0x08000000}'Unknown 28',
-        {0x10000000}'Unknown 29',
-        {0x20000000}'Unknown 30',
-        {0x40000000}'Unknown 31',
-        {0x80000000}'Unknown 32'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
-    ], cpNormal, True, nil, 1),
+    wbInteger(DATA, 'Flags', itU32,
+      wbFlags(wbSparseFlags([
+      0,  'Hidden From NPC',
+      1,  'Special Combat',
+      6,  'Track Crime',
+      7,  'Ignore Crimes: Murder',
+      8,  'Ignore Crimes: Assault',
+      9,  'Ignore Crimes: Stealing',
+      10, 'Ignore Crimes: Trespass',
+      11, 'Do Not Report Crimes Against Members',
+      12, 'Crime Gold - Use Defaults',
+      13, 'Ignore Crimes: Pickpocket',
+      14, 'Vendor',
+      15, 'Can Be Owner',
+      16, 'Ignore Crimes: Werewolf'
+      ], False, 17))
+    ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbFormIDCk(JAIL, 'Exterior Jail Marker', [REFR]),
     wbFormIDCk(WAIT, 'Follower Wait Marker', [REFR]),
     wbFormIDCk(STOL, 'Stolen Goods Container', [REFR]),
@@ -5431,7 +5094,8 @@ begin
       {02} wbFloat('Steal Multiplier'),
       {02} wbInteger('Escape', itU16),
       {02} wbInteger('Werewolf', itU16)
-      ], cpNormal, False, nil, 7).SetRequired,
+      ]).SetOptionalFrom(7)
+        .SetRequired,
     wbRArrayS('Ranks', wbFactionRank),
     wbFormIDCk(VEND, 'Vendor Buy/Sell List', [FLST]),
     wbFormIDCk(VENC, 'Merchant Container', [REFR]),
@@ -5441,7 +5105,7 @@ begin
       {02} wbInteger('Radius', itU16),
       {02} wbByteArray('Unknown 1', 2),
            wbInteger('Only Buys Stolen Items', itU8, wbBoolEnum),
-           wbInteger('Not/Sell Buy', itU8, wbBoolEnum),
+           wbInteger('Not Sell/Buy', itU8, wbBoolEnum),
       {02} wbByteArray('Unknown 2', 2)
       ]).SetRequired,
     wbPLVD,
@@ -5449,7 +5113,7 @@ begin
     wbConditions
   ]);
 
-  wbRecord(FURN, 'Furniture',
+  RegisterRecordDef(FURN, 'Furniture',
     wbFlags(wbFlagsList([
       7, 'Is Perch',
      15, 'Has Distant LOD',
@@ -5461,7 +5125,7 @@ begin
     ])), [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbDEST,
@@ -5470,7 +5134,7 @@ begin
     wbInteger(FNAM, 'Flags', itU16, wbFlags([
       {0x0001} 'Unknown 0',
       {0x0002} 'Ignored By Sandbox'
-    ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbFormIDCk(KNAM, 'Interaction Keyword', [KYWD, NULL]),
     wbInteger(MNAM, 'Active Markers / Flags', itU32, wbFlags([
       {0x00000001} 'Sit 0',
@@ -5505,7 +5169,7 @@ begin
       {0x20000000} 'Unknown 30',
       {0x40000000} 'Has Sit Marker',
       {0x80000000} 'Has Sleep Marker'
-    ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbStruct(WBDT, 'Workbench Data', [
       wbInteger('Bench Type', itU8, wbEnum([
         {0} 'None',
@@ -5524,13 +5188,13 @@ begin
       wbInteger(ENAM, 'Marker Index', itU32),
       wbStruct(NAM0, 'Disabled Entry Points', [
         wbByteArray('Unknown', 2),
-        wbInteger('Disabled Points', itU16, wbFurnitureEntryTypeFlags).IncludeFlag(dfCollapsed, wbCollapseFlags)
+        wbInteger('Disabled Points', itU16, wbFurnitureEntryTypeFlags).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
       ]),
       wbFormIDCk(FNMK, 'Marker Keyword', [KYWD, NULL])
     ])),
     wbRArray('Marker Entry Points', wbStruct(FNPR, 'Marker', [
       wbInteger('Type', itU16, wbFurnitureAnimEnum),
-      wbInteger('Entry Points', itU16, wbFurnitureEntryTypeFlags).IncludeFlag(dfCollapsed, wbCollapseFlags)
+      wbInteger('Entry Points', itU16, wbFurnitureEntryTypeFlags).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
     ])),
     wbString(XMRK, 'Model FileName')
   ]);
@@ -5539,7 +5203,7 @@ begin
 // For expansion to use wbGLOBUnionDecider to display Short, Long, Float
 // correctly without making a signed float by default
 //----------------------------------------------------------------------------
-  wbRecord(GLOB, 'Global',
+  RegisterRecordDef(GLOB, 'Global',
     wbFlags(wbFlagsList([
       6, 'Constant'
     ])), [
@@ -5552,8 +5216,8 @@ begin
     wbFloat(FLTV, 'Value', cpNormal, True)
   ]);
 
-  wbRecord(GMST, 'Game Setting', [
-    wbString(EDID, 'Editor ID', 0, cpCritical, True, nil, wbGMSTEDIDAfterSet),
+  RegisterRecordDef(GMST, 'Game Setting', [
+    wbString(EDID, 'Editor ID', 0, cpCritical, True).SetAfterSet(wbGMSTEDIDAfterSet).IncludeFlag(dfKeepInPartialForm),
     wbUnion(DATA, 'Value', wbGMSTUnionDecider, [
       wbLString('Name', 0, cpTranslate),
       wbInteger('Int', itS32),
@@ -5563,24 +5227,24 @@ begin
   ]).SetSummaryKey([1])
     .IncludeFlag(dfIndexEditorID);
 
-  wbRecord(KYWD, 'Keyword', [
+  RegisterRecordDef(KYWD, 'Keyword', [
     wbEDID,
     wbByteRGBA(CNAM).SetRequired
   ]);
 
-  wbRecord(LCRT, 'Location Reference Type', [
+  RegisterRecordDef(LCRT, 'Location Reference Type', [
     wbEDID,
     wbByteRGBA(CNAM).SetRequired
   ]);
 
-  wbRecord(AACT, 'Action', [
+  RegisterRecordDef(AACT, 'Action', [
     wbEDID,
     wbByteRGBA(CNAM).SetRequired
   ]);
 
-  wbRecord(TXST, 'Texture Set', [
+  RegisterRecordDef(TXST, 'Texture Set', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbRStruct('Textures (RGB/A)', [
       wbString(TX00,'Diffuse'),
       wbString(TX01,'Normal/Gloss'),
@@ -5596,57 +5260,64 @@ begin
       {0x0001}'No Specular Map',
       {0x0002}'Facegen Textures',
       {0x0004}'Has Model Space Normal Map'
-    ]), cpNormal, False).IncludeFlag(dfCollapsed, wbCollapseFlags)
+    ]), cpNormal, False).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
   ]).SetSummaryKey([2, 3]);
 
-  wbRecord(HDPT, 'Head Part',
+  RegisterRecordDef(HDPT, 'Head Part',
     wbFlags(wbFlagsList([
-      2, 'Non-Playable'
+    2, 'Non-Playable'
     ])), [
     wbEDID,
     wbFULL,
     wbGenericModel,
-    wbInteger(DATA, 'Flags', itU8, wbFlags([
-      {0x01} 'Playable',
-      {0x02} 'Male',
-      {0x04} 'Female',
-      {0x10} 'Is Extra Part',
-      {0x20} 'Use Solid Tint'
-    ]), cpNormal, True).IncludeFlag(dfCollapsed, wbCollapseFlags),
-    wbInteger(PNAM, 'Type', itU32, wbEnum([
-      'Misc',
-      'Face',
-      'Eyes',
-      'Hair',
-      'Facial Hair',
-      'Scar',
-      'Eyebrows'
-    ])),
+    wbInteger(DATA, 'Flags', itU8,
+      wbFlags([
+      {0} 'Playable',
+      {1} 'Male',
+      {2} 'Female',
+      {3} 'Is Extra Part',
+      {4} 'Use Solid Tint'
+      ])
+    ).SetRequired
+     .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+    wbInteger(PNAM, 'Type', itU32,
+      wbEnum([
+      {0} 'Misc',
+      {1} 'Face',
+      {2} 'Eyes',
+      {3} 'Hair',
+      {4} 'Facial Hair',
+      {5} 'Scar',
+      {6} 'Eyebrows'
+      ])
+    ).SetRequired,
     wbRArrayS('Extra Parts',
       wbFormIDCk(HNAM, 'Part', [HDPT])
     ),
-    wbRArray('Parts', wbRStruct('Part', [
-      wbInteger(NAM0, 'Part Type', itU32, wbEnum([
-        'Race Morph',
-        'Tri',
-        'Chargen Morph'
+    wbRArray('Parts',
+      wbRStruct('Part', [
+        wbInteger(NAM0, 'Part Type', itU32,
+          wbEnum([
+          {0} 'Race Morph',
+          {1} 'Tri',
+          {2} 'Chargen Morph'
+        ])),
+        wbString(NAM1, 'Filename').SetRequired
       ])),
-      wbString(NAM1, 'FileName', 0, cpTranslate, True)
-    ])),
-    wbFormIDCk(TNAM, 'Texture Set', [TXST, NULL]),
-    wbFormIDCk(CNAM, 'Color', [CLFM, NULL]),
-    wbFormIDCk(RNAM, 'Valid Races', [FLST, NULL])
+    wbFormIDCk(TNAM, 'Texture Set', [TXST]),
+    wbFormIDCk(CNAM, 'Color', [CLFM]),
+    wbFormIDCk(RNAM, 'Valid Races', [FLST])
   ]);
 
-  wbRecord(ASPC, 'Acoustic Space', [
+  RegisterRecordDef(ASPC, 'Acoustic Space', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbFormIDCk(SNAM, 'Ambient Sound', [SNDR]),
     wbFormIDCk(RDAT, 'Use Sound from Region (Interiors Only)', [REGN]),
     wbFormIDCk(BNAM, 'Environment Type (reverb)', [REVB])
   ]);
 
-  wbRecord(MSTT, 'Moveable Static',
+  RegisterRecordDef(MSTT, 'Moveable Static',
     wbFlags(wbFlagsList([
       2, 'Never Fades',
       8, 'Must Update Anims',
@@ -5662,7 +5333,7 @@ begin
        .SetFlagHasDontShow(27, wbFlagNavmeshBoundingBoxDontShow)
        .SetFlagHasDontShow(30, wbFlagNavmeshGroundDontShow), [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbDEST,
@@ -5671,24 +5342,24 @@ begin
       {0} 'On Local Map',
       {1} 'Unknown 1',
       {2} 'Static'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
          .SetRequired,
     wbFormIDCk(SNAM, 'Looping Sound', [SNDR])
   ]);
 
-  wbRecord(IDLM, 'Idle Marker',
+  RegisterRecordDef(IDLM, 'Idle Marker',
     wbFlags(wbFlagsList([
     29, 'Child Can Use'
     ])), [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbIdleAnimation,
     wbGenericModel
   ]);
 
-  wbRecord(PROJ, 'Projectile', [
+  RegisterRecordDef(PROJ, 'Projectile', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbDEST,
@@ -5706,7 +5377,7 @@ begin
         'Pass Through Small Transparent',
         'Disable Combat Aim Correction',
         'Rotation'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       {02} wbInteger('Type', itU16, wbEnum([], [
         $01, 'Missile',
         $02, 'Lobber',
@@ -5738,7 +5409,8 @@ begin
       {80} wbFloat('Relaunch Interval'),
            wbFormIDCk('Decal Data', [TXST, NULL]),
            wbFormIDCk('Collision Layer', [COLL, NULL])
-    ], cpNormal, True, nil, 22),
+    ]).SetOptionalFrom(22)
+      .SetRequired,
     wbRStructSK([0], 'Muzzle Flash Model', [
       wbString(NAM1, 'Model FileName'),
       wbModelInfo(NAM2)
@@ -5746,9 +5418,9 @@ begin
     wbInteger(VNAM, 'Sound Level', itU32, wbSoundLevelEnum, cpNormal, True)
   ]);
 
-  wbRecord(HAZD, 'Hazard', [
+  RegisterRecordDef(HAZD, 'Hazard', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbFormIDCk(MNAM, 'Image Space Modifier', [IMAD, NULL]),
@@ -5764,7 +5436,7 @@ begin
         {0x04} 'Align to Impact Normal',
         {0x08} 'Inherit Radius from Spawn Spell',
         {0x10} 'Drop to Ground'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbFormIDCk('Spell', [SPEL, ENCH, NULL]),
       wbFormIDCk('Light', [LIGH, NULL]),
       wbFormIDCk('Impact Data Set', [IPDS, NULL]),
@@ -5772,12 +5444,12 @@ begin
     ])
   ]);
 
-  wbRecord(SLGM, 'Soul Gem',
+  RegisterRecordDef(SLGM, 'Soul Gem',
     wbFlags(wbFlagsList([
       17, 'Can Hold NPC Soul'
     ])), [
     wbEDID,
-    wbOBND,
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbICON,
@@ -5809,7 +5481,7 @@ begin
         ])
       ]).SetSummaryKey([2,1])
         .IncludeFlag(dfSummaryMembersNoName),
-      IfThen(wbSimpleRecords,
+      IfThen(DefineOptions.SimpleRecords,
         wbArray('Vertices',
           wbByteArray('Vertex', 12),
         -1).IncludeFlag(dfNotAlignable),
@@ -5817,7 +5489,7 @@ begin
           wbVec3('Vertex'),
         -1).IncludeFlag(dfNotAlignable)
       ),
-      IfThen(wbSimpleRecords,
+      IfThen(DefineOptions.SimpleRecords,
         wbArray('Triangles',
           wbByteArray('Triangles', 16),
         -1).IncludeFlag(dfNotAlignable),
@@ -5830,21 +5502,21 @@ begin
             wbInteger('Edge 1-2', itS16, wbEdgeToStr1, wbEdgeToInt1).SetLinksToCallback(wbEdgeLinksTo1),
             wbInteger('Edge 2-0', itS16, wbEdgeToStr2, wbEdgeToInt2).SetLinksToCallback(wbEdgeLinksTo2),
             wbInteger('Flags', itU16, wbNavmeshTriangleFlags)
-              .IncludeFlag(dfCollapsed, wbCollapseFlags),
+              .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
             wbInteger('Cover Flags', itU16, wbNavmeshCoverFlags)
-              .IncludeFlag(dfCollapsed, wbCollapseFlags)
+              .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
           ]),
         -1).IncludeFlag(dfNotAlignable)
       ),
       wbArray('Edge Links',
         wbStruct('Edge Link', [
-          wbInteger('Type', itU32, wbNavmeshEdgeLinkEnum, cpIgnore),
-          wbFormIDCk('Navmesh', [NAVM], False, cpIgnore),
-          wbInteger('Triangle', itS16, nil, cpIgnore)
+          wbInteger('Type', itU32, wbNavmeshEdgeLinkEnum).SetGetCP(wbNAVMEdgeLinksGetCP),
+          wbFormIDCk('Navmesh', [NAVM]).SetGetCP(wbNAVMEdgeLinksGetCP),
+          wbInteger('Triangle', itS16).SetGetCP(wbNAVMEdgeLinksGetCP)
         ]).SetSummaryKey([2, 1])
           .SetSummaryMemberPrefixSuffix(2, 'Tri: [', ']')
           .SetSummaryMemberPrefixSuffix(1, 'Nav: ', '')
-          .IncludeFlag(dfCollapsed, wbCollapseNavmesh),
+          .IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse),
       -1).IncludeFlag(dfNotAlignable),
       wbArrayS('Door Links',
         wbStructSK([0, 2], 'Door Link', [
@@ -5855,9 +5527,9 @@ begin
         ]).SetSummaryKey([0, 2])
           .SetSummaryMemberPrefixSuffix(0, 'Tri: [', ']')
           .SetSummaryMemberPrefixSuffix(2, 'Door: ', '')
-          .IncludeFlag(dfCollapsed, wbCollapseNavmesh),
+          .IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse),
       -1),
-      IfThen(wbSimpleRecords,
+      IfThen(DefineOptions.SimpleRecords,
         wbArray('Cover Triangles',
           wbByteArray('Triangle', 2),
         -1).IncludeFlag(dfNotAlignable),
@@ -5875,7 +5547,7 @@ begin
           wbVec3('Min'),
           wbVec3('Max')
         ]),
-        IfThen(wbSimpleRecords,
+        IfThen(DefineOptions.SimpleRecords,
           wbArray('Cells',
             wbArray('Cell',
               wbByteArray('Triangle', 2),
@@ -5892,7 +5564,7 @@ begin
       ])
     ]);
 
-  wbRecord(NAVM, 'Navmesh',
+  RegisterRecordDef(NAVM, 'Navmesh',
     wbFlags(wbFlagsList([
       11, 'Initially Disabled',
       18, 'Compressed',
@@ -5909,7 +5581,7 @@ begin
       wbInteger('Vertex', itU16))
   ]).SetAddInfo(wbNAVMAddInfo);
 
-  wbRecord(NAVI, 'Navmesh Info Map', [
+  RegisterRecordDef(NAVI, 'Navmesh Info Map', [
     wbEDID,
     wbInteger(NVER, 'Version', itU32),
     wbRArrayS('Navmesh Infos',
@@ -5920,23 +5592,23 @@ begin
           5, 'Is Island',
           6, 'Not Edited'
           ], False, 7))
-        ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
         wbVec3('Approx Location'),
         wbFloat('Preferred %'),
-        wbArrayS('Edge Links', wbFormIDCk('Navmesh', [NAVM]), -1).IncludeFlag(dfCollapsed, wbCollapseNavmesh),
-        wbArrayS('Preferred Edge Links', wbFormIDCk('Navmesh', [NAVM]), -1).IncludeFlag(dfCollapsed, wbCollapseNavmesh),
+        wbArrayS('Edge Links', wbFormIDCk('Navmesh', [NAVM]), -1).IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse),
+        wbArrayS('Preferred Edge Links', wbFormIDCk('Navmesh', [NAVM]), -1).IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse),
         wbArrayS('Door Links',
           wbStructSK([1], 'Door Link', [
             wbInteger('CRC Hash', itU32, wbCRCValuesEnum).SetDefaultEditValue('PathingDoor'),
             wbFormIDCk('Door Ref', [REFR])
           ]).SetSummaryKey([1])
-            .IncludeFlag(dfCollapsed, wbCollapseNavmesh)
+            .IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse)
             .IncludeFlag(dfSummaryMembersNoName),
-        -1).IncludeFlag(dfCollapsed, wbCollapseNavmesh),
+        -1).IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse),
         wbStruct('Optional Island Data', [
           wbInteger('Has Island Data', itU8, wbBoolEnum).SetAfterSet(wbUpdateSameParentUnions),
           wbUnion('Island Data', wbNAVIIslandDataDecider, [
-            wbStruct('Unused', [wbEmpty('Unused')]).IncludeFlag(dfCollapsed, wbCollapseNavmesh),
+            wbStruct('Unused', [wbEmpty('Unused')]).IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse),
             wbStruct('Island Data', [
               wbStruct('Navmesh Bounds', [
                 wbVec3('Min'),
@@ -5947,19 +5619,19 @@ begin
                   wbInteger('Vertex 0', itU16),
                   wbInteger('Vertex 1', itU16),
                   wbInteger('Vertex 2', itU16)
-                ]).IncludeFlag(dfCollapsed, wbCollapseVertices),
-              -1).IncludeFlag(dfCollapsed, wbCollapseVertices)
+                ]).IncludeFlag(dfCollapsed, clpVertices in DefineOptions.Collapse),
+              -1).IncludeFlag(dfCollapsed, clpVertices in DefineOptions.Collapse)
                  .IncludeFlag(dfNotAlignable),
               wbArray('Vertices',
                 wbVec3('Vertex'),
-              -1).IncludeFlag(dfCollapsed, wbCollapseVertices)
+              -1).IncludeFlag(dfCollapsed, clpVertices in DefineOptions.Collapse)
                  .IncludeFlag(dfNotAlignable)
             ]).SetSummaryKey([1])
-              .IncludeFlag(dfCollapsed, wbCollapseNavmesh)
+              .IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse)
               .IncludeFlag(dfSummaryMembersNoName)
-          ]).IncludeFlag(dfCollapsed, wbCollapseNavmesh)
+          ]).IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse)
         ]).SetSummaryKey([1])
-          .IncludeFlag(dfCollapsed, wbCollapseNavmesh)
+          .IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse)
           .IncludeFlag(dfSummaryMembersNoName),
         wbStruct('Pathing Cell', [
           wbInteger('CRC Hash', itU32, wbCRCValuesEnum).SetDefaultEditValue('PathingCell'),
@@ -5972,38 +5644,39 @@ begin
               .SetSummaryMemberPrefixSuffix(0, 'Y: ', '>')
               .SetSummaryMemberPrefixSuffix(1, '<X: ', '')
               .SetSummaryDelimiter(', ')
-              .IncludeFlag(dfCollapsed, wbCollapsePlacement)
+              .IncludeFlag(dfCollapsed, clpPlacement in DefineOptions.Collapse)
               .IncludeFlag(dfSummaryMembersNoName),
             wbFormIDCk('Parent Cell', [CELL])
-          ]).IncludeFlag(dfCollapsed, wbCollapsePlacement)
+          ]).IncludeFlag(dfCollapsed, clpPlacement in DefineOptions.Collapse)
         ]).SetSummaryKey([1, 2])
-          .IncludeFlag(dfCollapsed, wbCollapseNavmesh)
+          .IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse)
           .IncludeFlag(dfSummaryMembersNoName)
       ]).SetSummaryKeyOnValue([0, 8, 7])
         .SetSummaryPrefixSuffixOnValue(0, '', '')
         .SetSummaryPrefixSuffixOnValue(8, 'in ', '')
         .SetSummaryPrefixSuffixOnValue(7, 'is island with ', '')
-        .IncludeFlag(dfCollapsed, wbCollapseNavmesh)
+        .IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse)
         .IncludeFlag(dfSummaryMembersNoName)
-    ).IncludeFlag(dfCollapsed, wbCollapseNavmesh),
+    ).SetAfterLoad(wbNAVINavmeshInfosAfterLoad)
+     .IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse),
     wbStruct(NVPP, 'Precomputed Pathing', [
       wbArray('Precomputed Paths',
-        wbArray('Path', wbFormIDCk('Navmesh', [NAVM]), -1).IncludeFlag(dfCollapsed, wbCollapseNavmesh),
-      -1).IncludeFlag(dfCollapsed, wbCollapseNavmesh),
+        wbArray('Path', wbFormIDCk('Navmesh', [NAVM]), -1).IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse),
+      -1).IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse),
       wbArrayS('Road Marker Index',
         wbStructSK([1], 'Road Marker', [
           wbFormIDCk('Navmesh', [NAVM]),
           wbInteger('Index', itU32)
-        ]).IncludeFlag(dfCollapsed, wbCollapseNavmesh),
-      -1).IncludeFlag(dfCollapsed, wbCollapseNavmesh)
-    ]).IncludeFlag(dfCollapsed, wbCollapseNavmesh),
-    wbArrayS(NVSI, 'Deleted Navmeshes', wbFormIDCk('Navmesh', [NAVM])).IncludeFlag(dfCollapsed, wbCollapseNavmesh)
+        ]).IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse),
+      -1).IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse)
+    ]).IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse),
+    wbArrayS(NVSI, 'Deleted Navmeshes', wbFormIDCk('Navmesh', [NAVM])).IncludeFlag(dfCollapsed, clpNavmesh in DefineOptions.Collapse)
   ]);
 
-   wbRecord(EXPL, 'Explosion', [
+   RegisterRecordDef(EXPL, 'Explosion', [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbEnchantment,
@@ -6030,17 +5703,18 @@ begin
         'Ignore Image Space Swap',
         'Chain',
         'No Controller Vibration'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbInteger('Sound Level', itU32, wbSoundLevelEnum, cpNormal, True)
-    ], cpNormal, True, nil, 10)
+    ]).SetOptionalFrom(10)
+      .SetRequired
   ]);
 
-  wbRecord(DEBR, 'Debris', [
+  RegisterRecordDef(DEBR, 'Debris', [
     wbEDID,
-    wbRArray('Models', wbDebrisModel(wbMODT), cpNormal, True)
+    wbRArray('Models', wbDebrisModel(wbModelInfo(MODT)), cpNormal, True)
   ]);
 
-  wbRecord(IMGS, 'Image Space', [
+  RegisterRecordDef(IMGS, 'Image Space', [
     wbEDID,
     wbStruct(ENAM, 'Data', [
       wbStruct('HDR', [
@@ -6105,10 +5779,10 @@ begin
         16984, 'No Sky, Radius 6',
         17016, 'No Sky, Radius 7'
       ]))
-    ], cpNormal, False, nil, 3)
+    ]).SetOptionalFrom(3)
   ]);
 
-  wbRecord(IMAD, 'Image Space Adapter', [
+  RegisterRecordDef(IMAD, 'Image Space Adapter', [
     wbEDID.SetRequired,
     wbStruct(DNAM, 'Data', [
       wbInteger('Animatable', itU32, wbBoolEnum),
@@ -6159,7 +5833,7 @@ begin
         {3} 'Unknown 3',
         {4} 'Unknown 4',
         {5} 'Unknown 5'
-        ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbUnused(2),
       wbInteger('Radial Blur Ramp Down', itU32),
       wbInteger('Radial Blur Down Start', itU32),
@@ -6177,7 +5851,7 @@ begin
       wbTimeInterpolators(NAM1, 'Ramp Down'),
       wbTimeInterpolators(NAM2, 'Down Start')
     ]).SetRequired,
-    wbRStruct('Depht of Field', [
+    wbRStruct('Depth of Field', [
       wbTimeInterpolators(WNAM, 'Strength'),
       wbTimeInterpolators(XNAM, 'Distance'),
       wbTimeInterpolators(YNAM, 'Range')
@@ -6210,106 +5884,17 @@ begin
     ]).SetRequired
   ]);
 
-  wbRecord(FLST, 'FormID List', [
-    wbString(EDID, 'Editor ID', 0, cpBenign, True, nil, wbFLSTEDIDAfterSet),
-    wbRArrayS('FormIDs', wbFormID(LNAM, 'FormID'), cpNormal, False, nil, nil, nil, wbFLSTLNAMIsSorted)
+  RegisterRecordDef(FLST, 'FormID List', [
+    wbString(EDID, 'Editor ID', 0, cpBenign)
+      .SetAfterSet(wbFLSTEDIDAfterSet)
+      .SetRequired
+      .IncludeFlag(dfKeepInPartialForm),
+    wbRArrayS('FormIDs',
+      wbFormID(LNAM, 'FormID')
+    ).SetIsSorted(wbFLSTLNAMIsSorted)
   ]);
 
-  var wbPerkConditions :=
-    wbRStructExSK([0], [1], 'Perk Condition', [
-      wbInteger(PRKC, 'Run On (Tab Index)', itS8{, wbPRKCToStr, wbPRKCToInt}),
-      wbConditions.SetRequired
-    ], [], cpNormal, False{, nil, nil, wbPERKPRKCDontShow});
-
-  var wbPerkEffect :=
-    wbRStructExSK([0,1,3], [2], 'Effect', [
-      wbStructSK(PRKE, [1, 2, 0], 'Header', [
-        wbPerkEffectType(wbPERKPRKETypeAfterSet),
-        wbInteger('Rank', itU8),
-        wbInteger('Priority', itU8)
-      ]),
-      wbUnion(DATA, 'Effect Data', wbPerkDATADecider, [
-        wbStructSK([0, 1], 'Quest + Stage', [
-          wbFormIDCk('Quest', [QUST]),
-          wbInteger('Quest Stage', itU8, wbPerkDATAQuestStageToStr, wbQuestStageToInt),
-          wbUnused(3)
-        ]),
-        wbFormIDCk('Ability', [SPEL]),
-        wbStructSK([0, 1], 'Entry Point', [
-          wbInteger('Entry Point', itU8, wbEntryPointsEnum, cpNormal, True, nil{, wbPERKEntryPointAfterSet}),
-          wbInteger('Function', itU8, wbEnum([
-            {0} 'Unknown 0',
-            {1} 'Set Value', // EPFT=1
-            {2} 'Add Value', // EPFT=1
-            {3} 'Multiply Value', // EPFT=1
-            {4} 'Add Range To Value', // EPFT=2
-            {5} 'Add Actor Value Mult', // EPFT=2
-            {6} 'Absolute Value', // no params
-            {7} 'Negative Absolute Value', // no params
-            {8} 'Add Leveled List', // EPFT=3
-            {9} 'Add Activate Choice', // EPFT=4
-           {10} 'Select Spell', // EPFT=5
-           {11} 'Select Text', // EPFT=6
-           {12} 'Set to Actor Value Mult', // EPFT=2
-           {13} 'Multiply Actor Value Mult', // EPFT=2
-           {14} 'Multiply 1 + Actor Value Mult', // EPFT=2
-           {15} 'Set Text' // EPFT=7
-          ])),
-          wbInteger('Perk Condition Tab Count', itU8, nil, cpIgnore)
-        ])
-      ], cpNormal, True),
-
-      wbRArrayS('Perk Conditions', wbPerkConditions),
-
-      wbRStructSK([0,2,3], 'Function Parameters', [
-        wbInteger(EPFT, 'Type', itU8, wbEnum([
-          {0} 'None',
-          {1} 'Float',
-          {2} 'Float/AV,Float',
-          {3} 'LVLI',
-          {4} 'SPEL,lstring,flags',
-          {5} 'SPEL',
-          {6} 'string',
-          {7} 'lstring'
-        ])),
-        // case(EPFT) of
-        // 1: EPFD=float
-        // 2: EPFD=float,float
-        // 3: EPFD=LVLI
-        // 4: EPFD=SPEL, EPF2=lstring, EPF3=int32 flags
-        // 5: EPFD=SPEL
-        // 6: EPFD=string
-        // 7: EPFD=lstring
-        wbLString(EPF2, 'Button Label', 0, cpTranslate),
-        wbStructSK(EPF3, [1], 'Script Flags', [
-          wbInteger('Script Flags', itU16, wbFlags([
-            'Run Immediately',
-            'Replace Default'
-          ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
-          wbInteger('Fragment Index', itU16)
-        ]),
-        wbUnion(EPFD, 'Data', wbEPFDDecider, [
-          {0} wbByteArray('Unknown'),
-          {1} wbFloat('Float'),
-          {2} wbStruct('Float, Float', [
-                wbFloat('Float 1'),
-                wbFloat('Float 2')
-              ]),
-          {3} wbFormIDCk('Leveled Item', [LVLI]),
-          {4} wbFormIDCk('Spell', [SPEL]),
-          {5} wbFormIDCk('Spell', [SPEL]),
-          {6} wbString('Text', 0, cpTranslate),
-          {7} wbLString('Text', 0, cpTranslate),
-          {8} wbStruct('Actor Value, Float', [
-                wbInteger('Actor Value', itU32, wbEPFDActorValueToStr, wbEPFDActorValueToInt),
-                wbFloat('Float')
-              ])
-        ], cpNormal, False{, wbEPFDDontShow})
-      ], [], cpNormal, False{, wbPERKPRKCDontShow}),
-      wbEmpty(PRKF, 'End Marker', cpIgnore, True)
-    ]);
-
-  wbRecord(PERK, 'Perk',
+  RegisterRecordDef(PERK, 'Perk',
     wbFlags(wbFlagsList([
       2, 'Non-Playable'
     ])), [
@@ -6322,15 +5907,101 @@ begin
     wbStruct(DATA, 'Data', [
       wbInteger('Trait', itU8, wbBoolEnum),
       wbInteger('Level', itU8),
-      wbInteger('Num Ranks', itU8),
+      wbInteger('Num Ranks', itU8)
+        .SetAfterLoad(wbPERKNumRanksAfterLoad)
+        .SetAfterSet(wbPERKNumRanksAfterSet)
+        .SetDefaultNativeValue(1),
       wbInteger('Playable', itU8, wbBoolEnum),
       wbInteger('Hidden', itU8, wbBoolEnum)
-    ], cpNormal, True),
+    ]).SetRequired,
     wbFormIDCK(NNAM, 'Next Perk', [PERK, NULL]),
-    wbRArrayS('Effects', wbPerkEffect)
+    wbRArrayS('Effects',
+      wbRStructExSK([0,1,3], [2], 'Effect', [
+        wbStructSK(PRKE, [1, 2, 0], 'Header', [
+          wbPerkEffectType(wbPERKPRKETypeAfterSet),
+          wbInteger('Rank', itU8, wbPERKRankIntToStr, wbPERKRankStrToInt).SetToStr(wbPERKRankToStr),
+          wbInteger('Priority', itU8)
+        ]),
+        wbUnion(DATA, 'Effect Data', wbPerkDATADecider, [
+          wbStructSK([0, 1], 'Quest + Stage', [
+            wbFormIDCk('Quest', [QUST]),
+            wbInteger('Quest Stage', itU16, wbPerkDATAQuestStageToStr, wbQuestStageToInt),
+            wbUnused(2)
+          ]),
+          wbFormIDCk('Ability', [SPEL]),
+          wbStructExSK([0], [1], 'Entry Point', [
+            wbInteger('Entry Point', itU8, wbEntryPointsEnum),
+            wbInteger('Function', itU8,
+              wbEnum([
+              {0}  'Unknown 0',
+              {1}  'Set Value', // EPFT=1
+              {2}  'Add Value', // EPFT=1
+              {3}  'Multiply Value', // EPFT=1
+              {4}  'Add Range To Value', // EPFT=2
+              {5}  'Add Actor Value Mult', // EPFT=2
+              {6}  'Absolute Value', // no params
+              {7}  'Negative Absolute Value', // no params
+              {8}  'Add Leveled List', // EPFT=3
+              {9}  'Add Activate Choice', // EPFT=4
+              {10} 'Select Spell', // EPFT=5
+              {11} 'Select Text', // EPFT=6
+              {12} 'Set to Actor Value Mult', // EPFT=2
+              {13} 'Multiply Actor Value Mult', // EPFT=2
+              {14} 'Multiply 1 + Actor Value Mult', // EPFT=2
+              {15} 'Set Text' // EPFT=7
+              ])),
+            wbInteger('Perk Condition Tab Count', itU8, nil, cpIgnore)
+          ])
+        ]).SetRequired,
+        wbRArrayS('Perk Conditions',
+          wbRStructExSK([0], [1], 'Perk Condition', [
+            wbInteger(PRKC, 'Run On (Tab Index)', itS8),
+            wbConditions.SetRequired
+          ])),
+        wbRStructExSK([0,2], [3], 'Function Parameters', [
+          wbInteger(EPFT, 'Type', itU8,
+            wbEnum([
+            {0} 'None',
+            {1} 'Float',              // 1: EPFD=float
+            {2} 'Float/AV,Float',     // 2: EPFD=float,float
+            {3} 'LVLI',               // 3: EPFD=LVLI
+            {4} 'SPEL,lstring,flags', // 4: EPFD=SPEL, EPF2=lstring, EPF3=int32 flags
+            {5} 'SPEL',               // 5: EPFD=SPEL
+            {6} 'string',             // 6: EPFD=string
+            {7} 'lstring'             // 7: EPFD=lstring
+          ])),
+          wbLString(EPF2, 'Button Label', 0, cpTranslate),
+          wbStructSK(EPF3, [1], 'Script Flags', [
+            wbInteger('Script Flags', itU16,
+              wbFlags([
+              {0} 'Run Immediately',
+              {1} 'Replace Default'
+              ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+            wbInteger('Fragment Index', itU16)
+          ]),
+          wbUnion(EPFD, 'Data', wbEPFDDecider, [
+          {0} wbByteArray('Unknown'),
+          {1} wbFloat('Float'),
+          {2} wbStruct('Float, Float', [
+                wbFloat('Float 1'),
+                wbFloat('Float 2')
+              ]),
+          {3} wbFormIDCk('Leveled Item', [LVLI]),
+          {4} wbFormIDCk('Spell', [SPEL]),
+          {5} wbFormIDCk('Spell', [SPEL]),
+          {6} wbString('Text', 0, cpTranslate),
+          {7} wbLString('Text', 0, cpTranslate),
+          {8} wbStruct('Actor Value, Float', [
+                wbInteger('Actor Value', itU32, EPFDActorValueToStr, EPFDActorValueToInt),
+                wbFloat('Float')
+              ])
+          ])
+        ]),
+        wbEmpty(PRKF, 'End Marker', cpIgnore).SetRequired
+      ]))
   ]);
 
-  wbRecord(BPTD, 'Body Part Data', [
+  RegisterRecordDef(BPTD, 'Body Part Data', [
     wbEDID,
     wbGenericModel,
     wbRArrayS('Body Parts',
@@ -6351,7 +6022,7 @@ begin
               {4} 'IK Data - Is Head',
               {5} 'IK Data - Headtracking',
               {6} 'To Hit Chance - Absolute'
-            ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+            ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
           wbInteger('Part Type', itU8,
             wbEnum([
               {0} 'Torso',
@@ -6362,7 +6033,7 @@ begin
               {5} 'Saddle'
             ])),
           wbInteger('Health Percent', itU8),
-          wbInteger('Actor Value', itS8, wbActorValueEnum),
+          wbInteger('Actor Value', itS8, ActorValueEnum),
           wbInteger('To Hit Chance', itU8),
           wbInteger('Explodable - Explosion Chance %', itU8),
           wbInteger('Explodable - Debris Count', itU16),
@@ -6394,9 +6065,9 @@ begin
   ]).SetSummaryKey([1])
     .IncludeFlag(dfSummaryMembersNoName);
 
-  wbRecord(ADDN, 'Addon Node', [
+  RegisterRecordDef(ADDN, 'Addon Node', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbGenericModel,
     wbInteger(DATA, 'Index', itU32).SetRequired,
     wbFormIDCk(SNAM, 'Sound', [SNDR,NULL]),
@@ -6421,7 +6092,7 @@ begin
     end)
     .SetSummaryKey([2]);
 
-  wbRecord(AVIF, 'Actor Value Information', [
+  RegisterRecordDef(AVIF, 'Actor Value Information', [
     wbEDID,
     wbFULL,
     wbDESCReq,
@@ -6451,7 +6122,7 @@ begin
 
               var lContainer := aElement.Container;
               // only worry about the root array node where the INAM index is 0 and the PNAM is NULL
-              Result := (lContainer.Container.Elements[0].Equals(lContainer)) and (lContainer.ElementByPath['PNAM'].NativeValue = 0) and (lContainer.ElementByPath['INAM'].NativeValue = 0);
+              Result := lContainer.Container.Elements[0].Equals(lContainer) and (lContainer.ElementByPath['PNAM'].NativeValue = 0) and (lContainer.ElementByPath['INAM'].NativeValue = 0);
             end),
         wbInteger(XNAM, 'Perk-Grid X', itU32, nil, cpNormal, True),
         wbInteger(YNAM, 'Perk-Grid Y', itU32, nil, cpNormal, True),
@@ -6464,7 +6135,7 @@ begin
     ).IncludeFlag(dfNoMove)
   ]);
 
-  wbRecord(CAMS, 'Camera Shot', [
+  RegisterRecordDef(CAMS, 'Camera Shot', [
     wbEDID,
     wbGenericModel,
     wbStruct(DATA, 'Data', [
@@ -6493,7 +6164,7 @@ begin
         'First Person Camera',
         'No Tracer',
         'Start At Time Zero'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbStruct('Time Multipliers', [
         {16} wbFloat('Player'),
         {20} wbFloat('Target'),
@@ -6503,18 +6174,18 @@ begin
       {32} wbFloat('Min Time'),
       {36} wbFloat('Target % Between Actors'),
       {40} wbFloat('Near Target Distance')
-    ], cpNormal, True, nil, 8)
+    ]).SetOptionalFrom(8)
       .SetSummaryKeyOnValue([0, 1, 2])
       .SetSummaryPrefixSuffixOnValue(0, '', ',')
       .SetSummaryPrefixSuffixOnValue(1, '', ' ->')
-      .IncludeFlagOnValue(dfSummaryMembersNoName),
+      .IncludeFlagOnValue(dfSummaryMembersNoName)
+      .SetRequired,
     wbFormIDCk(MNAM, 'Image Space Modifier', [IMAD])
-  ])
-  .SetSummaryKey([1, 2])
-  .SetSummaryMemberPrefixSuffix(2, '[', ']')
-  .IncludeFlag(dfSummaryMembersNoName);
+  ]).SetSummaryKey([1, 2])
+    .SetSummaryMemberPrefixSuffix(2, '[', ']')
+    .IncludeFlag(dfSummaryMembersNoName);
 
-  wbRecord(CPTH, 'Camera Path', [
+  RegisterRecordDef(CPTH, 'Camera Path', [
     wbEDID,
     wbConditions,
     wbStruct(ANAM, 'Camera Paths', [
@@ -6532,15 +6203,15 @@ begin
     wbRArray('Camera Shots', wbFormIDCk(SNAM, 'Camera Shot', [CAMS]))
   ]).SetSummaryKey([1, 4]).IncludeFlag(dfSummaryMembersNoName);
 
-  wbRecord(VTYP, 'Voice Type', [
+  RegisterRecordDef(VTYP, 'Voice Type', [
     wbEDID,
     wbInteger(DNAM, 'Flags', itU8, wbFlags([
       'Allow Default Dialog',
       'Female'
-    ]), cpNormal, True).IncludeFlag(dfCollapsed, wbCollapseFlags)
+    ]), cpNormal, True).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
   ]);
 
-  wbRecord(MATT, 'Material Type', [
+  RegisterRecordDef(MATT, 'Material Type', [
     wbEDID,
     wbFormIDCk(PNAM, 'Material Parent', [MATT, NULL]),
     wbString(MNAM, 'Material Name'),
@@ -6549,11 +6220,11 @@ begin
     wbInteger(FNAM, 'Flags', itU32, wbFlags([
       'Stair Material',
       'Arrows Stick'
-    ], False)).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ], False)).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbFormIDCk(HNAM, 'Havok Impact Data Set', [IPDS, NULL])
   ]);
 
-  wbRecord(IPCT, 'Impact', [
+  RegisterRecordDef(IPCT, 'Impact', [
     wbEDID,
     wbGenericModel,
     wbStruct(DATA, '', [
@@ -6568,7 +6239,7 @@ begin
       wbInteger('Sound Level', itU32, wbSoundLevelEnum),
       wbInteger('Flags', itU8, wbFlags([
         {0x01} 'No Decal Data'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbInteger('Impact Result', itU8, wbEnum([
          {0} 'Default',
          {1} 'Destroy',
@@ -6577,16 +6248,23 @@ begin
          {4} 'Stick'
       ])),
       wbByteArray('Unknown', 2)
-    ], cpNormal, True, nil, 4),
+    ]).SetOptionalFrom(4)
+      .SetRequired,
     wbDODT,
     wbFormIDCk(DNAM, 'Texture Set', [TXST]),
     wbFormIDCk(ENAM, 'Secondary Texture Set', [TXST]),
-    wbFormIDCk(SNAM, 'Sound 1', [SNDR,NULL]),
-    wbFormIDCk(NAM1, 'Sound 2', [SNDR,NULL]),
+    wbUnion(SNAM, 'Sound 1', wbFormVersionDecider(27), [
+      wbFormIDCk('Sound 1', [SOUN,NULL]),
+      wbFormIDCk('Sound 1', [SNDR,NULL])
+    ]).IncludeFlagOnValue(dfUnionStaticResolve),
+    wbUnion(NAM1, 'Sound 2', wbFormVersionDecider(27), [
+      wbFormIDCk('Sound 2', [SOUN,NULL]),
+      wbFormIDCk('Sound 2', [SNDR,NULL])
+    ]).IncludeFlagOnValue(dfUnionStaticResolve),
     wbFormIDCk(NAM2, 'Hazard', [HAZD, NULL])
   ]);
 
-  wbRecord(IPDS, 'Impact Data Set', [
+  RegisterRecordDef(IPDS, 'Impact Data Set', [
     wbEDID,
     wbRArrayS('Data', wbStructSK(PNAM, [0], '', [
       wbFormIDCk('Material', [MATT]),
@@ -6594,7 +6272,7 @@ begin
     ]))
   ]);
 
-  wbRecord(ECZN, 'Encounter Zone', [
+  RegisterRecordDef(ECZN, 'Encounter Zone', [
     wbEDID,
     wbUnion(DATA, '', wbFormVersionDecider(34), [
       wbStruct('', [
@@ -6610,13 +6288,13 @@ begin
           'Never Resets',
           'Match PC Below Minimum Level',
           'Disable Combat Boundary'
-        ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
         wbInteger('Max Level', itS8)
       ], cpNormal, True)
     ])
   ]);
 
-  wbRecord(LCTN, 'Location', [
+  RegisterRecordDef(LCTN, 'Location', [
     wbEDID,
     wbArrayS(ACPR, 'Added Persist Location References',
       wbStructSK([0], 'Reference', [
@@ -6626,7 +6304,7 @@ begin
         wbInteger('Grid X', itS16, nil, cpBenign).SetDontShow(wbLCTNCellDontShow)
       ], cpBenign),
     0, cpBenign),
-    wbArrayS(LCPR, 'Location Persist Location References',
+    wbArrayS(LCPR, 'Master Persist Location References',
       wbStructSK([0], 'Reference', [
         wbFormIDCk('Ref', [PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA], False, cpBenign),
         wbFormIDCk('World/Cell', [WRLD, CELL], False, cpBenign),
@@ -6639,14 +6317,14 @@ begin
     0, cpBenign),
     wbArrayS(ACUN, 'Added Unique NPCs',
       wbStructSK([1], 'Actor', [
-        wbFormIDCk('NPC', [NPC_], False, cpBenign),
+        wbFormIDCk('NPC', [NPC_], False, cpBenign).SetToStr(wbLCTNUniqueNPCToStr),
         wbFormIDCk('Actor Ref', [ACHR], False, cpBenign),
         wbFormIDCk('Location', [LCTN, NULL], False, cpBenign)
       ], cpBenign),
     0, cpBenign),
     wbArrayS(LCUN, 'Master Unique NPCs',
       wbStructSK([1], 'Actor', [
-        wbFormIDCk('NPC', [NPC_], False, cpBenign),
+        wbFormIDCk('NPC', [NPC_], False, cpBenign).SetToStr(wbLCTNUniqueNPCToStr),
         wbFormIDCk('Actor Ref', [ACHR], False, cpBenign),
         wbFormIDCk('Location', [LCTN, NULL], False, cpBenign)
       ], cpBenign),
@@ -6723,7 +6401,7 @@ begin
           {0} 'Set Enable State to Opposite of Parent',
           {1} 'Pop In'
           ]),
-        cpBenign).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        cpBenign).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
         wbUnused(3)
       ], cpBenign),
     0, cpBenign),
@@ -6736,7 +6414,7 @@ begin
           {0} 'Set Enable State to Opposite of Parent',
           {1} 'Pop In'
           ]),
-        cpBenign).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        cpBenign).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
         wbUnused(3)
       ], cpBenign),
     0, cpBenign),
@@ -6752,7 +6430,7 @@ begin
   ]);
 
   // load map markes list from external file if present
-  s := ExtractFilePath(ParamStr(0)) + wbAppName + 'MapMarkers.txt';
+  s := ExtractFilePath(ParamStr(0)) + AppName +'MapMarkers.txt';
   if FileExists(s) then try
     wbMapMarkerEnum := wbEnum(TFile.ReadAllLines(s));
   except end;
@@ -6822,7 +6500,7 @@ begin
     ]);
 
   // load quest types list from external file if present
-  s := ExtractFilePath(ParamStr(0)) + wbAppName + 'QuestTypes.txt';
+  s := ExtractFilePath(ParamStr(0)) + AppName +'QuestTypes.txt';
   if FileExists(s) then try
     wbQuestTypeEnum := wbEnum(TFile.ReadAllLines(s));
   except end;
@@ -6843,25 +6521,30 @@ begin
      {11} 'DLC02 - Dragonborn'
     ]);
 
-  wbMenuButton :=
-    wbRStruct('Menu Button', [
-      wbLString(ITXT, 'Button Text', 0, cpTranslate),
-      wbConditions
-    ]);
-
-  wbRecord(MESG, 'Message', [
+  RegisterRecordDef(MESG, 'Message', [
     wbEDID,
     wbDESCReq,
     wbFULL,
-    wbFormIDCk(INAM, 'Icon (unused)', [NULL], False, cpIgnore, True), // leftover
+    wbFormIDCk(INAM, 'Icon (unused)', [NULL], False, cpIgnore).SetRequired(), // leftover
     wbFormIDCk(QNAM, 'Owner Quest', [QUST]),
-    wbInteger(DNAM, 'Flags', itU32, wbFlags([
-      'Message Box',
-      'Auto Display'
-    ]), cpNormal, True, False, nil, wbMESGDNAMAfterSet).IncludeFlag(dfCollapsed, wbCollapseFlags),
-    wbInteger(TNAM, 'Display Time', itU32, nil, cpNormal, False, False, wbMESGTNAMDontShow),
-    wbRArray('Menu Buttons', wbMenuButton)
-  ], False, nil, cpNormal, False, wbMESGAfterLoad);
+    wbInteger(DNAM, 'Flags', itU32,
+      wbFlags([
+      {0} 'Message Box',
+      {1} 'Auto Display'
+      ])
+    ).SetAfterSet(wbMESGDNAMAfterSet)
+     .SetRequired
+     .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+    wbInteger(TNAM, 'Display Time', itU32)
+      .SetDefaultNativeValue(2)
+      .SetDontShow(wbMESGTNAMDontShow)
+      .SetIsRemovable(wbMessageTNAMIsRemovable),
+    wbRArray('Menu Buttons',
+      wbRStruct('Menu Button', [
+        wbLString(ITXT, 'Button Text', 0, cpTranslate),
+        wbConditions
+      ]))
+  ]).SetAfterLoad(wbMESGAfterLoad);
 
   var wbDOBJObjectsTES5 := wbMakeVarRecs([
                   0, 'None',
@@ -7264,10 +6947,10 @@ begin
     Sig2Int('VRWS'), 'VRWS'
   ]);
 
-  if wbGameMode = gmTES5VR then
+  if GameMode = gmTES5VR then
     wbDOBJObjects := wbCombineVarRecs(wbDOBJObjectsTES5, wbDOBJObjectsTES5VR);
 
-  wbRecord(DOBJ, 'Default Object Manager', [
+  RegisterRecordDef(DOBJ, 'Default Object Manager', [
     wbEDID
       .SetDefaultNativeValue('DefaultObjectManager')
       .SetRequired
@@ -7281,7 +6964,7 @@ begin
      .SetRequired
   ]);
 
-  wbRecord(LGTM, 'Lighting Template', [
+  RegisterRecordDef(LGTM, 'Lighting Template', [
     wbEDID,
     wbStruct(DATA, 'Lighting', [
       wbByteColors('Ambient Color'),
@@ -7294,7 +6977,7 @@ begin
       wbFloat('Directional Fade'),
       wbFloat('Fog Clip Dist'),
       wbFloat('Fog Power'),
-      wbUnused(32), // WindhelmLightingTemplate [LGTM:0007BA87] only find 24 !
+      wbAmbientColors('Unused'), // WindhelmLightingTemplate [LGTM:0007BA87] only find 24 !
       wbFromVersion(34, wbByteColors('Fog Color Far')),
       wbFromVersion(34, wbFloat('Fog Max')),
       wbFromVersion(34, wbStruct('Light Fade Distances', [
@@ -7306,7 +6989,7 @@ begin
     wbAmbientColors(DALC)
   ]);
 
-  wbRecord(MUSC, 'Music Type', [
+  RegisterRecordDef(MUSC, 'Music Type', [
     wbEDID,
     wbInteger(FNAM, 'Flags', itU32, wbFlags([
       {0x01} 'Plays One Selection',
@@ -7316,7 +6999,7 @@ begin
       {0x10} 'Unknown 4',
       {0x20} 'Ducks Current Track',
       {0x40} IsSSE('Doesn''t Queue', 'Unknown 6')
-    ]), cpNormal, True).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ]), cpNormal, True).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbStruct(PNAM, 'Data', [
       wbInteger('Priority', itU16),
       wbInteger('Ducking (dB)', itU16, wbDiv(100))
@@ -7325,13 +7008,13 @@ begin
     wbArray(TNAM, 'Music Tracks', wbFormIDCk('Track', [MUST, NULL]))
   ]);
 
-  wbRecord(FSTP, 'Footstep', [
+  RegisterRecordDef(FSTP, 'Footstep', [
     wbEDID,
     wbFormIDCk(DATA, 'Impact Data Set', [IPDS, NULL], False, cpNormal, True),
     wbString(ANAM, 'Tag', 0, cpNormal, True)
   ]);
 
-  wbRecord(FSTS, 'Footstep Set', [
+  RegisterRecordDef(FSTS, 'Footstep Set', [
     wbEDID,
     wbStruct(XCNT, 'Footstep Counts', [
       wbInteger('Walking Count', itU32),
@@ -7359,7 +7042,7 @@ begin
     ]).SetRequired
   ]);
 
-  wbRecord(SMBN, 'Story Manager Branch Node', [
+  RegisterRecordDef(SMBN, 'Story Manager Branch Node', [
     wbEDID,
     wbFormIDCkNoReach(PNAM, 'Parent Node', [SMQN, SMBN, SMEN, NULL]),
     wbFormIDCkNoReach(SNAM, 'Previous Node', [SMQN, SMBN, SMEN, NULL], False, cpBenign),
@@ -7370,11 +7053,11 @@ begin
         'Random',
         'Warn if no child quest started'
       ])
-    ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbInteger(XNAM, 'Max concurrent quests', itU32)
   ]);
 
-  wbRecord(SMQN, 'Story Manager Quest Node', [
+  RegisterRecordDef(SMQN, 'Story Manager Quest Node', [
     wbEDID,
     wbFormIDCkNoReach(PNAM, 'Parent Node', [SMQN, SMBN, SMEN, NULL]),
     wbFormIDCkNoReach(SNAM, 'Previous Node ', [SMQN, SMBN, SMEN, NULL], False, cpBenign),
@@ -7388,7 +7071,7 @@ begin
        17, 'Shares event',
        18, 'Num quests to run'
       ]))
-    ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbInteger(XNAM, 'Max concurrent quests', itU32),
     wbInteger(MNAM, 'Num quests to run', itU32),
     wbInteger(QNAM, 'Quest Count', itU32, nil, cpBenign, True),
@@ -7401,7 +7084,7 @@ begin
     ).SetCountPath(QNAM)
   ]);
 
-  wbRecord(SMEN, 'Story Manager Event Node', [
+  RegisterRecordDef(SMEN, 'Story Manager Event Node', [
     wbEDID,
     wbFormIDCkNoReach(PNAM, 'Parent Node', [SMQN, SMBN, SMEN, NULL]),
     wbFormIDCkNoReach(SNAM, 'Previous Node', [SMQN, SMBN, SMEN, NULL], False, cpBenign),
@@ -7412,27 +7095,30 @@ begin
         'Random',
         'Warn if no child quest started'
       ])
-    ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbInteger(XNAM, 'Max concurrent quests', itU32),
     wbInteger(ENAM, 'Type', itU32, wbQuestEventEnum)
   ]).SetSummaryKey([7]);
 
-  wbRecord(DLBR, 'Dialog Branch', [
+  RegisterRecordDef(DLBR, 'Dialog Branch', [
     wbEDID,
-    wbFormIDCkNoReach(QNAM, 'Quest', [QUST], False, cpNormal, True),
-    wbInteger(TNAM, 'Category', itU32, wbEnum([
-        {0} 'Player',
-        {1} 'Command'
-    ])),
-    wbInteger(DNAM, 'Flags', itU32, wbFlags([
-      {0x01} 'Top-Level',
-      {0x02} 'Blocking',
-      {0x04} 'Exclusive'
-    ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
-    wbFormIDCk(SNAM, 'Starting Topic', [DIAL], False, cpNormal, True)
+    wbFormIDCkNoReach(QNAM, 'Quest', [QUST]).SetRequired,
+    wbInteger(TNAM, 'Category', itU32,
+      wbEnum([
+      {0} 'Player',
+      {1} 'Favor'
+      ])),
+    wbInteger(DNAM, 'Flags', itU32,
+      wbFlags([
+      {0} 'Top-Level',
+      {1} 'Blocking',
+      {2} 'Exclusive'
+      ])
+    ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+    wbFormIDCk(SNAM, 'Starting Topic', [DIAL]).SetRequired
   ]).SetAddInfo(wbDLBRAddInfo);
 
-  wbRecord(MUST, 'Music Track', [
+  RegisterRecordDef(MUST, 'Music Track', [
     wbEDID,
     wbInteger(CNAM, 'Track Type', itU32, wbEnum([], [
       Int64($23F678C3), 'Palette',
@@ -7452,33 +7138,28 @@ begin
     wbCITC,
     wbConditions,
     wbArray(SNAM, 'Tracks', wbFormIDCk('Track', [MUST, NULL]))
-  ], True);
+  ]).SetUnordered;
 
-  wbRecord(DLVW, 'Dialog View', [
+  RegisterRecordDef(DLVW, 'Dialog View', [
     wbEDID,
-    wbFormIDCk(QNAM, 'Quest', [QUST], False, cpNormal, True),
-    wbRArray('Branches',
-      wbFormIDCk(BNAM, 'Branch', [DLBR])
-    ),
-    wbRArray('Topics',
-      wbFormIDCK(TNAM, 'Topic', [DIAL])
-    ),
+    wbFormIDCkNoReach(QNAM, 'Quest', [QUST]).SetRequired,
+    wbRArray('Branches', wbFormIDCkNoReach(BNAM, 'Branch', [DLBR])),
+    wbRArray('Topics', wbFormIDCKNoReach(TNAM, 'Topic', [DIAL])),
     wbInteger(ENAM, 'Topic Type', itU32,
-      wbEnum([], [
-        0, 'Player Dialogue',
-        1, 'Favor Dialogue',
-        2, 'Custom',
-        3, 'Combat',
-        4, 'Favors',
-        5, 'Detection',
-        6, 'Service',
-        7, 'Misc'
+      wbEnum([
+      {0} 'Player',
+      {1} 'Favor',
+      {2} 'Scene',
+      {3} 'Combat',
+      {4} 'Favors',
+      {5} 'Detection',
+      {6} 'Service',
+      {7} 'Misc'
       ])).SetRequired,
-    wbInteger(DNAM, 'Show All Text', itU8, wbBoolEnum)
-      .SetRequired
+    wbInteger(DNAM, 'Show All Text', itU8, wbBoolEnum).SetRequired
   ]);
 
-  wbRecord(SHOU, 'Shout',
+  RegisterRecordDef(SHOU, 'Shout',
     wbFlags(wbFlagsList([
       7, 'Treat spells as powers'
     ])), [
@@ -7497,13 +7178,13 @@ begin
     ).IncludeFlag(dfNotAlignable)
   ]);
 
-  wbRecord(EQUP, 'Equip Type', [
+  RegisterRecordDef(EQUP, 'Equip Type', [
     wbEDID,
-    wbArray(PNAM, 'Slot Parents', wbFormID('Can Be Equipped'), 0, nil, nil, cpNormal, False),
+    wbArray(PNAM, 'Slot Parents', wbFormID('Can Be Equipped')),
     wbInteger(DATA, 'Use All Parents', itU32, wbBoolEnum)
   ]);
 
-  wbRecord(RELA, 'Relationship',
+  RegisterRecordDef(RELA, 'Relationship',
     wbFlags(wbFlagsList([
       6, 'Secret'
     ])), [
@@ -7532,12 +7213,12 @@ begin
         {0x20} 'Unknown 6',
         {0x40} 'Unknown 7',
         {0x80} 'Secret'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbFormIDCk('Association Type', [ASTP, NULL])
     ])
   ]);
 
-  wbRecord(SCEN, 'Scene', [
+  RegisterRecordDef(SCEN, 'Scene', [
     wbEDID,
     wbVMADFragmentedSCEN,
     wbInteger(FNAM, 'Flags', itU32,
@@ -7548,7 +7229,7 @@ begin
       {3} 'Repeat Conditions While True',
       {4} 'Interruptible'
       ])
-    ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbRArray('Phases',
       wbRStruct('Phase', [
         wbEmpty(HNAM, 'Marker Phase Start').SetRequired,
@@ -7591,7 +7272,7 @@ begin
           {0} 'No Player Activation',
           {1} 'Optional'
           ])
-        ).IncludeFlag(dfCollapsed, wbCollapseFlags)
+        ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
          .SetRequired,
         wbInteger(DNAM, 'Behaviour Flags', itU32,
           wbFlags([
@@ -7606,7 +7287,7 @@ begin
           ])
         ).SetDefaultNativeValue(26)
          .SetRequired
-         .IncludeFlag(dfCollapsed, wbCollapseFlags)
+         .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
       ])),
     wbRArray('Actions',
       wbRStructSK([0, 1, 3, 4], 'Action', [
@@ -7647,7 +7328,7 @@ begin
           {16} 'Looping',
           {17} 'Headtrack Player'
           ])
-        ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
         wbInteger(SNAM, 'Start Phase', itU32),
         wbInteger(ENAM, 'End Phase', itU32),
         wbRUnion('Type Specific Action', wbSceneActionTypeDecider, [
@@ -7735,7 +7416,7 @@ begin
     wbConditions
   ]).SetAddInfo(wbSCENAddInfo);
 
-  wbRecord(ASTP, 'Association Type', [
+  RegisterRecordDef(ASTP, 'Association Type', [
     wbEDID,
     wbString(MPRT, 'Male Parent Title'),
     wbString(FPRT, 'Female Parent Title'),
@@ -7743,17 +7424,17 @@ begin
     wbString(FCHT, 'Female Child Title'),
     wbInteger(DATA, 'Flags', itU32, wbFlags([
       'Family Association'
-    ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
+    ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
   ]);
 
-  wbRecord(OTFT, 'Outfit', [
+  RegisterRecordDef(OTFT, 'Outfit', [
     wbEDID,
     wbArrayS(INAM, 'Items', wbFormIDCk('Item', [ARMO, LVLI]))
   ]);
 
-  wbRecord(ARTO, 'Art Object', [
+  RegisterRecordDef(ARTO, 'Art Object', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbGenericModel,
     wbInteger(DNAM, 'Art Type', itU32, wbEnum([
       'Magic Casting',
@@ -7762,12 +7443,12 @@ begin
     ]))
   ]).SetSummaryKey([2]);
 
-  wbRecord(MATO, 'Material Object', [
+  RegisterRecordDef(MATO, 'Material Object', [
     wbEDID,
     wbGenericModel,
     wbRArray('Property Data',
-      wbByteArray(DNAM, 'Data', 0, cpIgnore, False, False, wbNeverShow)
-    ),
+      wbByteArray(DNAM, 'Data', 0, cpIgnore)
+    ).SetDontShow(wbNeverShow),
     wbStruct(DATA, 'Directional Material Data', [
       wbFloat('Falloff Scale'),
       wbFloat('Falloff Bias'),
@@ -7781,10 +7462,11 @@ begin
         wbFromVersion(43, wbInteger('Is Snow', itU32, wbBoolEnum)),
         nil
       )
-    ], cpNormal, True, nil, 8)
+    ]).SetOptionalFrom(8)
+      .SetRequired
   ]);
 
-  wbRecord(MOVT, 'Movement Type', [
+  RegisterRecordDef(MOVT, 'Movement Type', [
     wbEDID,
     wbString(MNAM, 'Name'),
     wbStruct(SPED, 'Default Data', [
@@ -7807,7 +7489,7 @@ begin
     ]).SetRequired
   ]);
 
-  wbRecord(SNDR, 'Sound Descriptor', [
+  RegisterRecordDef(SNDR, 'Sound Descriptor', [
     wbEDID,
     wbInteger(CNAM, 'Descriptor Type', itU32, wbEnum([], [
       Int64($1EEF540A), 'Standard'
@@ -7824,7 +7506,7 @@ begin
         2, 'Unknown 2',
         4, 'Loop'
         ], False, 5))
-      ).IncludeFlag(dfCollapsed, wbCollapseFlags)),
+      ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)),
     wbConditions,
     wbFromVersion(34, LNAM,
       wbStruct('Values', [
@@ -7847,9 +7529,9 @@ begin
     ])
   ]);
 
-  wbRecord(DUAL, 'Dual Cast Data', [
+  RegisterRecordDef(DUAL, 'Dual Cast Data', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbStruct(DATA, 'Data', [
       wbFormIDCk('Projectile', [PROJ, NULL]),
       wbFormIDCk('Explosion', [EXPL, NULL]),
@@ -7860,29 +7542,29 @@ begin
         'Hit Effect Art',
         'Projectile',
         'Explosion'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
     ], cpNormal, True)
   ]);
 
-  wbRecord(SNCT, 'Sound Category', [
+  RegisterRecordDef(SNCT, 'Sound Category', [
     wbEDID,
     wbFULL,
     wbInteger(FNAM, 'Flags', itU32, wbFlags([
       'Mute When Submerged',
       'Should Appear on Menu'
-    ]), cpNormal, True).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ]), cpNormal, True).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbFormIDCk(PNAM, 'Parent', [SNCT]),
     wbInteger(VNAM, 'Static Volume Multiplier', itU16, wbDiv(65535)),
     wbInteger(UNAM, 'Default Menu Value', itU16, wbDiv(65535))
   ]);
 
-  wbRecord(SOPM, 'Sound Output Model', [
+  RegisterRecordDef(SOPM, 'Sound Output Model', [
     wbEDID,
     wbStruct(NAM1, 'Data', [
       wbInteger('Flags', itU8, wbFlags([
         'Attenuates With Distance',
         'Allows Rumble'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbByteArray('Unknown', 2),
       wbInteger('Reverb Send %', itU8)
     ]),
@@ -7918,7 +7600,7 @@ begin
     ])
   ]);
 
-  wbRecord(COLL, 'Collision Layer', [
+  RegisterRecordDef(COLL, 'Collision Layer', [
     wbEDID,
     wbDESCReq,
     wbInteger(BNAM, 'Index', itU32, nil, cpNormal, True),
@@ -7927,7 +7609,7 @@ begin
       {0x00000001} 'Trigger Volume',
       {0x00000002} 'Sensor',
       {0x00000004} 'Navmesh Obstacle'
-    ]), cpNormal, True).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ]), cpNormal, True).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbString(MNAM, 'Name', 0, cpNormal, True),
     wbInteger(INTV, 'Interactables Count', itU32, nil, cpNormal, True),
     wbArrayS(CNAM, 'Collides With', wbFormIDCk('Forms', [COLL]), 0, cpNormal, False)
@@ -7943,7 +7625,7 @@ begin
       aIndexKeys.Keys[wbIdxCollisionLayer] := lBNAM;
     end);
 
-  wbRecord(CLFM, 'Color',
+  RegisterRecordDef(CLFM, 'Color',
     wbFlags(wbFlagsList([
       2, 'Non-Playable'
     ])), [
@@ -7953,7 +7635,7 @@ begin
     wbInteger(FNAM, 'Playable', itU32, wbBoolEnum, cpNormal, True)
   ]);
 
-  wbRecord(REVB, 'Reverb Parameters', [
+  RegisterRecordDef(REVB, 'Reverb Parameters', [
     wbEDID,
     wbStruct(DATA, 'Data', [
       wbInteger('Decay Time (ms)', itU16),
@@ -7971,9 +7653,9 @@ begin
     ], cpNormal, True)
   ]);
 
-  wbRecord(GRAS, 'Grass', [
+  RegisterRecordDef(GRAS, 'Grass', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbGenericModel,
     wbStruct(DATA, '', [
       wbInteger('Density', itU8),
@@ -8000,12 +7682,12 @@ begin
         'Vertex Lighting',
         'Uniform Scaling',
         'Fit to Slope'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbUnused(3)
     ], cpNormal, True)
   ]);
 
-  wbRecord(IDLE, 'Idle Animation', [
+  RegisterRecordDef(IDLE, 'Idle Animation', [
     wbEDID,
     wbConditions,
     wbString(DNAM, 'FileName'),
@@ -8020,17 +7702,17 @@ begin
         wbInteger('Max', itU8)
       ]),
       wbInteger('Flags', itU8, wbFlags([
-        {0x01} 'Parent',
+        {0x01} 'Loose',
         {0x02} 'Sequence',
         {0x04} 'No Attacking',
         {0x04} 'Blocking'
-      ], True)).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ], True)).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbInteger('Animation Group Section', itU8{, wbIdleAnam}),
       wbInteger('Replay Delay', itU16)
     ], cpIgnore, True)
   ]);
 
-  wbRecord(INFO, 'Dialog response',
+  RegisterRecordDef(INFO, 'Dialog response',
     wbFlags(wbFlagsList([
     13, 'Actor Changed'
     ])), [
@@ -8066,7 +7748,7 @@ begin
         {13} 'Audio Output Override',
         {14} 'Spends Favor Points'
         ])
-      ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbFloat('Reset Days')
     ]),
     wbStruct(ENAM, 'Data', [
@@ -8088,8 +7770,8 @@ begin
         {13} 'Audio Output Override',
         {14} 'Spends favor points'
         ])
-      ).IncludeFlag(dfCollapsed, wbCollapseFlags),
-      wbInteger('Reset Hours', itU16, wbDiv(2730))
+      ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+      wbInteger('Reset Hours', itU16, wbDivF(2730.625, 2))
     ]),
     wbFormIDCkNoReach(TPIC, 'Previous Topic', [DIAL]),
     wbFormIDCkNoReach(PNAM, 'Previous INFO', [INFO,NULL], False, cpBenign).SetAfterSet(wbINFOPNAMAfterSet),
@@ -8102,7 +7784,7 @@ begin
       ])
     ).SetRequired,
     wbRArray('Link To', wbFormIDCk(TCLT, 'Topic', [DIAL])),
-    wbFormIDCk(DNAM, 'Response Data', [INFO]),
+    wbFormIDCk(DNAM, 'Shared Info', [INFO]),
     wbRArray('Responses',
       wbRStruct('Response', [
         wbStruct(TRDT, 'Response Data', [
@@ -8115,9 +7797,7 @@ begin
           wbInteger('Use Emotion Animation', itU8, wbBoolEnum),
           wbUnused(3)
         ]),
-        wbLStringKC(NAM1, 'Response Text', 0, cpTranslate)
-          .SetAfterLoad(wbDialogueTextAfterLoad)
-          .SetAfterSet(wbDialogueTextAfterSet),
+        wbLStringKC(NAM1, 'Response Text', 0, cpTranslate).IncludeFlagOnValue(dfStringTrim),
         wbString(NAM2, 'Script Notes'),
         wbString(NAM3, 'Edits'),
         wbFormIDCk(SNAM, 'Idle Animations: Speaker', [IDLE]),
@@ -8135,18 +7815,16 @@ begin
       ])).IncludeFlag(dfInternalEditOnly)
          .SetDontShow(wbNeverShow),
     {>>> END leftover from earlier CK versions <<<}
-    wbLStringKC(RNAM, 'Prompt', 0, cpTranslate)
-      .SetAfterLoad(wbDialogueTextAfterLoad)
-      .SetAfterSet(wbDialogueTextAfterSet),
+    wbLStringKC(RNAM, 'Prompt', 0, cpTranslate).IncludeFlagOnValue(dfStringTrim),
     wbFormIDCkNoReach(ANAM, 'Speaker', [NPC_]),
     wbFormIDCk(TWAT, 'Walk Away Topic', [DIAL]),
     wbFormIDCk(ONAM, 'Audio Output Override', [SOPM])
   ]).SetAddInfo(wbINFOAddInfo);
 
-  wbRecord(INGR, 'Ingredient', [
+  RegisterRecordDef(INGR, 'Ingredient', [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbKeywords,
     wbGenericModel,
@@ -8171,18 +7849,18 @@ begin
         {0x00000040} 'Unknown 7',
         {0x00000080} 'Unknown 8',
         {0x00000100} 'References Persist'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
     ], cpNormal, True),
     wbEffectsReq
   ]);
 
-  wbRecord(KEYM, 'Key',
+  RegisterRecordDef(KEYM, 'Key',
     wbFlags(wbFlagsList([
       2, 'Non-Playable'
     ])), [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULLReq,
     wbGenericModel,
     wbICON,
@@ -8196,7 +7874,7 @@ begin
     ], cpNormal, True)
   ]);
 
-  wbRecord(LAND, 'Landscape',
+  RegisterRecordDef(LAND, 'Landscape',
     wbFlags(wbFlagsList([
       18, 'Compressed'
     ]), [18]), [
@@ -8212,7 +7890,7 @@ begin
       {0x100} '',
       {0x200} '',
       {0x400} 'Ignored'
-    ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbLandNormals,
     wbLandHeights,
     wbLandColors,
@@ -8220,7 +7898,7 @@ begin
     wbRArray('Unknown', wbUnknown(MPCD))
   ]).SetAddInfo(wbLANDAddInfo);
 
-  wbRecord(LIGH, 'Light',
+  RegisterRecordDef(LIGH, 'Light',
     wbFlags(wbFlagsList([
     16, 'Random Anim Start',
     17, 'Portal-strict',
@@ -8228,7 +7906,7 @@ begin
     ])), [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbGenericModel,
     wbDEST,
     wbFULL.SetDontShow(wbLIGHCarryDontShow),
@@ -8255,18 +7933,16 @@ begin
         {11} 'Shadow Hemisphere',
         {12} 'Shadow Omnidirectional',
         {13} 'Portal-strict',
-        {14} IsCS('Inverse Square', '')
+        {14} IsCS('Inverse Square', ''),
+        {15} IsCS('Linear', '')
         ])
       ).SetAfterSet(wbLIGHDataFlagsAfterSet)
-       .IncludeFlag(dfCollapsed, wbCollapseFlags),
-      wbUnion('', wbLIGHInverseSquareDecider, [
-        wbFloat('Falloff Exponent', cpNormal, True, 1, 4),
-        wbFloat('Inverse Square Falloff', cpNormal, True, 1, 4)
-      ]).SetDontShow(wbLIGHFalloffDontShow),
-      wbUnion('', wbLIGHInverseSquareDecider, [
-        wbFloat('FOV', cpNormal, True, 1, 4, nil, wbNormalizeToRange(0.001, 160), 90),
-        wbFloat('Size', cpNormal, True, 1, 4, nil, wbNormalizeToRange(0.001, 160), 90)
-      ]).SetDontShow(wbLIGHShadowSpotDontShow),
+       .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+      wbFloat('Falloff Exponent', cpNormal, True, 1, 4).SetDontShow(wbLIGHFalloffDontShow),
+      wbFloat('FOV', cpNormal, True, 1, 4)
+        .SetNormalizer(wbNormalizeToRange(0.001, 160))
+        .SetDefaultNativeValue(90)
+        .SetDontShow(wbLIGHShadowSpotDontShow),
       wbFloat('Near Clip', cpNormal, True, 1, 4)
         .SetDefaultNativeValue(1)
         .SetDontShow(wbLIGHShadowSpotDontShow),
@@ -8278,11 +7954,9 @@ begin
       wbInteger('Value', itU32).SetDontShow(wbLIGHCarryDontShow),
       wbFloat('Weight', cpNormal, True, 1, 4).SetDontShow(wbLIGHCarryDontShow)
     ]).SetRequired,
-    wbUnion(FNAM, '', wbLIGHInverseSquareDecider, [
-      wbFloat('Fade Value', cpNormal, True, 1, 4, nil, wbNormalizeToRange(0, 10), 1),
-      wbFloat('Intensity', cpNormal, True, 1, 4, nil, wbNormalizeToRange(0, 10), 1)
-    ]).IncludeFlagOnValue(dfUnionStaticResolve)
-      .SetRequired,
+    wbFloat(FNAM, 'Fade Value', cpNormal, True, 1, 4)
+      .SetNormalizer(wbNormalizeToRange(0, 10))
+      .SetDefaultNativeValue(1),
     wbFormIDCk(SNAM, 'Sound', [SNDR]),
     IsSSE(
       wbFormIDCk(LNAM, 'Lens Flare', [LENS]),
@@ -8290,20 +7964,20 @@ begin
     )
   ]);
 
-  wbRecord(LSCR, 'Load Screen',
+  RegisterRecordDef(LSCR, 'Load Screen',
     wbFlags(wbFlagsList([
       10, 'Displays In Main Menu'
     ])), [
     wbEDID,
     wbDESCReq,
     wbConditions,
-    wbFormIDCk(NNAM, 'Loading Screen NIF', [STAT, NULL], False, cpNormal, True),
+    wbFormIDCk(NNAM, 'Loading Screen NIF', [STAT, NULL]),
     wbFloat(SNAM, 'Initial Scale'),
     wbStruct(RNAM, 'Initial Rotation', [
       wbInteger('X', itS16),
       wbInteger('Y', itS16),
       wbInteger('Z', itS16)
-    ]).SetToStr(wbVec3ToStr).IncludeFlag(dfCollapsed, wbCollapseVec3),
+    ]).SetToStr(wbVec3ToStr).IncludeFlag(dfCollapsed, clpVec3 in DefineOptions.Collapse),
     wbStruct(ONAM, 'Rotation Offset Constraints', [
       wbInteger('Min', itS16),
       wbInteger('Max', itS16)
@@ -8312,7 +7986,7 @@ begin
     wbString(MOD2, 'Camera Path', 0, cpNormal, False)
   ]);
 
-  wbRecord(LTEX, 'Landscape Texture', [
+  RegisterRecordDef(LTEX, 'Landscape Texture', [
     wbEDID,
     wbFormIDCk(TNAM, 'Texture Set', [TXST], False, cpNormal, False),
     wbFormIDCk(MNAM, 'Material Type', [MATT, NULL], False, cpNormal, True),
@@ -8329,14 +8003,14 @@ begin
     )
   ]);
 
-  wbRecord(LVLN, 'Leveled NPC', [
+  RegisterRecordDef(LVLN, 'Leveled NPC', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbLVLD,
     wbInteger(LVLF, 'Flags', itU8, wbFlags([
       {0x01} 'Calculate from all levels <= player''s level',
       {0x02} 'Calculate for each item in count'
-    ]), cpNormal, True).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ]), cpNormal, True).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbFormIDCk(LVLG, 'Global', [GLOB]),
     wbLLCT,
     wbRArrayS('Leveled List Entries',
@@ -8344,21 +8018,21 @@ begin
         wbLeveledListEntry('NPC', [LVLN, NPC_]),
         wbCOED
       ]).SetSummaryMemberMaxDepth(0, 1)
-        .IncludeFlag(dfCollapsed, wbCollapseLeveledItems)
-    ).SetCountPath(LLCT),
+        .IncludeFlag(dfCollapsed, clpLeveledItems in DefineOptions.Collapse)
+    ).SetCountPath(LLCT).SetMaxCount(255),
     wbGenericModel
   ]);
 
-  wbRecord(LVLI, 'Leveled Item', [
+  RegisterRecordDef(LVLI, 'Leveled Item', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbLVLD,
     wbInteger(LVLF, 'Flags', itU8, wbFlags([
       {0x01} 'Calculate from all levels <= player''s level',
       {0x02} 'Calculate for each item in count',
       {0x04} 'Use All',
       {0x08} 'Special Loot'
-    ]), cpNormal, True).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ]), cpNormal, True).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbFormIDCk(LVLG, 'Global', [GLOB]),
     wbLLCT,
     wbRArrayS('Leveled List Entries',
@@ -8366,178 +8040,175 @@ begin
         wbLeveledListEntry('Item', [ALCH, AMMO, APPA, ARMO, BOOK, INGR, KEYM, LIGH, LVLI, MISC, SCRL, SLGM, WEAP]),
         wbCOED
       ]).SetSummaryMemberMaxDepth(0, 1)
-        .IncludeFlag(dfCollapsed, wbCollapseLeveledItems)
-    ).SetCountPath(LLCT)
+        .IncludeFlag(dfCollapsed, clpLeveledItems in DefineOptions.Collapse)
+    ).SetCountPath(LLCT).SetMaxCount(255)
   ]);
 
-   wbRecord(LVSP, 'Leveled Spell', [
+   RegisterRecordDef(LVSP, 'Leveled Spell', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbLVLD,
     wbInteger(LVLF, 'Flags', itU8, wbFlags([
       {0x01} 'Calculate from all levels <= player''s level',
       {0x02} 'Calculate for each item in count',
       {0x04} 'Use All Spells'
-    ]), cpNormal, True).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ]), cpNormal, True).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbLLCT,
     wbRArrayS('Leveled List Entries',
       wbRStructSK([0], 'Leveled List Entry', [
         wbLeveledListEntry('Spell', [LVSP, SPEL])
       ]).SetSummaryMemberMaxDepth(0, 1)
-        .IncludeFlag(dfCollapsed, wbCollapseLeveledItems)
-    ).SetCountPath(LLCT)
+        .IncludeFlag(dfCollapsed, clpLeveledItems in DefineOptions.Collapse)
+    ).SetCountPath(LLCT).SetMaxCount(255)
   ]);
 
-  wbMGEFType := wbInteger('Archtype', itU32, wbEnum([
-    {00} 'Value Modifier',
-    {01} 'Script',
-    {02} 'Dispel',
-    {03} 'Cure Disease',
-    {04} 'Absorb',
-    {05} 'Dual Value Modifier',
-    {06} 'Calm',
-    {07} 'Demoralize',
-    {08} 'Frenzy',
-    {09} 'Disarm',
-    {10} 'Command Summoned',
-    {11} 'Invisibility',
-    {12} 'Light',
-    {13} 'Unknown 13',
-    {14} 'Unknown 14',
-    {15} 'Lock',
-    {16} 'Open',
-    {17} 'Bound Weapon',
-    {18} 'Summon Creature',
-    {19} 'Detect Life',
-    {20} 'Telekinesis',
-    {21} 'Paralysis',
-    {22} 'Reanimate',
-    {23} 'Soul Trap',
-    {24} 'Turn Undead',
-    {25} 'Guide',
-    {26} 'Werewolf Feed',
-    {27} 'Cure Paralysis',
-    {28} 'Cure Addiction',
-    {29} 'Cure Poison',
-    {30} 'Concussion',
-    {31} 'Value and Parts',
-    {32} 'Accumulate Magnitude',
-    {33} 'Stagger',
-    {34} 'Peak Value Modifier',
-    {35} 'Cloak',
-    {36} 'Werewolf',
-    {37} 'Slow Time',
-    {38} 'Rally',
-    {39} 'Enhance Weapon',
-    {40} 'Spawn Hazard',
-    {41} 'Etherealize',
-    {42} 'Banish',
-    {43} 'Spawn Scripted Ref',
-    {44} 'Disguise',
-    {45} 'Grab Actor',
-    {46} 'Vampire Lord'
-  ]), cpNormal, False, nil, wbMGEFArchtypeAfterSet);
-
-  wbMGEFData := wbRStruct('Magic Effect Data', [
-    wbStruct(DATA, 'Data', [
-      wbInteger('Flags', itU32, wbFlags([
-        {0x00000001}  'Hostile',
-        {0x00000002}  'Recover',
-        {0x00000004}  'Detrimental',
-        {0x00000008}  'Snap to Navmesh',
-        {0x00000010}  'No Hit Event',
-        {0x00000020}  'Unknown 6',
-        {0x00000040}  'Unknown 7',
-        {0x00000080}  'Unknown 8',
-        {0x00000100}  'Dispel with Keywords',
-        {0x00000200}  'No Duration',
-        {0x00000400}  'No Magnitude',
-        {0x00000800}  'No Area',
-        {0x00001000}  'FX Persist',
-        {0x00002000}  'Unknown 14',
-        {0x00004000}  'Gory Visuals',
-        {0x00008000}  'Hide in UI',
-        {0x00010000}  'Unknown 17',
-        {0x00020000}  'No Recast',
-        {0x00040000}  'Unknown 19',
-        {0x00080000}  'Unknown 20',
-        {0x00100000}  'Unknown 21',
-        {0x00200000}  'Power Affects Magnitude',
-        {0x00400000}  'Power Affects Duration',
-        {0x00800000}  'Unknown 24',
-        {0x01000000}  'Unknown 25',
-        {0x02000000}  'Unknown 26',
-        {0x04000000}  'Painless',
-        {0x08000000}  'No Hit Effect',
-        {0x10000000}  'No Death Dispel',
-        {0x20000000}  'Unknown 30',
-        {0x40000000}  'Unknown 31',
-        {0x80000000}  'Unknown 32'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
-      wbFloat('Base Cost'),
-      wbUnion('Assoc. Item', wbMGEFAssocItemDecider, [
-        wbFormID('Unused', cpIgnore),
-        wbFormIDCk('Assoc. Item', [LIGH, NULL]),
-        wbFormIDCk('Assoc. Item', [WEAP, ARMO, NULL]),
-        wbFormIDCk('Assoc. Item', [NPC_, NULL]),
-        wbFormIDCk('Assoc. Item', [HAZD, NULL]),
-        wbFormIDCk('Assoc. Item', [SPEL, NULL]),
-        wbFormIDCk('Assoc. Item', [RACE, NULL]),
-        wbFormIDCk('Assoc. Item', [ENCH, NULL]),
-        wbFormIDCk('Assoc. Item', [KYWD, NULL])
-      ], cpNormal, False, nil, wbMGEFAssocItemAfterSet),
-      wbInteger('Magic Skill', itS32, wbActorValueEnum),
-      wbInteger('Resist Value', itS32, wbActorValueEnum),
-      wbInteger('Counter Effect Count', itU16),
-      wbUnused(2),
-      wbFormIDCk('Casting Light', [LIGH, NULL]),
-      wbFloat('Taper Weight'),
-      wbFormIDCk('Hit Shader', [EFSH, NULL]),
-      wbFormIDCk('Enchant Shader', [EFSH, NULL]),
-      wbInteger('Minimum Skill Level', itU32),
-      wbStruct('Spellmaking', [
-        wbInteger('Area', itU32),
-        wbFloat('Casting Time')
-      ]),
-      wbFloat('Taper Curve'),
-      wbFloat('Taper Duration'),
-      wbFloat('Second AV Weight', cpNormal, False, nil, wbMGEFAV2WeightAfterSet),
-      wbMGEFType,
-      wbActorValue,
-      wbFormIDCk('Projectile', [PROJ, NULL]),
-      wbFormIDCk('Explosion', [EXPL, NULL]),
-      wbInteger('Casting Type', itU32, wbCastEnum),
-      wbInteger('Delivery', itU32, wbDeliveryEnum),
-      wbInteger('Second Actor Value', itS32, wbActorValueEnum),
-      wbFormIDCk('Casting Art', [ARTO, NULL]),
-      wbFormIDCk('Hit Effect Art', [ARTO, NULL]),
-      wbFormIDCk('Impact Data', [IPDS, NULL]),
-      wbFloat('Skill Usage Multiplier'),
-      wbStruct('Dual Casting', [
-        wbFormIDCk('Art', [DUAL, NULL]),
-        wbFloat('Scale')
-      ]),
-      wbFormIDCk('Enchant Art', [ARTO, NULL]),
-      wbFormIDCk('Hit Visuals', [RFCT, NULL]),
-      wbFormIDCk('Enchant Visuals', [RFCT, NULL]),
-      wbFormIDCk('Equip Ability', [SPEL, NULL]),
-      wbFormIDCk('Image Space Modifier', [IMAD, NULL]),
-      wbFormIDCk('Perk to Apply', [PERK, NULL]),
-      wbInteger('Casting Sound Level', itU32, wbSoundLevelEnum),
-      wbStruct('Script Effect AI', [
-        wbFloat('Score'),
-        wbFloat('Delay Time')
-      ])
-    ], cpNormal, True)
-  ]);
-
-  wbRecord(MGEF, 'Magic Effect', [
+  RegisterRecordDef(MGEF, 'Magic Effect', [
     wbEDID,
     wbVMAD,
     wbFULL,
     wbMDOB,
     wbKeywords,
-    wbMGEFData,
+    wbStruct(DATA, 'Data', [
+    {0}  wbInteger('Flags', itU32,
+           wbFlags([
+           {0}   'Hostile',
+           {1}   'Recover',
+           {2}   'Detrimental',
+           {3}   'Snap to Navmesh',
+           {4}   'No Hit Event',
+           {5}   'Unknown 5',
+           {6}   'Unknown 6',
+           {7}   'Unknown 7',
+           {8}   'Dispel with Keywords',
+           {9}   'No Duration',
+           {10}  'No Magnitude',
+           {11}  'No Area',
+           {12}  'FX Persist',
+           {13}  'Unknown 13',
+           {14}  'Gory Visuals',
+           {15}  'Hide in UI',
+           {16}  'Unknown 16',
+           {17}  'No Recast',
+           {18}  'Unknown 18',
+           {19}  'Unknown 19',
+           {20}  'Unknown 20',
+           {21}  'Power Affects Magnitude',
+           {22}  'Power Affects Duration',
+           {23}  'Unknown 23',
+           {24}  'Unknown 24',
+           {25}  'Unknown 25',
+           {26}  'Painless',
+           {27}  'No Hit Effect',
+           {28}  'No Death Dispel',
+           {29}  'Unknown 29',
+           {30}  'Unknown 30',
+           {31}  'Unknown 31'
+           ])
+         ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+    {1}  wbFloat('Base Cost'),
+    {2}  wbUnion('Assoc. Item', wbMGEFAssocItemDecider, [
+         {0} wbFormIDCk('Unused', [NULL]),
+         {1} wbFormIDCk('Assoc. Item', [LIGH, NULL]),
+         {2} wbFormIDCk('Assoc. Item', [WEAP, ARMO, NULL]),
+         {3} wbFormIDCk('Assoc. Item', [NPC_, NULL]),
+         {4} wbFormIDCk('Assoc. Item', [HAZD, NULL]),
+         {5} wbFormIDCk('Assoc. Item', [SPEL, NULL]),
+         {6} wbFormIDCk('Assoc. Item', [RACE, NULL]),
+         {7} wbFormIDCk('Assoc. Item', [ENCH, NULL]),
+         {8} wbFormIDCk('Assoc. Item', [KYWD, NULL])
+         ]),
+    {3}  wbInteger('Magic Skill', itS32, ActorValueEnum),
+    {4}  wbInteger('Resist Value', itS32, ActorValueEnum),
+    {5}  wbInteger('Counter Effect Count', itU16),
+    {6}  wbUnused(2),
+    {7}  wbFormIDCk('Casting Light', [LIGH, NULL]),
+    {8}  wbFloat('Taper Weight'),
+    {9}  wbFormIDCk('Hit Shader', [EFSH, NULL]),
+    {10} wbFormIDCk('Enchant Shader', [EFSH, NULL]),
+    {11} wbInteger('Minimum Skill Level', itU32),
+    {12} wbStruct('Spellmaking', [
+           wbInteger('Area', itU32),
+           wbFloat('Casting Time')
+         ]),
+    {13} wbFloat('Taper Curve'),
+    {14} wbFloat('Taper Duration'),
+    {15} wbFloat('Second AV Weight'),
+    {16} wbInteger('Archetype', itU32,
+           wbEnum([
+           {0}  'Value Modifier',
+           {1}  'Script',
+           {2}  'Dispel',
+           {3}  'Cure Disease',
+           {4}  'Absorb',
+           {5}  'Dual Value Modifier',
+           {6}  'Calm',
+           {7}  'Demoralize',
+           {8}  'Frenzy',
+           {9}  'Disarm',
+           {10} 'Command Summoned',
+           {11} 'Invisibility',
+           {12} 'Light',
+           {13} 'Unknown 13',
+           {14} 'Unknown 14',
+           {15} 'Lock',
+           {16} 'Open',
+           {17} 'Bound Weapon',
+           {18} 'Summon Creature',
+           {19} 'Detect Life',
+           {20} 'Telekinesis',
+           {21} 'Paralysis',
+           {22} 'Reanimate',
+           {23} 'Soul Trap',
+           {24} 'Turn Undead',
+           {25} 'Guide',
+           {26} 'Werewolf Feed',
+           {27} 'Cure Paralysis',
+           {28} 'Cure Addiction',
+           {29} 'Cure Poison',
+           {30} 'Concussion',
+           {31} 'Value and Parts',
+           {32} 'Accumulate Magnitude',
+           {33} 'Stagger',
+           {34} 'Peak Value Modifier',
+           {35} 'Cloak',
+           {36} 'Werewolf',
+           {37} 'Slow Time',
+           {38} 'Rally',
+           {39} 'Enhance Weapon',
+           {40} 'Spawn Hazard',
+           {41} 'Etherealize',
+           {42} 'Banish',
+           {43} 'Spawn Scripted Ref',
+           {44} 'Disguise',
+           {45} 'Grab Actor',
+           {46} 'Vampire Lord'
+           ])),
+    {17} wbActorValue,
+    {18} wbFormIDCk('Projectile', [PROJ, NULL]),
+    {19} wbFormIDCk('Explosion', [EXPL, NULL]),
+    {20} wbInteger('Casting Type', itU32, wbCastEnum),
+    {21} wbInteger('Delivery', itU32, wbDeliveryEnum),
+    {22} wbInteger('Second Actor Value', itS32, ActorValueEnum),
+    {23} wbFormIDCk('Casting Art', [ARTO, NULL]),
+    {24} wbFormIDCk('Hit Effect Art', [ARTO, NULL]),
+    {25} wbFormIDCk('Impact Data', [IPDS, NULL]),
+    {26} wbFloat('Skill Usage Multiplier'),
+    {27} wbStruct('Dual Casting', [
+           wbFormIDCk('Art', [DUAL, NULL]),
+           wbFloat('Scale')
+         ]),
+    {28} wbFormIDCk('Enchant Art', [ARTO, NULL]),
+    {29} wbFormIDCk('Hit Visuals', [RFCT, NULL]),
+    {30} wbFormIDCk('Enchant Visuals', [RFCT, NULL]),
+    {31} wbFormIDCk('Equip Ability', [SPEL, NULL]),
+    {32} wbFormIDCk('Image Space Modifier', [IMAD, NULL]),
+    {33} wbFormIDCk('Perk to Apply', [PERK, NULL]),
+    {34} wbInteger('Casting Sound Level', itU32, wbSoundLevelEnum),
+    {35} wbStruct('Script Effect AI', [
+           wbFloat('Score'),
+           wbFloat('Delay Time')
+         ])
+    ], [0,1,16,2,3,4,5,6,7,8,9,10,11,12,13,14,15,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35]).SetRequired,
     wbRArrayS('Counter Effects',
       wbFormIDCk(ESCE, 'Effect', [MGEF])
     ).SetCountPath('DATA\Counter Effect Count'),
@@ -8546,13 +8217,13 @@ begin
     wbConditions
   ]);
 
-  wbRecord(MISC, 'Misc. Item',
+  RegisterRecordDef(MISC, 'Misc. Item',
     wbFlags(wbFlagsList([
       2, 'Non-Playable'
     ])), [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbICON,
@@ -8566,10 +8237,10 @@ begin
     ], cpNormal, True)
   ]);
 
-  wbRecord(APPA, 'Alchemical Apparatus', [
+  RegisterRecordDef(APPA, 'Alchemical Apparatus', [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbICON,
@@ -8590,7 +8261,7 @@ begin
     ])
   ]);
 
-  wbRecord(COBJ, 'Constructible Object', [
+  RegisterRecordDef(COBJ, 'Constructible Object', [
     wbEDID,
     wbCOCT,
     wbCNTOsNoReach,
@@ -8605,7 +8276,7 @@ begin
     .SetSummaryMemberPrefixSuffix(3, 'when (', ')')
     .SetSummaryMemberPrefixSuffix(5, 'at (', ')');
 
-  wbRecord(NPC_, 'Non-Player Character',
+  RegisterRecordDef(NPC_, 'Non-Player Character',
     wbFlags(wbFlagsList([
       10, 'Unknown 10',
       18, 'Compressed',
@@ -8614,42 +8285,32 @@ begin
     ]), [18]), [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbStruct(ACBS, 'Configuration', [
-      wbInteger('Flags', itU32, wbFlags([
-        {0x00000001} 'Female',
-        {0x00000002} 'Essential',
-        {0x00000004} 'Is CharGen Face Preset',
-        {0x00000008} 'Respawn',
-        {0x00000010} 'Auto-calc stats',
-        {0x00000020} 'Unique',
-        {0x00000040} 'Doesn''t affect stealth meter',
-        {0x00000080} 'PC Level Mult',
-        {0x00000100} 'Use Template?',
-        {0x00000200} 'Unknown 9',
-        {0x00000400} 'Unknown 10',
-        {0x00000800} 'Protected',
-        {0x00001000} 'Unknown 12',
-        {0x00002000} 'Unknown 13',
-        {0x00004000} 'Summonable',
-        {0x00008000} 'Unknown 15',
-        {0x00010000} 'Doesn''t bleed',
-        {0x00020000} 'Unknown 17',
-        {0x00040000} 'Bleedout Override',
-        {0x00080000} 'Opposite Gender Anims',
-        {0x00100000} 'Simple Actor',
-        {0x00200000} 'looped script?',
-        {0x00400000} 'Unknown 22',
-        {0x00800000} 'Unknown 23',
-        {0x01000000} 'Unknown 24',
-        {0x02000000} 'Unknown 25',
-        {0x04000000} 'Unknown 26',
-        {0x08000000} 'Unknown 27',
-        {0x10000000} 'looped audio?',
-        {0x20000000} 'Is Ghost',
-        {0x40000000} 'Unknown 30',
-        {0x80000000} 'Invulnerable'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      wbInteger('Flags', itU32,
+        wbFlags(wbSparseFlags([
+        0,  'Female',
+        1,  'Essential',
+        2,  'Is CharGen Face Preset',
+        3,  'Respawn',
+        4,  'Auto-calc stats',
+        5,  'Unique',
+        6,  'Doesn''t affect stealth meter',
+        7,  'PC Level Mult',
+        8,  'Use Template?',
+        11, 'Protected',
+        14, 'Summonable',
+        16, 'Doesn''t bleed',
+        18, 'Bleedout Override',
+        19, 'Opposite Gender Anims',
+        20, 'Simple Actor',
+        21, 'looped script?',
+        28, 'looped audio?',
+        29, 'Is Ghost',
+        31, 'Invulnerable'
+        ]))
+      ).SetToStr(wbACBSFlagsToStr)
+       .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbInteger('Magicka Offset', itS16),
       wbInteger('Stamina Offset', itS16),
       wbUnion('Level', wbACBSLevelDecider, [
@@ -8662,14 +8323,14 @@ begin
       wbInteger('Speed Multiplier', itU16),
       wbInteger('Disposition Base (unused)', itS16, nil, cpIgnore),
       wbInteger('Template Flags', itU16, wbTemplateFlags)
-        .IncludeFlag(dfCollapsed,  wbCollapseFlags),
+        .IncludeFlag(dfCollapsed,  clpFlags in DefineOptions.Collapse),
       wbInteger('Health Offset', itS16),
       wbInteger('Bleedout Override', itU16)
     ], cpNormal, True),
     wbRArrayS('Factions', wbFaction),
     wbFormIDCk(INAM, 'Death item', [LVLI]),
     wbFormIDCk(VTCK, 'Voice', [VTYP]),
-    wbFormIDCk(TPLT, 'Template', [LVLN, NPC_]),
+    wbFormIDCk(TPLT, 'Template', [LVLN, NPC_]).SetToStr(wbNPCTemplateToStr),
     wbFormIDCk(RNAM, 'Race', [RACE]).SetRequired,
     wbSPCT,
     wbSPLOs,
@@ -8691,7 +8352,7 @@ begin
       ]).SetSummaryKeyOnValue([1])
         .SetSummaryPrefixSuffixOnValue(1, '{Rank: ', '}')
         .IncludeFlagOnValue(dfSummaryMembersNoName)
-        .IncludeFlag(dfCollapsed, wbCollapsePerk)
+        .IncludeFlag(dfCollapsed, clpPerk in DefineOptions.Collapse)
     ).SetCountPath(PRKZ),
     wbCOCT,
     wbCNTOs,
@@ -8820,11 +8481,11 @@ begin
     9, 'World Interactions'
   ], False, 10), True);
 
-  wbRecord(PACK, 'Package', [
+  RegisterRecordDef(PACK, 'Package', [
     wbEDID,
     wbVMADFragmentedPACK,
     wbStruct(PKDT, 'Pack Data', [
-      wbInteger('General Flags', itU32, wbPackageFlags).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      wbInteger('General Flags', itU32, wbPackageFlags).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbInteger('Type', itU8,
         wbEnum ([], [
         18, 'Package',
@@ -8848,78 +8509,23 @@ begin
       wbUnknown(1),
       wbInteger('Interrupt Flags', itU16, wbPKDTInterruptFlags)
         .SetDefaultNativeValue(365)
-        .IncludeFlag(dfCollapsed, wbCollapseFlags),
+        .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbUnknown(2)
     ]).SetRequired,
     wbStruct(PSDT, 'Schedule', [
-      wbInteger('Month', itU8,
-        wbEnum([
-        {0}  'January',
-        {1}  'February',
-        {2}  'March',
-        {3}  'April',
-        {4}  'May',
-        {5}  'June',
-        {6}  'July',
-        {7}  'August',
-        {8}  'September',
-        {9}  'October',
-        {10} 'November',
-        {11} 'December',
-        {12} 'Spring (MAM)',
-        {13} 'Summer (JJA)',
-        {14} 'Autumn (SON)',
-        {15} 'Winter (DJF)'
-        ], [
-        255, 'Any'
-        ])).SetDefaultNativeValue(255),
-      wbInteger('Day Of Week', itU8,
-        wbEnum([
-        {0}  'Sunday',
-        {1}  'Monday',
-        {2}  'Tuesday',
-        {3}  'Wednesday',
-        {4}  'Thursday',
-        {5}  'Friday',
-        {6}  'Saturday',
-        {7}  'Weekdays',
-        {8}  'Weekends',
-        {9}  'Monday, Wednesday, Friday',
-        {10} 'Tuesday, Thursday'
-        ], [
-        255, 'Any'
-        ])).SetDefaultNativeValue(255),
-      wbInteger('Date', itS8)
+      wbInteger('Month', itS8,
+        wbPackagePSDTMonthValueToStr,
+        wbPackagePSDTMonthValueToInt
+      ).SetDefaultEditValue('Any'),
+      wbInteger('Day Of Week', itS8, wbPackageScheduleDayOfWeekEnum).SetDefaultNativeValue(-1),
+      wbInteger('Date', itS8, wbPackageScheduleDayOfMonthEnum)
         .SetAfterLoad(wbPACKDateAfterLoad)
         .SetAfterSet(wbPACKDateAfterSet),
-      wbInteger('Hour', itS8,
-        wbEnum([
-        '0','1','2','3','4','5','6','7','8','9','10',
-        '11','12','13','14','15','16','17','18','19',
-        '20','21','22','23'
-        ], [
-        -1, 'Any'
-        ])).SetDefaultNativeValue(-1),
-      wbInteger('Minute', itU8,
-        wbEnum([
-        {0} '00'
-        ], [
-        5,   '05',
-        10,  '10',
-        15,  '15',
-        20,  '20',
-        25,  '25',
-        30,  '30',
-        35,  '35',
-        40,  '40',
-        45,  '45',
-        50,  '50',
-        55,  '55',
-        255, 'Any'
-        ])).SetDefaultNativeValue(255),
+      wbInteger('Hour', itS8, wbPackageScheduleHoursEnum).SetDefaultNativeValue(-1),
+      wbInteger('Minute', itS8, wbPackageScheduleMinutesEnum).SetDefaultNativeValue(-1),
       wbUnused(3),
-      wbInteger('Duration', itU32, wbDiv(60))
-    ]).SetRequired,
+      wbInteger('Duration (Hours)', itU32, wbDiv(60, 4))
+    ], cpNormal, True),
     wbConditions,
     wbIdleAnimation,
     wbFormIDCk(CNAM, 'Combat Style', [CSTY]),
@@ -8932,13 +8538,15 @@ begin
     wbRStruct('Package Data', [
       wbRArray('Data Input Values',
         wbRStruct('Value', [
-          wbString(ANAM, 'Type').SetAfterSet(wbPackageDataInputValueTypeAfterSet),
+          wbString(ANAM, 'Type')
+            .SetFormaterOnValue(wbPACKDataInputTypeEnum)
+            .SetAfterSet(wbPACKDataInputTypeAfterSet),
           wbUnion(CNAM, 'Value', wbPubPackCNAMDecider, [
-          {0} wbByteArray('Unknown'),
-          {1} wbInteger('Bool', itU8, wbBoolEnum),
+          {0} wbUnknown,
+          {1} wbInteger('Bool', itU8, wbBoolEnum).SetAfterLoad(wbPACKDataBoolAfterLoad),
           {2} wbInteger('Integer', itU32),
           {3} wbFloat('Float')
-          ]),
+          ]).IncludeFlag(dfUnionStaticResolve),
           wbUnknown(BNAM),
           wbPDTOs,
           wbPLDT,
@@ -8981,7 +8589,7 @@ begin
               wbFlags([
               {0} 'Repeat when Complete',
               {1} 'Unknown 1'
-              ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
+              ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
           ]),
           wbString(PNAM, 'Procedure Type'),
           wbInteger(FNAM, 'Success Completes Package', itU32, wbBoolEnum),
@@ -8989,10 +8597,10 @@ begin
         {>>> PFO2 should be single, there is only 1 PACK [00095F46] <PatrolAndHunt> in Skyrim.esm with 2xPFO2 <<<}
           wbRArray('Flags Override',
             wbStruct(PFO2, 'Data', [
-              wbInteger('Set General Flags', itU32, wbPackageFlags).IncludeFlag(dfCollapsed, wbCollapseFlags),
-              wbInteger('Clear General Flags', itU32, wbPackageFlags).IncludeFlag(dfCollapsed, wbCollapseFlags),
-              wbInteger('Set Interrupt Flags', itU16, wbPKDTInterruptFlags).IncludeFlag(dfCollapsed, wbCollapseFlags),
-              wbInteger('Clear Interrupt Flags', itU16, wbPKDTInterruptFlags).IncludeFlag(dfCollapsed, wbCollapseFlags),
+              wbInteger('Set General Flags', itU32, wbPackageFlags).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+              wbInteger('Clear General Flags', itU32, wbPackageFlags).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+              wbInteger('Set Interrupt Flags', itU16, wbPKDTInterruptFlags).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+              wbInteger('Clear Interrupt Flags', itU16, wbPKDTInterruptFlags).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
               wbInteger('Preferred Speed Override', itU8,
                 wbEnum([
                 {0} 'Walk',
@@ -9057,7 +8665,7 @@ begin
     ]).SetRequired
   ]);
 
-  wbRecord(QUST, 'Quest', [
+  RegisterRecordDef(QUST, 'Quest', [
     wbEDID,
     wbVMADFragmentedQUST,
     wbFULL,
@@ -9081,13 +8689,13 @@ begin
         {14} 'Want Dormant',
         {15} 'Has Dialogue Data'
         ])
-      ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbInteger('Priority', itU8),
       wbInteger('Form Version', itU8, nil, cpIgnore),
       wbByteArray('Unknown', 4),
       wbInteger('Type', itU32, wbQuestTypeEnum)
     ]).SetRequired,
-    wbInteger(ENAM, 'Event', itU32, wbQuestEventEnum),
+    wbInteger(ENAM, 'Event', itU32, wbQuestEventEnum).SetToStr(wbQUSTEventToStr),
     wbRArray('Text Display Globals', wbFormIDCk(QTGL, 'Global', [GLOB])),
     wbString(FLTR, 'Object Window Filter', 0, cpTranslate),
     wbRStruct('Quest Dialogue Conditions', [wbConditions]),
@@ -9104,9 +8712,9 @@ begin
             {2} 'Shut Down Stage',
             {3} 'Keep Instance Data From Here On'
             ])
-          ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+          ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
           wbUnknown(1)
-        ]).IncludeFlag(dfCollapsed, wbCollapseOther),
+        ]).IncludeFlag(dfCollapsed, clpOther in DefineOptions.Collapse),
         wbRArray('Log Entries',
           wbRStruct('Log Entry', [
             wbInteger(QSDT, 'Stage Flags', itU8,
@@ -9114,7 +8722,7 @@ begin
               {0} 'Complete Quest',
               {1} 'Fail Quest'
               ])
-            ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+            ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
             wbConditions,
             wbLStringKC(CNAM, 'Log Entry', 0, cpTranslate),
             wbFormIDCk(NAM0, 'Next Quest', [QUST]),
@@ -9132,12 +8740,12 @@ begin
             .SetSummaryMemberPrefixSuffix(1, 'Conditions: [', ']')
             .SetSummaryDelimiter(' ')
             .IncludeFlag(dfSummaryMembersNoName)
-            .IncludeFlag(dfCollapsed, wbCollapseQuestLog))
+            .IncludeFlag(dfCollapsed, clpQuestLog in DefineOptions.Collapse))
       ]).SetSummaryKey([1])
         .SetSummaryMemberPrefixSuffix(0, '[', ']')
         .SetSummaryDelimiter(' ')
         .IncludeFlag(dfSummaryMembersNoName)
-        .IncludeFlag(dfCollapsed, wbCollapseQuestStage)),
+        .IncludeFlag(dfCollapsed, clpQuestStage in DefineOptions.Collapse)),
     wbRArrayS('Objectives',
       wbRStructSK([0], 'Objective', [
         wbInteger(QOBJ, 'Objective Index', itU16),
@@ -9159,144 +8767,163 @@ begin
             .SetSummaryMemberPrefixSuffix(1, 'Conditions: [', ']')
             .SetSummaryDelimiter(' ')
             .IncludeFlag(dfSummaryMembersNoName)
-            .IncludeFlag(dfCollapsed, wbCollapseQuestObjectiveTarget))
+            .IncludeFlag(dfCollapsed, clpQuestObjectiveTarget in DefineOptions.Collapse))
     ]).SetSummaryKey([2, 1, 3])
       .SetSummaryMemberPrefixSuffix(0, '[', ']')
       .SetSummaryMemberPrefixSuffix(1, 'Flags{', '}')
       .SetSummaryDelimiter(' ')
       .IncludeFlag(dfSummaryMembersNoName)
-      .IncludeFlag(dfCollapsed, wbCollapseQuestObjective)),
+      .IncludeFlag(dfCollapsed, clpQuestObjective in DefineOptions.Collapse)),
     wbInteger(ANAM, 'Next Alias ID', itU32).SetRequired,
     wbRArray('Aliases',
       wbRUnion('', [
-        wbRStructSK([0], 'Reference Alias', [
-          wbInteger(ALST, 'Reference Alias ID', itU32).SetRequired,
-          wbString(ALID, 'Alias Name').SetRequired,
-          wbInteger(FNAM, 'Flags', itU32,
-            wbFlags([
-            {0}  'Reserves Reference',
-            {1}  'Optional',
-            {2}  'Quest Object',
-            {3}  'Allow Reuse in Quest',
-            {4}  'Allow Dead',
-            {5}  'Matching Ref - In Loaded Area',
-            {6}  'Essential',
-            {7}  'Allow Disabled',
-            {8}  'Stores Text',
-            {9}  'Allow Reserved',
-            {10} 'Protected',
-            {11} 'Unknown 11',
-            {12} 'Allow Destroyed',
-            {13} 'Matching Ref - Closest',
-            {14} 'Uses Stored Text',
-            {15} 'Initially Disabled',
-            {16} '',
-            {17} 'Clear Names When Removed'
-            ])
-          ).SetRequired
-           .IncludeFlag(dfCollapsed, wbCollapseFlags),
-          wbInteger(ALFI, 'Force Into Alias When Filled', itS32, wbQuestAliasToStr, wbAliasToInt),
-          wbFormIDCk(ALFR, 'Specific Reference', [ACHR,PARW,PBAR,PBAR,PCON,PFLA,PGRE,PHZD,PLYR,PMIS,REFR], True),
-          wbFormIDCk(ALUA, 'Unique Actor', [NPC_]),
-          wbRStruct('Location Alias Reference', [
-            wbInteger(ALFA, 'Alias', itS32, wbQuestAliasToStr, wbAliasToInt),
-            wbFormIDCk(KNAM, 'Keyword', [KYWD]),
-            wbFormIDCk(ALRT, 'Ref Type', [LCRT])
-          ]),
-          wbRStruct('External Alias Reference', [
-            wbFormIDCk(ALEQ, 'Quest', [QUST]),
-            wbInteger(ALEA, 'Alias', itS32, wbQuestExternalAliasToStr, wbAliasToInt)
-          ]),
-          wbRStruct('Create Reference to Object', [
-            wbFormID(ALCO, 'Object'),
-            wbStruct(ALCA, 'Alias', [
-              wbInteger('Alias', itS16, wbQuestAliasToStr, wbAliasToInt),
-              wbInteger('Create', itU16,
-                wbEnum([] ,[
-                $0000, 'At',
-                $8000, 'In'
-                ]))
+      {0} wbRStructSK([0], 'Reference Alias', [
+            wbInteger(ALST, 'Alias ID', itU32).SetRequired,
+            wbString(ALID, 'Alias Name').SetRequired,
+            wbInteger(FNAM, 'Flags', itU32,
+              wbFlags([
+              {0}  'Reserves Reference',
+              {1}  'Optional',
+              {2}  'Quest Object',
+              {3}  'Allow Reuse in Quest',
+              {4}  'Allow Dead',
+              {5}  'Matching Ref - In Loaded Area',
+              {6}  'Essential',
+              {7}  'Allow Disabled',
+              {8}  'Stores Text',
+              {9}  'Allow Reserved',
+              {10} 'Protected',
+              {11} 'Forced By Aliases',
+              {12} 'Allow Destroyed',
+              {13} 'Matching Ref - Closest',
+              {14} 'Uses Stored Text',
+              {15} 'Initially Disabled',
+              {16} '',
+              {17} 'Clear Names When Removed'
+              ])
+            ).SetRequired
+             .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+            wbInteger(ALFI, 'Force Into Alias When Filled', itS32, wbQuestAliasToStr, wbAliasToInt),
+            wbRUnion('Fill Type', [
+            {0} wbRStruct('Specific Reference', [
+                  wbFormIDCk(ALFR, 'Reference', [ACHR,PARW,PBAR,PBAR,PCON,PFLA,PGRE,PHZD,PLYR,PMIS,REFR], True)
+                ]),
+            {1} wbRStruct('Unique Actor', [
+                  wbFormIDCk(ALUA, 'Actor', [NPC_])
+                    .SetFormIDFilter(wbQUSTUniqueActorFilter)
+                    .SetToStr(wbQUSTUniqueActorToStr)
+                ]),
+            {2} wbRStruct('Location Alias Reference', [
+                  wbInteger(ALFA, 'Alias', itS32, wbQuestAliasToStr, wbAliasToInt),
+                  wbFormIDCk(ALRT, 'Ref Type', [LCRT])
+                ]),
+            {3} wbRStruct('External Alias Reference', [
+                  wbFormIDCk(ALEQ, 'Quest', [QUST]),
+                  wbInteger(ALEA, 'Alias', itS32, wbQuestExternalAliasToStr, wbAliasToInt)
+                ]),
+            {4} wbRStruct('Create Reference to Object', [
+                  wbFormID(ALCO, 'Object'),
+                  wbStruct(ALCA, 'Alias', [
+                    wbInteger('Alias', itS16, wbQuestAliasToStr, wbAliasToInt),
+                    wbInteger('Create', itU16,
+                      wbEnum([] ,[
+                      $0000, 'At',
+                      $8000, 'In'
+                      ]))
+                  ]),
+                  wbInteger(ALCL, 'Level', itU32,
+                    wbEnum([
+                    {0} 'Easy',
+                    {1} 'Medium',
+                    {2} 'Hard',
+                    {3} 'Very Hard',
+                    {4} 'None'
+                    ]))
+                ]),
+            {5} wbRStruct('Find Matching Reference', [
+                  wbRUnion('Match Type', [
+                    wbRStruct('Near Alias', [
+                      wbInteger(ALNA, 'Alias', itS32, wbQuestAliasToStr, wbAliasToInt),
+                      wbInteger(ALNT, 'Near Type', itU32,
+                        wbEnum([
+                        {0} 'Linked Ref Child'
+                        ]))
+                    ]),
+                    wbRStruct('From Event', [
+                      wbInteger(ALFE, 'Event', itU32, wbQuestEventEnum),
+                      wbInteger(ALFD, 'Data', itU32, gdEventMemberEnum)
+                    ])
+                  ]).IncludeFlag(dfUnionStaticResolve)
+                ]).IncludeFlag(dfStructFirstNotRequired)
+            ]).IncludeFlag(dfUnionStaticResolve),
+            wbRStruct('Match Conditions', [
+              wbConditions
             ]),
-            wbInteger(ALCL, 'Level', itU32,
-              wbEnum([
-              {0} 'Easy',
-              {1} 'Medium',
-              {2} 'Hard',
-              {3} 'Very Hard',
-              {4} 'None'
+            wbKeywords,
+            wbCOCT,
+            wbCNTOs,
+            wbFormIDCk(SPOR, 'Spectator override package list', [FLST]),
+            wbFormIDCk(OCOR, 'Observe dead body override package list', [FLST]),
+            wbFormIDCk(GWOR, 'Guard warn override package list', [FLST]),
+            wbFormIDCk(ECOR, 'Combat override package list', [FLST]),
+            wbFormIDCk(ALDN, 'Display Name', [MESG]),
+            wbRArray('Alias Spells', wbFormIDCk(ALSP, 'Spell', [SPEL])),
+            wbRArray('Alias Factions', wbFormIDCk(ALFC, 'Faction', [FACT])),
+            wbRArray('Alias Package Data', wbFormIDCk(ALPC, 'Package', [PACK])),
+            wbFormIDCk(VTCK, 'Voice Types', [FLST,NPC_,NULL]),
+            wbEmpty(ALED, 'Alias End').SetRequired
+          ]).SetSummaryKey([1, 2])
+            .SetSummaryDelimiter(' ')
+            .SetSummaryMemberPrefixSuffix(0, 'Ref [', ']')
+            .SetSummaryMemberPrefixSuffix(1, '', '')
+            .SetSummaryMemberPrefixSuffix(2, '{', '}')
+            .SetToStr(wbQUSTAliasToStr)
+            .IncludeFlag(dfSummaryMembersNoName)
+            .IncludeFlag(dfCollapsed, clpAliases in DefineOptions.Collapse),
+      {1} wbRStructSK([0], 'Location Alias', [
+            wbInteger(ALLS, 'Alias ID', itU32).SetRequired,
+            wbString(ALID, 'Alias Name').SetRequired,
+            wbInteger(FNAM, 'Flags', itU32,
+              wbFlags(wbSparseFlags([
+              0,  'Reserves Location',
+              1,  'Optional',
+              3,  'Allow Reuse in Quest',
+              8,  'Stores Text',
+              9,  'Allow Reserved',
+              11, 'Forced by Aliases',
+              16, 'Allow Cleared'
               ]))
-          ]),
-          wbRStruct('Find Matching Reference Near Alias', [
-            wbInteger(ALNA, 'Alias', itS32, wbQuestAliasToStr, wbAliasToInt),
-            wbInteger(ALNT, 'Type', itU32,
-              wbEnum([
-              {0} 'Linked Ref Child'
-              ]))
-          ]),
-          wbRStruct('Find Matching Reference From Event', [
-            wbInteger(ALFE, 'From Event', itU32, wbQuestEventEnum),
-            wbInteger(ALFD, 'Event Data', itU32, wbEventMemberEnum)
-          ]),
-          wbConditions,
-          wbKeywords,
-          wbCOCT,
-          wbCNTOs,
-          wbFormIDCk(SPOR, 'Spectator override package list', [FLST]),
-          wbFormIDCk(OCOR, 'Observe dead body override package list', [FLST]),
-          wbFormIDCk(GWOR, 'Guard warn override package list', [FLST]),
-          wbFormIDCk(ECOR, 'Combat override package list', [FLST]),
-          wbFormIDCk(ALDN, 'Display Name', [MESG]),
-          wbRArray('Alias Spells', wbFormIDCk(ALSP, 'Spell', [SPEL])),
-          wbRArray('Alias Factions', wbFormIDCk(ALFC, 'Faction', [FACT])),
-          wbRArray('Alias Package Data', wbFormIDCk(ALPC, 'Package', [PACK])),
-          wbFormIDCk(VTCK, 'Voice Types', [FLST,NPC_,NULL]),
-          wbEmpty(ALED, 'Alias End').SetRequired
-        ]).SetSummaryKey([1, 2])
-          .SetSummaryDelimiter(' ')
-          .SetSummaryMemberPrefixSuffix(0, 'Ref [', ']')
-          .SetSummaryMemberPrefixSuffix(1, '', '')
-          .SetSummaryMemberPrefixSuffix(2, '{', '}')
-          .IncludeFlag(dfSummaryMembersNoName)
-          .IncludeFlag(dfCollapsed, wbCollapseAliases),
-        wbRStructSK([0], 'Location Alias', [
-          wbInteger(ALLS, 'Location Alias ID', itU32).SetRequired,
-          wbString(ALID, 'Alias Name').SetRequired,
-          wbInteger(FNAM, 'Flags', itU32,
-            wbFlags(wbSparseFlags([
-            0,  'Reserves Location',
-            1,  'Optional',
-            3,  'Allow Reuse in Quest',
-            8,  'Stores Text',
-            9,  'Allow Reserved',
-            11, 'Unknown 11',
-            16, 'Allow Cleared'
-            ]))
-          ).SetRequired
-           .IncludeFlag(dfCollapsed, wbCollapseFlags),
-          wbInteger(ALFI, 'Force Into Alias When Filled', itS32, wbQuestAliasToStr, wbAliasToInt),
-          wbFormIDCk(ALFL, 'Specific Location', [LCTN]),
-          wbRStruct('Reference Alias Location', [
-            wbInteger(ALFA, 'Alias', itS32, wbQuestAliasToStr, wbAliasToInt),
-            wbFormIDCk(KNAM, 'Keyword', [KYWD])
-          ]),
-          wbRStruct('External Alias Location', [
-            wbFormIDCk(ALEQ, 'Quest', [QUST]),
-            wbInteger(ALEA, 'Alias', itS32, wbQuestExternalAliasToStr, wbAliasToInt)
-          ]),
-          wbRStruct('Find Matching Location', [
-            wbInteger(ALFE, 'From Event', itU32, wbQuestEventEnum),
-            wbInteger(ALFD, 'Event Data', itU32, wbEventMemberEnum)
-          ]),
-          wbConditions,
-          wbFormIDCk(ALDN, 'Display Name', [MESG]),
-          wbEmpty(ALED, 'Alias End').SetRequired
-        ]).SetSummaryKey([1, 2])
-          .SetSummaryDelimiter(' ')
-          .SetSummaryMemberPrefixSuffix(0, 'Loc [', ']')
-          .SetSummaryMemberPrefixSuffix(1, '', '')
-          .SetSummaryMemberPrefixSuffix(2, '{', '}')
-          .IncludeFlag(dfSummaryMembersNoName)
-          .IncludeFlag(dfCollapsed, wbCollapseAliases)
+            ).SetRequired
+             .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
+            wbInteger(ALFI, 'Force Into Alias When Filled', itS32, wbQuestAliasToStr, wbAliasToInt),
+            wbRUnion('Fill Type', [
+            {0} wbRStruct('Specific Location', [
+                  wbFormIDCk(ALFL, 'Location', [LCTN])
+                ]),
+            {1} wbRStruct('Reference Alias Location', [
+                  wbInteger(ALFA, 'Alias', itS32, wbQuestAliasToStr, wbAliasToInt),
+                  wbFormIDCk(KNAM, 'Keyword', [KYWD])
+                ]),
+            {2} wbRStruct('External Alias Location', [
+                  wbFormIDCk(ALEQ, 'Quest', [QUST]),
+                  wbInteger(ALEA, 'Alias', itS32, wbQuestExternalAliasToStr, wbAliasToInt)
+                ]),
+            {3} wbRStruct('Find Matching Location', [
+                  wbInteger(ALFE, 'From Event', itU32, wbQuestEventEnum),
+                  wbInteger(ALFD, 'Event Data', itU32, gdEventMemberEnum)
+                ])
+            ]).IncludeFlag(dfUnionStaticResolve),
+            wbRStruct('Match Conditions', [wbConditions]),
+            wbFormIDCk(ALDN, 'Display Name', [MESG]),
+            wbEmpty(ALED, 'Alias End').SetRequired
+          ]).SetSummaryKey([1, 2])
+            .SetSummaryDelimiter(' ')
+            .SetSummaryMemberPrefixSuffix(0, 'Loc [', ']')
+            .SetSummaryMemberPrefixSuffix(1, '', '')
+            .SetSummaryMemberPrefixSuffix(2, '{', '}')
+            .SetToStr(wbQUSTAliasToStr)
+            .IncludeFlag(dfSummaryMembersNoName)
+            .IncludeFlag(dfCollapsed, clpAliases in DefineOptions.Collapse)
       ]).IncludeFlag(dfUnionStaticResolve)),
     wbString(NNAM, 'Description'),
     wbRArray('Targets',
@@ -9343,7 +8970,7 @@ begin
     {0x20000000}'NoseType29',
     {0x40000000}'NoseType30',
     {0x80000000}'NoseType31'
-  ])).IncludeFlag(dfCollapsed, wbCollapseFlags);
+  ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse);
 
   wbBrowMorphFlags := wbInteger('Brow Morph Flags', itU32, wbFlags([
     {0x00000001}'BrowType0',
@@ -9367,7 +8994,7 @@ begin
     {0x00040000}'BrowType18',
     {0x00080000}'BrowType19',
     {0x00100000}'BrowType20'
-  ], True)).IncludeFlag(dfCollapsed, wbCollapseFlags);
+  ], True)).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse);
 
   wbEyesMorphFlags01 := wbInteger('Eye Morph Flags 1', itU32, wbFlags([
     {0x00000001}'EyesType0',
@@ -9402,7 +9029,7 @@ begin
     {0x20000000}'EyesType29',
     {0x40000000}'EyesType30',
     {0x80000000}'EyesType31'
-  ])).IncludeFlag(dfCollapsed, wbCollapseFlags);
+  ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse);
 
   wbEyesMorphFlags02 := wbInteger('Eye Morph Flags 2', itU8, wbFlags([
     {0x00000001}'EyesType32',
@@ -9412,7 +9039,7 @@ begin
     {0x00000010}'EyesType36',
     {0x00000020}'EyesType37',
     {0x00000040}'EyesType38'
-  ], True)).IncludeFlag(dfCollapsed, wbCollapseFlags);
+  ], True)).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse);
 
   wbLipMorphFlags := wbInteger('Lip Morph Flags', itU32, wbFlags([
     {0x00000001}'LipType0',
@@ -9447,7 +9074,7 @@ begin
     {0x20000000}'LipType29',
     {0x40000000}'LipType30',
     {0x80000000}'LipType31'
-  ])).IncludeFlag(dfCollapsed, wbCollapseFlags);
+  ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse);
 
   wbTintMaskTypeEnum := wbEnum([
     'None',
@@ -9517,7 +9144,7 @@ begin
     {0x20000000}'Allow Multiple Membrane Shaders',
     {0x40000000}'Can Dual Wield',
     {0x80000000}'Avoids Roads'
-  ])).IncludeFlag(dfCollapsed, wbCollapseFlags);
+  ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse);
 
   wbPhonemeTargets := wbStruct(PHWT, 'Phoneme Target Weight', [
     wbFloat('Aah / LipBigAah'),
@@ -9536,7 +9163,7 @@ begin
     wbFloat('R'),
     wbFloat('TH'),
     wbFloat('W')
-  ], cpNormal, False, nil, 8);
+  ]).SetOptionalFrom(8);
 
   wbPHWT := wbRStruct('FaceFX Phonemes', [
     wbRStruct('IY', [wbPhonemeTargets]),
@@ -9646,10 +9273,10 @@ begin
       .SetSummaryDelimiter(' ')
       .IncludeFlag(dfSummaryMembersNoName)
       .IncludeFlag(dfSummaryNoSortKey)
-      .IncludeFlag(dfCollapsed, wbCollapseBodyParts)
+      .IncludeFlag(dfCollapsed, clpBodyParts in DefineOptions.Collapse)
     , cpNormal, True);
 
-  wbRecord(RACE, 'Race',
+  RegisterRecordDef(RACE, 'Race',
     wbFlags(wbFlagsList([
       19, 'Critter?'
     ])), [
@@ -9663,14 +9290,14 @@ begin
     wbKeywords,
     wbStruct(DATA, '', [
       wbArrayS('Skill Boosts', wbStructSK([0], 'Skill Boost', [
-        wbInteger('Skill', itS8, wbActorValueEnum),
+        wbInteger('Skill', itS8, ActorValueEnum),
         wbInteger('Boost', itS8)
       ]).SetSummaryKey([1, 0])
       .SetSummaryMemberPrefixSuffix(1, '+', '')
       .SetSummaryMemberPrefixSuffix(0, '', '')
       .SetSummaryDelimiter(' ')
       .IncludeFlag(dfSummaryNoSortKey)
-      .IncludeFlag(dfSummaryMembersNoName).IncludeFlag(dfCollapsed, wbCollapseOther), 7),
+      .IncludeFlag(dfSummaryMembersNoName).IncludeFlag(dfCollapsed, clpOther in DefineOptions.Collapse), 7),
       wbByteArray('Unknown', 2),
       wbFloat('Male Height'),
       wbFloat('Female Height'),
@@ -9710,26 +9337,27 @@ begin
         {0x00000004} 'Unknown 2',
         {0x00000008} 'Unknown 3',
         {0x00000010} 'Allow Mounted Combat'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbStruct('Mount Data', [
-        wbFloat('Mount Offset X', cpNormal, False, 1, -1, nil, nil, -63.479000),
+        wbFloat('Mount Offset X').SetDefaultNativeValue(-63.479000),
         wbFloat('Mount Offset Y'),
         wbFloat('Mount Offset Z'),
-        wbFloat('Dismount Offset X', cpNormal, False, 1, -1, nil, nil, -50.0),
+        wbFloat('Dismount Offset X').SetDefaultNativeValue(-50.0),
         wbFloat('Dismount Offset Y'),
-        wbFloat('Dismount Offset Z', cpNormal, False, 1, -1, nil, nil, 65.0),
+        wbFloat('Dismount Offset Z').SetDefaultNativeValue(65.0),
         wbFloat('Mount Camera Offset X'),
-        wbFloat('Mount Camera Offset Y', cpNormal, False, 1, -1, nil, nil, -300.0),
+        wbFloat('Mount Camera Offset Y').SetDefaultNativeValue(-300.0),
         wbFloat('Mount Camera Offset Z')
       ])
       //wbByteArray('Unknown', 4*7)
-    ], cpNormal, True, nil, 29),
+    ]).SetOptionalFrom(29)
+      .SetRequired,
     wbEmpty(MNAM, 'Male Marker').SetRequired,
     wbString(ANAM, 'Male Skeletal Model'),
-    wbMODT,
+    wbModelInfo(MODT),
     wbEmpty(FNAM, 'Female Marker').SetRequired,
     wbString(ANAM, 'Female Skeletal Model'),
-    wbMODT,
+    wbModelInfo(MODT),
     wbEmpty(NAM2, 'Marker NAM2 #1'),
     wbRArrayS('Movement Type Names', wbString(MTNM, 'Name', 4)).SetDefaultEditValues(['BLDO', 'RUN1', 'SNEK', 'SWIM', 'WALK']).SetRequired,
     wbArray(VTCK, 'Voices', wbFormIDCk('Voice', [VTYP]), ['Male', 'Female'], cpNormal, True).SetDefaultEditValues(['MaleUniqueMolagBal [VTYP:0000002D]', 'FemaleUniqueAzura [VTYP:0000002E]']),
@@ -9761,13 +9389,13 @@ begin
       wbGenericModel
     ], [], cpNormal, True)
     .SetSummaryKey([1])
-    .IncludeFlag(dfCollapsed, wbCollapseModels),
+    .IncludeFlag(dfCollapsed, clpModels in DefineOptions.Collapse),
     wbRStruct('Female Behavior Graph', [
       wbEmpty(FNAM, 'Female Data Marker', cpNormal, True),
       wbGenericModel
     ], [], cpNormal, True)
     .SetSummaryKey([1])
-    .IncludeFlag(dfCollapsed, wbCollapseModels),
+    .IncludeFlag(dfCollapsed, clpModels in DefineOptions.Collapse),
     wbFormIDCk(NAM4, 'Material Type', [MATT, NULL]),
     wbFormIDCk(NAM5, 'Impact Data Set', [IPDS, NULL]),
     wbFormIDCk(NAM7, 'Decapitation FX', [ARTO, NULL]),
@@ -9808,7 +9436,7 @@ begin
       {12} 'Crossbow'
       ], True)
     ).SetRequired
-     .IncludeFlag(dfCollapsed, wbCollapseFlags),
+     .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbRArrayS('Equip Slots', wbFormIDCk(QNAM, 'Equip Slot', [EQUP, NULL])),
     wbFormIDCk(UNES, 'Unarmed Equip Slot', [EQUP, NULL]),
     wbRArray('Phoneme Target Names', wbString(PHTN, 'Name')),
@@ -9851,7 +9479,7 @@ begin
     wbFormIDCk(RNAM, 'Armor race', [RACE, NULL])
   ]).SetAfterLoad(wbRACEAfterLoad);
 
-  wbRefRecord(REFR, 'Placed Object', wbFormaterUnion(wbREFRRecordFlagsDecider, [
+  RegisterRefRecordDef(REFR, 'Placed Object', wbFormaterUnion(wbREFRRecordFlagsDecider, [
     wbFlags(wbFlagsList([
     10, 'Persistent',
     11, 'Initially Disabled'
@@ -9936,7 +9564,20 @@ begin
     26, 'Navmesh - Filter (Collision Geometry)',
     27, 'Navmesh - Bounding Box (Collision Geometry)',
     28, 'Reflected By Auto Water',
-    29, 'Don''t Have Settle',
+    29, 'Don''t Havok Settle',
+    30, 'Navmesh - Ground',
+    31, 'Multibound'
+    ])).SetFlagHasDontShow(16, wbFlagREFRInteriorDontShow)
+       .SetFlagHasDontShow(28, wbFlagREFRInteriorDontShow),
+    wbFlags(wbFlagsList([ //SCOL
+    10, 'Persistent',
+    11, 'Initially Disabled',
+    15, 'Visible When Distant',
+    16, 'Is Full LOD',
+    26, 'Navmesh - Filter (Collision Geometry)',
+    27, 'Navmesh - Bounding Box (Collision Geometry)',
+    28, 'Reflected By Auto Water',
+    29, 'Don''t Havok Settle',
     30, 'Navmesh - Ground',
     31, 'Multibound'
     ])).SetFlagHasDontShow(16, wbFlagREFRInteriorDontShow)
@@ -9954,7 +9595,7 @@ begin
     29, 'Don''t Havok Settle',
     30, 'Navmesh - Ground',
     31, 'Multibound'
-    ])).SetFlagHasDontShow(23, wbFlagREFRSkyMarkerDontShow)
+    ])).SetFlagHasDontShow(13, wbFlagREFRSkyMarkerDontShow)
        .SetFlagHasDontShow(16, wbFlagREFRInteriorDontShow)
        .SetFlagHasDontShow(28, wbFlagREFRInteriorDontShow),
     wbFlags
@@ -9974,7 +9615,9 @@ begin
     wbEDID,
     wbVMAD,
     wbFormIDCk(NAME, 'Base', [
-      ACTI, ADDN, ALCH, AMMO, APPA, ARMO, ARTO, ASPC, BOOK, CONT, DOOR, FLOR, FURN, IDLM, INGR, KEYM, LIGH, MISC, MSTT, SCRL, SLGM, SOUN, STAT, TACT, TREE, TXST, WEAP
+      ACTI,ADDN,ALCH,AMMO,APPA,ARMO,ARTO,ASPC,BOOK,CONT,
+      DOOR,FLOR,FURN,IDLM,INGR,KEYM,LIGH,MISC,MSTT,SCOL,
+      SCRL,SLGM,SOUN,STAT,TACT,TREE,TXST,WEAP
     ]).SetRequired,
 
     {--- Bound Contents ---}
@@ -9987,16 +9630,17 @@ begin
         wbFloat('X', cpNormal, True, 2, 4),
         wbFloat('Y', cpNormal, True, 2, 4),
         wbFloat('Z', cpNormal, True, 2, 4)
-      ]).SetToStr(wbVec3ToStr).IncludeFlag(dfCollapsed, wbCollapseVec3),
-      wbFloatColors('Color'),
-      wbFloat('Unknown'),
-      wbInteger('Type', itU32, wbEnum([
-        'None',
-        'Box',
-        'Sphere',
-        'Portal Box',
-        'Unknown 4'
-      ]))
+      ]).SetToStr(wbVec3ToStr)
+        .IncludeFlag(dfCollapsed, clpVec3 in DefineOptions.Collapse),
+      wbFloatRGBA,
+      wbInteger('Type', itU32,
+        wbEnum([
+        {0} 'None',
+        {1} 'Box',
+        {2} 'Sphere',
+        {3} 'Portal Box',
+        {4} 'Line'
+        ]))
     ]),
     // Copied from FO3; assuming that the order is the same
     wbArray(XORD, 'Linked Occlusion References', wbFormIDCk('Reference', [REFR, NULL]), [
@@ -10025,7 +9669,7 @@ begin
           'Unknown 6',
           'Has Image Space',
           'Has Lighting Template'
-        ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
         wbByteArray('Unknown', 2)
       ]),
       wbFormIDCk(LNAM, 'Lighting Template', [LGTM]),
@@ -10037,7 +9681,7 @@ begin
     wbEmpty(XMBP, 'MultiBound Primitive Marker', cpIgnore),
 
     wbRagdoll,
-    wbFloat(XRDS, 'Radius'),
+    wbFloat(XRDS, 'Radius', cpNormal, False, 1, 2).SetToStr(wbREFRRadiusToStr),
 
     {--- Reflected By / Refracted By ---}
     wbRArrayS('Reflected/Refracted By',
@@ -10046,14 +9690,11 @@ begin
         wbInteger('Type', itU32, wbFlags([
           'Reflection',
           'Refraction'
-        ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
-      ], cpNormal, False, nil, 1)
-    ),
+        ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
+      ]).SetOptionalFrom(1)),
 
     {--- Lit Water ---}
-    wbRArrayS('Lit Water',
-      wbFormIDCk(XLTW, 'Water', [REFR])
-    ),
+    wbRArrayS('Lit Water', wbFormIDCk(XLTW, 'Water', [REFR])),
 
     {--- Emittance ---}
     wbFormIDCk(XEMI, 'Emittance', [LIGH, REGN]),
@@ -10062,8 +9703,8 @@ begin
       wbFloat('Fade 1.35+/-'),
       wbFloat('End Distance Cap'),
       wbFloat('Shadow Depth Bias'),
-      wbByteArray('Unknown', 4) // optional
-    ], cpNormal, False, nil, 4),
+      wbUnknown(4) // optional
+    ]).SetOptionalFrom(4),
     wbStruct(XALP, 'Alpha', [
       wbInteger('Cutoff', itU8),
       wbInteger('Base', itU8)
@@ -10071,44 +9712,55 @@ begin
 
     {--- Teleport ---}
     wbStruct(XTEL, 'Teleport Destination', [
-      wbFormIDCk('Door', [REFR], True),
-      wbPosRot,
-      wbInteger('Flags', itU32, wbFlags([
-        'No Alarm'
-      ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
+      wbFormIDCk('Door', [REFR], True)
+        .SetFormIDFilter(wbREFRTeleportFilter)
+        .SetToStr(wbREFRTeleportToStr),
+      wbVec3PosRot,
+      wbInteger('No Alarm', itU32, wbBoolEnum).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
     ]),
     wbFormIDCk(XTNM, 'Teleport Message Box', [MESG]),
 
     {--- MultiBound ---}
     wbFormIDCk(XMBR, 'MultiBound Reference', [REFR]),
-    wbRStruct('Water Current Velocities', [
-      wbRUnion('', [
+    wbRUnion('Water Current Velocities', [
+      wbRStruct('Water Current Velocities', [
         wbInteger(XWCN, 'Velocity Count', itU32, nil, cpBenign),
-        wbInteger(XWCS, 'Velocity Count', itU32, nil, cpBenign)
-      ]).IncludeFlag(dfUnionStaticResolve),
-      wbArray(XWCU, 'Velocities',
-        wbStruct('Current', [
-          wbVec3('Velocity'),
-          wbFloat
-        ])
-      ).SetCountPathOnValue('[0]', False)
-       .SetRequired
-       .IncludeFlag(dfCollapsed, wbCollapseOther)
-       .IncludeFlag(dfNotAlignable)
+        wbArray(XWCU, 'Velocities',
+          wbStruct('Current', [
+            wbVec3('Velocity'),
+            wbFloat
+          ])
+        ).SetCountPathOnValue(XWCN, False)
+         .SetRequired
+      ]),
+      wbRStruct('Water Current Velocities (Old)', [
+        wbInteger(XWCS, 'Velocity Count', itU32, nil, cpBenign),
+        wbArray(XWCU, 'Velocities',
+          wbStruct('Current', [
+            wbVec3('Velocity'),
+            wbFloat
+          ])
+        ).SetCountPathOnValue(XWCS, False)
+         .SetRequired
+      ])
     ]),
     wbVec3(XCVL,'Water Current Linear Velocity'),
     wbVec3(XCVR,'Water Current Rotational Velocity'),
-    wbFormIDCk(XCZC, 'Water Current Zone Cell', [CELL, NULL]),
-    wbFormIDCk(XCZR, 'Water Current Zone Reference', [PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA, NULL]),
-    wbByteArray(XCZA, 'Water Current Zone Action', 4),
+    wbRArray('Water Current Data',
+      wbRStruct('Current', [
+        wbRUnion('', [
+          wbFormIDCk(XCZR, 'Reference', [ACHR,PARW,PBAR,PCON,PBEA,PFLA,PGRE,PHZD,PLYR,PMIS,REFR,NULL]),
+          wbFormIDCk(XCZC, 'Cell', [CELL])
+        ]),
+        wbUnknown(XCZA)
+      ])
+    ),
     wbXSCL,
     wbFormIDCk(XSPC, 'Spawn Container', [REFR]),
 
     {--- Activate Parents ---}
     wbRStruct('Activate Parents', [
-      wbInteger(XAPD, 'Flags', itU8, wbFlags([
-        'Parent Activate Only'
-      ], True)).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      wbInteger(XAPD, 'Parent Activate Only', itU8, wbBoolEnum),
       wbRArrayS('Activate Parent Refs',
         wbStructSK(XAPR, [0], 'Activate Parent Ref', [
           wbFormIDCk('Reference', [PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA]),
@@ -10119,7 +9771,7 @@ begin
 
     wbFormIDCk(XLIB, 'Leveled Item Base Object', [LVLI]),
     wbXLCM,
-    wbFormIDCk(XLCN, 'Persist Location', [LCTN]),
+    wbFormIDCk(XLCN, 'Persist Location', [LCTN]).SetToStr(wbREFRPersistLocToStr),
 
     {>>> COLL form Index value <<<}
     wbInteger(XTRI, 'Collision Layer', itU32)
@@ -10154,10 +9806,10 @@ begin
       ])),
       wbUnused(3),
       wbFormIDCkNoReach('Key', [KEYM, NULL]),
-      wbInteger('Flags', itU8, wbFlags(['', '', 'Leveled Lock'])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      wbInteger('Flags', itU8, wbFlags(['', '', 'Leveled Lock'])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbUnused(3),
       wbUnused(8)
-    ], cpNormal, False, nil, 4),
+    ]).SetOptionalFrom(4),
 
     wbFormIDCk(XEZN, 'Encounter Zone', [ECZN]),
 
@@ -10182,14 +9834,14 @@ begin
     wbRArray('Linked References', wbStruct(XLKR, 'Linked Reference', [
       wbFormIDCk('Keyword/Ref', [KYWD, PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA, NULL]),
       wbFormIDCk('Ref', [PLYR, ACHR, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA])
-    ], cpNormal, False, nil, 1)),
+    ]).SetOptionalFrom(1)),
 
     wbRArray('Patrol', wbRStruct('Data', [
       wbFloat(XPRD, 'Idle Time', cpNormal, True),
       wbEmpty(XPPA, 'Patrol Script Marker', cpNormal, True),
-      wbFormIDCk(INAM, 'Idle', [IDLE, NULL], False, cpNormal, True),
-      wbByteArray(SCHR, 'Unused', 0, cpIgnore, false, false, wbNeverShow),
-      wbByteArray(SCTX, 'Unused', 0, cpIgnore, false, false, wbNeverShow),
+      wbFormIDCk(INAM, 'Idle', [IDLE, NULL]).SetRequired,
+      wbByteArray(SCHR, 'Unused', 0, cpIgnore).SetDontShow(wbNeverShow),
+      wbByteArray(SCTX, 'Unused', 0, cpIgnore).SetDontShow(wbNeverShow),
       wbPDTOs
     ])),
 
@@ -10208,7 +9860,7 @@ begin
         {0x01} 'Visible',
         {0x02} 'Can Travel To',
         {0x04} '"Show All" Hidden'
-      ]), cpNormal, True).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ]), cpNormal, True).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbFULLReq,
       wbStruct(TNAM, '', [
         wbInteger('Type', itU8, wbMapMarkerEnum),
@@ -10218,12 +9870,12 @@ begin
     {--- Attach reference ---}
     wbFormIDCk(XATR, 'Attach Ref', [REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA]),
     wbXLOD,
-    wbDataPosRot
-  ], True)
-    .SetAddInfo(wbPlacedAddInfo)
+    wbVec3PosRot(DATA).SetRequired
+  ]).SetAddInfo(wbPlacedAddInfo)
+    .SetUnordered
     .SetAfterLoad(wbREFRAfterLoad);
 
-  wbRecord(REGN, 'Region',
+  RegisterRecordDef(REGN, 'Region',
     wbFlags(wbFlagsList([
       6, 'Border Region'
     ])), [
@@ -10243,22 +9895,21 @@ begin
             5, 'Land',
             6, 'Grass',
             7, 'Sound'
-          ])
-        ),
+          ])),
         wbInteger('Override', itU8, wbBoolEnum),
         wbInteger('Priority', itU8),
-        wbByteArray('Unknown')
-      ], cpNormal, True),
+        wbUnused(2)
+      ]).SetRequired,
 
       {--- Icon ---}
       wbICON.SetDontShow(wbREGNLandDontShow),
 
       {--- Sound ---}
-      wbFormIDCk(RDMO, 'Music', [MUSC], False, cpNormal, False, wbREGNSoundDontShow),
+      wbFormIDCk(RDMO, 'Music', [MUSC]).SetDontShow(wbREGNSoundDontShow),
       wbRegionSounds,
 
       {--- Map ---}
-      wbLString(RDMP, 'Map Name', 0, cpTranslate, False, wbREGNMapDontShow),
+      wbLString(RDMP, 'Map Name', 0, cpTranslate).SetDontShow(wbREGNMapDontShow),
 
       {followed by one of these: }
 
@@ -10280,7 +9931,7 @@ begin
           {5}'Z +/-',
           {6}'Tree',
           {7}'Huge Rock'
-        ])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+        ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
         wbInteger('Radius wrt Parent', itU16),
         wbInteger('Radius', itU16),
         wbFloat('Min Height'),
@@ -10292,38 +9943,39 @@ begin
           wbInteger('X', itU16),
           wbInteger('Y', itU16),
           wbInteger('Z', itU16)
-        ]).SetToStr(wbVec3ToStr).IncludeFlag(dfCollapsed, wbCollapseVec3),
-        wbByteArray('Unknown', 2),
-        wbByteArray('Unknown', 4)
-      ]), 0, nil, nil, cpNormal, False, wbREGNObjectsDontShow),
+        ]).SetToStr(wbVec3ToStr)
+          .IncludeFlag(dfCollapsed, clpVec3 in DefineOptions.Collapse),
+        wbUnknown(2),
+        wbUnknown(4)
+      ])).SetDontShow(wbREGNObjectsDontShow),
 
       {--- Grass ---}
       wbArrayS(RDGS, 'Grasses', wbStructSK([0], 'Grass', [
         wbFormIDCk('Grass', [GRAS]),
         wbFormIDCk('Landscape Texture', [LTEX])
-      ]), 0, cpNormal, False, nil, nil, wbREGNGrassDontShow),
+      ])).SetDontShow(wbREGNGrassDontShow),
 
       {--- Weather ---}
       wbArrayS(RDWT, 'Weather Types', wbStructSK([0], 'Weather Type', [
         wbFormIDCk('Weather', [WTHR]),
         wbInteger('Chance', itU32),
         wbFormIDCk('Global', [GLOB, NULL])
-      ]), 0, cpNormal, False, nil, nil, wbREGNWeatherDontShow)
+      ])).SetDontShow(wbREGNWeatherDontShow)
 
     ]))
-  ], True);
+  ]).SetUnordered;
 
-  wbRecord(SOUN, 'Sound Marker', [
+  RegisterRecordDef(SOUN, 'Sound Marker', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbUnknown(FNAM, cpIgnore), // leftover, unused
     wbUnknown(SNDD, cpIgnore), // leftover, unused
-    wbFormIDCk(SDSC, 'Sound Descriptor', [SNDR,NULL])
+    wbFormIDCk(SDSC, 'Sound Descriptor', [SNDR]).SetRequired
   ]);
 
-  wbRecord(SPEL, 'Spell', [
+  RegisterRecordDef(SPEL, 'Spell', [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbKeywords,
     wbMDOB,
@@ -10343,7 +9995,7 @@ begin
         22, 'Unknown 22',
         23, 'No Dual Cast Modification'
         ], False, 24))
-      ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbInteger('Type', itU32,
         wbEnum([
         {0} 'Spell',
@@ -10366,9 +10018,10 @@ begin
     wbEffectsReq
   ]);
 
-  wbRecord(SCRL, 'Scroll', [
+  RegisterRecordDef(SCRL, 'Scroll', [
     wbEDID,
-    wbOBND(True),
+    wbVMAD,
+    wbObjectBounds,
     wbFULL,
     wbKeywords,
     wbMDOB,
@@ -10391,7 +10044,7 @@ begin
         20, 'Script Effect Always Applies',
         21, 'Disallow Spell Absorb/Reflect'
         ], False, 22))
-      ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbInteger('Type', itU32,
         wbEnum([], [
         0, 'Scroll'
@@ -10414,7 +10067,7 @@ begin
     wbEffectsReq
   ]);
 
-  wbRecord(STAT, 'Static',
+  RegisterRecordDef(STAT, 'Static',
     wbFlags(wbFlagsList([
       2, 'Never Fades',
       6, 'Has Tree LOD',
@@ -10435,7 +10088,7 @@ begin
        .SetFlagHasDontShow(27, wbFlagNavmeshBoundingBoxDontShow)
        .SetFlagHasDontShow(30, wbFlagNavmeshGroundDontShow), [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbGenericModel,
     wbStruct(DNAM, 'Direction Material', [
       wbFloat('Max Angle (30-120)').SetDefaultNativeValue(90),
@@ -10446,16 +10099,17 @@ begin
       IsSSE(
         wbUnused(3),
         nil)
-    ], cpNormal, True, nil, 2),
+    ]).SetOptionalFrom(2)
+      .SetRequired,
     wbStruct(MNAM, 'Distant LOD', [ {>>> Contains null-terminated mesh FileName followed by random data up to 260 bytes <<<}
-      wbString(True, 'Level 0', 260),
-      wbString(True, 'Level 1', 260),
-      wbString(True, 'Level 2', 260),
-      wbString(True, 'Level 3', 260)
+      wbStringForward('Level 0', 260),
+      wbStringForward('Level 1', 260),
+      wbStringForward('Level 2', 260),
+      wbStringForward('Level 3', 260)
     ])
   ]);
 
-  wbRecord(TES4, 'Main File Header',
+  RegisterRecordDef(TES4, 'Main File Header',
     wbFlags(wbFlagsList([
       0,  'ESM',
       1,  'Altered',
@@ -10465,8 +10119,8 @@ begin
       5,  'Temp ID Owner',
       7,  'Localized',
       8,  'Precalc Data Only',
-      9,  IsSSE(IsVR(IsVRESL('ESL', ''),'ESL'),''),
-      20, IsVRESL('Update', '')
+      9,  wb<string>.Iff(gcLightPlugins in Capabilities, 'ESL', ''),
+      20, wb<string>.Iff(gcUpdatePlugins in Capabilities, 'Update', '')
     ], False), True), [
     wbHEDR,
     wbByteArray(OFST, 'Unknown', 0, cpIgnore),
@@ -10476,28 +10130,29 @@ begin
     wbRArray('Master Files', wbRStruct('Master File', [
       wbStringForward(MAST, 'FileName', 0, cpNormal, True),
       wbByteArray(DATA, 'Unknown', 8, cpIgnore, True)
-    ], [ONAM])).IncludeFlag(dfInternalEditOnly, not wbAllowMasterFilesEdit),
+    ], [ONAM])).IncludeFlag(dfInternalEditOnly, not DefineOptions.AllowMasterFilesEdit),
     wbArray(ONAM, 'Overridden Forms',
-      wbFormIDCk('Form', [ACHR, LAND, NAVM, REFR, PGRE, PHZD, PMIS, PARW, PBAR, PBEA, PCON, PFLA]),
-      0, nil, nil, cpNormal, False{, wbTES4ONAMDontShow}),
+      wbFormIDCk('Form', [ACHR,LAND,NAVM,PARW,PBAR,PBEA,PCON,PFLA,PGRE,PHZD,PMIS,REFR])
+    ).IncludeFlag(dfExcludeFromBuildRef)
+     .IncludeFlag(dfCollapsed, clpOther in DefineOptions.Collapse),
     wbByteArray(SCRN, 'Screenshot'),
     wbUnknown(INTV),
     wbInteger(INCC, 'Interior Cell Count', itU32).SetRequired
-  ], True, nil, cpNormal, True);
+  ], cpNormal, True).SetUnordered;
 
-  wbRecord(PLYR, 'Player Reference', [
+  RegisterRecordDef(PLYR, 'Player Reference', [
     wbEDID,
     wbFormID(PLYR, 'Player', cpNormal, True).SetDefaultNativeValue($7)
   ]).IncludeFlag(dfInternalEditOnly);
 
-  wbRecord(TREE, 'Tree',
+  RegisterRecordDef(TREE, 'Tree',
     wbFlags(wbFlagsList([
       15, 'Has Distant LOD',
       25, 'Obstacle'
     ])), [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbGenericModel,
     wbFormIDCK(PFIG, 'Ingredient', [INGR, ALCH, MISC, LVLI, NULL]),
     wbFormIDCK(SNAM, 'Harvest Sound', [SNDR,NULL]),
@@ -10524,10 +10179,10 @@ begin
     ], cpNormal, True)
   ]);
 
-  wbRecord(FLOR, 'Flora', [
+  RegisterRecordDef(FLOR, 'Flora', [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULLReq,
     wbGenericModel,
     wbDEST,
@@ -10538,14 +10193,14 @@ begin
       wbFlags(wbSparseFlags([
         0, 'No Displacement',
         1, 'Ignored by Sandbox'
-    ],False, 2))).IncludeFlag(dfCollapsed, wbCollapseFlags),
+    ],False, 2))).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbFormIDCk(PFIG, 'Ingredient', [ALCH, AMMO, APPA, ARMO, BOOK, INGR, KEYM, LIGH, LVLI, MISC, SCRL, SLGM, WEAP, NULL]),
     wbFormIDCK(SNAM, 'Harvest Sound', [SNDR,NULL]),
     wbSeasons
   ]);
 
-  if wbIsSkyrimSE then begin
-    wbRecord(VOLI, 'Volumetric Lighting', [
+  if IsSkyrimSE then begin
+    RegisterRecordDef(VOLI, 'Volumetric Lighting', [
       wbEDID,
       wbFloat(CNAM, 'Intensity'),
       wbFloat(DNAM, 'Custom Color - Contribution'),
@@ -10559,7 +10214,7 @@ begin
       wbFloat(NNAM, 'Sampling Repartition - Range Factor') { max 1.0 }
     ]);
 
-    wbRecord(LENS, 'Lens Flare', [
+    RegisterRecordDef(LENS, 'Lens Flare', [
       wbEDID,
       wbFloat(CNAM, 'Color Influence'),
       wbFloat(DNAM, 'Fade Distance Radius Scale'),
@@ -10578,14 +10233,14 @@ begin
             wbInteger('Flags', itU32, wbFlags([
               {0x01} 'Rotates',
               {0x02} 'Shrinks When Occluded'
-            ])).IncludeFlag(dfCollapsed, wbCollapseFlags)
+            ])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
           ])
         ])).SetCountPath(LFSP)
     ]);
 
   end;
 
-  wbRecord(RGDL, 'Ragdoll', [
+  RegisterRecordDef(RGDL, 'Ragdoll', [
     wbEDID,
     wbInteger(NVER, 'Version', itU32).SetRequired,
     wbStruct(DATA, 'General Data', [
@@ -10642,7 +10297,7 @@ begin
     wbString(ANAM, 'Death Pose')
   ]);
 
-  wbRecord(WATR, 'Water', [
+  RegisterRecordDef(WATR, 'Water', [
     wbEDID.SetRequired,
     wbFULL,
     wbRStruct('Old Noise Textures', [
@@ -10660,7 +10315,7 @@ begin
       4, IsSSE('Blend Normals', 'Unknown 4')
       ], False, 5))
     ).SetRequired
-     .IncludeFlag(dfCollapsed, wbCollapseFlags),
+     .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbByteArray(MNAM, 'Material ID (Unused)', 0, cpIgnore),
     wbFormIDCk(TNAM, 'Material', [MATT]),
     wbFormIDCk(SNAM, 'Open Sound', [SNDR,NULL]),
@@ -10748,7 +10403,8 @@ begin
         wbFloat('Noise Properties - Flowmap Scale').SetDefaultNativeValue(1),
         nil
       )
-    ], cpNormal, True, nil, 36),
+    ]).SetOptionalFrom(36)
+      .SetRequired,
     wbStruct(GNAM, 'Related Waters (Unused)', [
       wbFormIDCk('Daytime', [WATR,NULL]),
       wbFormIDCk('Nighttime', [WATR,NULL]),
@@ -10768,13 +10424,13 @@ begin
     )
   ]);
 
-  wbRecord(WEAP, 'Weapon',
+  RegisterRecordDef(WEAP, 'Weapon',
     wbFlags(wbFlagsList([
       2, 'Non-Playable'
     ])), [
     wbEDID,
     wbVMAD,
-    wbOBND(True),
+    wbObjectBounds,
     wbFULL,
     wbGenericModel,
     wbICON,
@@ -10789,7 +10445,7 @@ begin
     wbDESC,
     wbTexturedModel('Has Scope', [MOD3, MO3T], [wbMO3S]),
     wbFormIDCK(EFSD, 'Scope Effect', [EFSH]),
-    wbByteArray(NNAM, 'Unused', 0, cpIgnore, False), // leftover
+    wbString(NNAM, 'Embedded Weapon Node'),
     wbFormIDCk(INAM, 'Impact Data Set', [IPDS, NULL]),
     wbFormIDCk(WNAM, '1st Person Model Object', [STAT, NULL]),
     wbFormIDCk(SNAM, 'Attack Sound', [SNDR]),
@@ -10815,17 +10471,26 @@ begin
         {0x0004}'Has Scope (unused)',
         {0x0008}'Can''t Drop',
         {0x0010}'Hide Backpack (unused)',
-        {0x0020}'Embedded Weapon (unused)',
+        {0x0020}'Embedded Weapon',
         {0x0040}'Don''t Use 1st Person IS Anim (unused)',
         {0x0080}'Non-playable'
-      ], [1, 2, 4, 5, 6])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ], [1, 2, 4, 6])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbUnused(2),
       wbFloat('Sight FOV'),
       wbByteArray('Unknown', 4),
       wbInteger('Base VATS To-Hit Chance', itU8),
       wbInteger('Attack Animation', itU8, wbAttackAnimationEnum),
       wbInteger('# Projectiles', itU8),
-      wbInteger('Embedded Weapon AV (unused)', itU8),
+      wbInteger('Embedded Weapon Actor Value', itU8, 
+        wbEnum([
+        {0} 'Perception Condition',
+        {1} 'Endurance Condition',
+        {2} 'Left Attack Condition',
+        {3} 'Right Attack Condition',
+        {4} 'Left Mobility Condition',
+        {5} 'Right Mobility Condition',
+        {6} 'Brain Condition'
+        ])),
       wbFloat('Range Min'),
       wbFloat('Range Max'),
       wbInteger('On Hit', itU32, wbEnum([
@@ -10849,7 +10514,7 @@ begin
         {0x00000800} 'Long Bursts',
         {0x00001000} 'Non-hostile',
         {0x00002000} 'Bound Weapon'
-      ], [2, 8])).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ], [2, 8])).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbFloat('Animation Attack Mult'),
       wbFloat('Fire Rate'),
       wbFloat('Rumble - Left Motor Strength'),
@@ -10860,7 +10525,7 @@ begin
       wbByteArray('Unknown', 4),
       wbInteger('Skill', itS32, wbSkillEnum),
       wbByteArray('Unknown', 8),
-      wbInteger('Resist', itS32, wbActorValueEnum),
+      wbInteger('Resist', itS32, ActorValueEnum),
       wbByteArray('Unknown', 4),
       wbFloat('Stagger')
     ]),
@@ -10881,16 +10546,16 @@ begin
     ]),
     wbInteger(VNAM, 'Detection Sound Level', itU32, wbSoundlevelEnum),
     wbFormIDCk(CNAM, 'Template', [WEAP])
-  ], False, nil, cpNormal, False, wbWEAPAfterLoad);
+  ]).SetAfterLoad(wbWEAPAfterLoad);
 
-  wbRecord(WTHR, 'Weather', [
+  RegisterRecordDef(WTHR, 'Weather', [
     wbEDID,
     wbRStruct('Old Cloud Textures', [
       wbString(DNAM, 'Layer #0', 0),
       wbString(CNAM, 'Layer #1', 0),
       wbString(ANAM, 'Layer #2', 0),
       wbString(BNAM, 'Layer #3', 0)
-    ]).IncludeFlag(dfCollapsed, wbCollapseOther),
+    ]).IncludeFlag(dfCollapsed, clpOther in DefineOptions.Collapse),
     wbWeatherCloudTextures,
     wbInteger(LNAM, 'Max Cloud Layers', itU32)
       .SetDefaultNativeValue(29)
@@ -10927,7 +10592,7 @@ begin
           4, 'Aurora - Always Visible',
           5, 'Aurora - Follows Sun Position'
         ], False, 6))
-      ).IncludeFlag(dfCollapsed, wbCollapseFlags),
+      ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
       wbWeatherLightningColor,
       wbInteger('Visual Effect - Begin', itU8), // scaled 0..1
       wbInteger('Visual Effect - End', itU8), // scaled 0..1
@@ -10967,13 +10632,13 @@ begin
     )
   ]);
 
-  wbRecord(WOOP, 'Word of Power', [
+  RegisterRecordDef(WOOP, 'Word of Power', [
     wbEDID,
     wbFULL,
     wbLString(TNAM, 'Translation', 0, cpTranslate, True)
   ]);
 
-  wbRecord(WRLD, 'Worldspace',
+  RegisterRecordDef(WRLD, 'Worldspace',
     wbFlags(wbFlagsList([
       14, 'Partial Form',
       19, 'Can''t Wait'
@@ -10998,7 +10663,7 @@ begin
           4, 'Use Climate Data',
           6, 'Use Sky Cell'
         ], False, 7), True)
-      ).IncludeFlag(dfCollapsed, wbCollapseFlags)
+      ).IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse)
        .SetRequired
     ]),
     wbFormIDCk(CNAM, 'Climate', [CLMT])
@@ -11030,7 +10695,7 @@ begin
       ], False, 8), True)
     ).SetDefaultNativeValue(1)
      .SetRequired
-     .IncludeFlag(dfCollapsed, wbCollapseFlags),
+     .IncludeFlag(dfCollapsed, clpFlags in DefineOptions.Collapse),
     wbWorldObjectBounds,
     wbFormIDCk(ZNAM, 'Music', [MUSC]),
     wbString(NNAM, 'Canopy Shadow (unused)', 0, cpIgnore),
@@ -11044,99 +10709,103 @@ begin
 
 {>>> Unused records, they have empty GRUP in skyrim.esm <<<}
 
-  wbRecord(CLDC, 'CLDC', [
+  RegisterRecordDef(CLDC, 'CLDC', [
     wbEDID
   ]);
-  wbRecord(HAIR, 'HAIR', [
+  RegisterRecordDef(HAIR, 'HAIR', [
     wbEDID
   ]);
-  wbRecord(PWAT, 'PWAT', [
+  RegisterRecordDef(PWAT, 'PWAT', [
     wbEDID
   ]);
-  {
-  wbRecord(SCOL, 'SCOL', [
-    wbEDID
-  ]);
-  }
 
-  wbStaticPart :=
-    wbRStruct('Part', [
-      wbFormIDCk(ONAM, 'Static', [STAT]),
-      wbStaticPartPlacements
-    ], [], cpNormal, True);
-
-  wbRecord(SCOL, 'Static Collection', [
+  RegisterRecordDef(SCOL, 'Static Collection',
+    wbFlags(wbFlagsList([
+    6,  'Has Tree LOD',
+    9,  'Hidden From Local Map',
+    25, 'Obstacle',
+    26, 'Navmesh - Filter',
+    27, 'Navmesh - Bounding Box',
+    30, 'Navmesh - Ground'
+    ])).SetFlagHasDontShow(26, wbFlagNavmeshFilterDontShow)
+       .SetFlagHasDontShow(27, wbFlagNavmeshBoundingBoxDontShow)
+       .SetFlagHasDontShow(30, wbFlagNavmeshGroundDontShow), [
     wbEDID,
-    wbOBND(True),
+    wbObjectBounds,
     wbGenericModel(True),
-    wbRArray('Parts', wbStaticPart)
+    wbRArray('Parts',
+      wbRStruct('Part', [
+        wbFormIDCk(ONAM, 'Static', [STAT]),
+        wbStaticPartPlacements
+      ]).SetRequired
+    )
   ]);
 
-  wbRecord(SCPT, 'SCPT', [
+  RegisterRecordDef(SCPT, 'SCPT', [
     wbEDID
   ]);
 
-   wbAddGroupOrder(GMST);
-   wbAddGroupOrder(KYWD);
-   wbAddGroupOrder(LCRT);
-   wbAddGroupOrder(AACT);
-   wbAddGroupOrder(TXST);
+   AddGroupOrder(GMST);
+   AddGroupOrder(KYWD);
+   AddGroupOrder(LCRT);
+   AddGroupOrder(AACT);
+   AddGroupOrder(TXST);
    //wbAddGroupOrder(MICN);
-   wbAddGroupOrder(GLOB);
-   wbAddGroupOrder(CLAS);
-   wbAddGroupOrder(FACT);
-   wbAddGroupOrder(HDPT);
-   wbAddGroupOrder(HAIR);{>>> Unused in Skyrim, but contained in Skyrim.esm <<<}
-   wbAddGroupOrder(EYES);
-   wbAddGroupOrder(RACE);
-   wbAddGroupOrder(SOUN);
-   wbAddGroupOrder(ASPC);
-   wbAddGroupOrder(MGEF);
-   wbAddGroupOrder(SCPT);{>>> Unused in Skyrim, but contained in Skyrim.esm <<<}
-   wbAddGroupOrder(LTEX);
-   wbAddGroupOrder(ENCH);
-   wbAddGroupOrder(SPEL);
-   wbAddGroupOrder(SCRL);
-   wbAddGroupOrder(ACTI);
-   wbAddGroupOrder(TACT);
-   wbAddGroupOrder(ARMO);
-   wbAddGroupOrder(BOOK);
-   wbAddGroupOrder(CONT);
-   wbAddGroupOrder(DOOR);
-   wbAddGroupOrder(INGR);
-   wbAddGroupOrder(LIGH);
-   wbAddGroupOrder(MISC);
-   wbAddGroupOrder(APPA);
-   wbAddGroupOrder(STAT);
-   wbAddGroupOrder(SCOL);{>>> Unused in Skyrim, but contained in Skyrim.esm <<<}
-   wbAddGroupOrder(MSTT);
-   wbAddGroupOrder(PWAT);{>>> Unused in Skyrim, but contained in Skyrim.esm <<<}
-   wbAddGroupOrder(GRAS);
-   wbAddGroupOrder(TREE);
-   wbAddGroupOrder(CLDC);{>>> Unused in Skyrim, but contained in Skyrim.esm <<<}
-   wbAddGroupOrder(FLOR);
-   wbAddGroupOrder(FURN);
-   wbAddGroupOrder(WEAP);
-   wbAddGroupOrder(AMMO);
-   wbAddGroupOrder(NPC_);
-   wbAddGroupOrder(PLYR);
-   wbAddGroupOrder(LVLN);
-   wbAddGroupOrder(KEYM);
-   wbAddGroupOrder(ALCH);
-   wbAddGroupOrder(IDLM);
+   AddGroupOrder(GLOB);
+   AddGroupOrder(CLAS);
+   AddGroupOrder(FACT);
+   AddGroupOrder(HDPT);
+   AddGroupOrder(HAIR);{>>> Unused in Skyrim, but contained in Skyrim.esm <<<}
+   AddGroupOrder(EYES);
+   AddGroupOrder(RACE);
+   AddGroupOrder(SOUN);
+   AddGroupOrder(ASPC);
+   AddGroupOrder(MGEF);
+   AddGroupOrder(SCPT);{>>> Unused in Skyrim, but contained in Skyrim.esm <<<}
+   AddGroupOrder(LTEX);
+   AddGroupOrder(ENCH);
+   AddGroupOrder(SPEL);
+   AddGroupOrder(SCRL);
+   AddGroupOrder(ACTI);
+   AddGroupOrder(TACT);
+   AddGroupOrder(ARMO);
+   AddGroupOrder(BOOK);
+   AddGroupOrder(CONT);
+   AddGroupOrder(DOOR);
+   AddGroupOrder(INGR);
+   AddGroupOrder(LIGH);
+   AddGroupOrder(MISC);
+   AddGroupOrder(APPA);
+   AddGroupOrder(STAT);
+   AddGroupOrder(SCOL);{>>> Unused in Skyrim, but contained in Skyrim.esm <<<}
+   AddGroupOrder(MSTT);
+   AddGroupOrder(PWAT);{>>> Unused in Skyrim, but contained in Skyrim.esm <<<}
+   AddGroupOrder(GRAS);
+   AddGroupOrder(TREE);
+   AddGroupOrder(CLDC);{>>> Unused in Skyrim, but contained in Skyrim.esm <<<}
+   AddGroupOrder(FLOR);
+   AddGroupOrder(FURN);
+   AddGroupOrder(WEAP);
+   AddGroupOrder(AMMO);
+   AddGroupOrder(NPC_);
+   AddGroupOrder(PLYR);
+   AddGroupOrder(LVLN);
+   AddGroupOrder(KEYM);
+   AddGroupOrder(ALCH);
+   AddGroupOrder(IDLM);
    //wbAddGroupOrder(NOTE);
-   wbAddGroupOrder(COBJ);
-   wbAddGroupOrder(PROJ);
-   wbAddGroupOrder(HAZD);
-   wbAddGroupOrder(SLGM);
-   wbAddGroupOrder(LVLI);
-   wbAddGroupOrder(WTHR);
-   wbAddGroupOrder(CLMT);
-   wbAddGroupOrder(SPGD);
-   wbAddGroupOrder(RFCT);
-   wbAddGroupOrder(REGN);
-   wbAddGroupOrder(NAVI);
-   wbAddGroupOrder(CELL);
+   AddGroupOrder(COBJ);
+   AddGroupOrder(PROJ);
+   AddGroupOrder(HAZD);
+   AddGroupOrder(SLGM);
+   AddGroupOrder(LVLI);
+   AddGroupOrder(WTHR);
+   AddGroupOrder(CLMT);
+   AddGroupOrder(SPGD);
+   AddGroupOrder(RFCT);
+   AddGroupOrder(REGN);
+   AddGroupOrder(NAVI);
+   AddGroupOrder(CELL);
    //wbAddGroupOrder(REFR);
    //wbAddGroupOrder(ACHR);
    //wbAddGroupOrder(PMIS);
@@ -11147,102 +10816,115 @@ begin
    //wbAddGroupOrder(PCON);
    //wbAddGroupOrder(PBAR);
    //wbAddGroupOrder(PHZD);
-   wbAddGroupOrder(WRLD);
+   AddGroupOrder(WRLD);
    //wbAddGroupOrder(LAND);
    //wbAddGroupOrder(NAVM);
    //wbAddGroupOrder(TLOD);
-   wbAddGroupOrder(DIAL);
+   AddGroupOrder(DIAL);
    //wbAddGroupOrder(INFO);
-   wbAddGroupOrder(QUST);
-   wbAddGroupOrder(IDLE);
-   wbAddGroupOrder(PACK);
-   wbAddGroupOrder(CSTY);
-   wbAddGroupOrder(LSCR);
-   wbAddGroupOrder(LVSP);
-   wbAddGroupOrder(ANIO);
-   wbAddGroupOrder(WATR);
-   wbAddGroupOrder(EFSH);
+   AddGroupOrder(QUST);
+   AddGroupOrder(IDLE);
+   AddGroupOrder(PACK);
+   AddGroupOrder(CSTY);
+   AddGroupOrder(LSCR);
+   AddGroupOrder(LVSP);
+   AddGroupOrder(ANIO);
+   AddGroupOrder(WATR);
+   AddGroupOrder(EFSH);
    //wbAddGroupOrder(TOFT);
-   wbAddGroupOrder(EXPL);
-   wbAddGroupOrder(DEBR);
-   wbAddGroupOrder(IMGS);
-   wbAddGroupOrder(IMAD);
-   wbAddGroupOrder(FLST);
-   wbAddGroupOrder(PERK);
-   wbAddGroupOrder(BPTD);
-   wbAddGroupOrder(ADDN);
-   wbAddGroupOrder(AVIF);
-   wbAddGroupOrder(CAMS);
-   wbAddGroupOrder(CPTH);
-   wbAddGroupOrder(VTYP);
-   wbAddGroupOrder(MATT);
-   wbAddGroupOrder(IPCT);
-   wbAddGroupOrder(IPDS);
-   wbAddGroupOrder(ARMA);
-   wbAddGroupOrder(ECZN);
-   wbAddGroupOrder(LCTN);
-   wbAddGroupOrder(MESG);
-   wbAddGroupOrder(RGDL);{>>> Unused in Skyrim, but contained in Skyrim.esm <<<}
-   wbAddGroupOrder(DOBJ);
-   wbAddGroupOrder(LGTM);
-   wbAddGroupOrder(MUSC);
-   wbAddGroupOrder(FSTP);
-   wbAddGroupOrder(FSTS);
-   wbAddGroupOrder(SMBN);
-   wbAddGroupOrder(SMQN);
-   wbAddGroupOrder(SMEN);
-   wbAddGroupOrder(DLBR);
-   wbAddGroupOrder(MUST);
-   wbAddGroupOrder(DLVW);
-   wbAddGroupOrder(WOOP);
-   wbAddGroupOrder(SHOU);
-   wbAddGroupOrder(EQUP);
-   wbAddGroupOrder(RELA);
-   wbAddGroupOrder(SCEN);
-   wbAddGroupOrder(ASTP);
-   wbAddGroupOrder(OTFT);
-   wbAddGroupOrder(ARTO);
-   wbAddGroupOrder(MATO);
-   wbAddGroupOrder(MOVT);
-   wbAddGroupOrder(SNDR);
-   wbAddGroupOrder(DUAL);
-   wbAddGroupOrder(SNCT);
-   wbAddGroupOrder(SOPM);
-   wbAddGroupOrder(COLL);
-   wbAddGroupOrder(CLFM);
-   wbAddGroupOrder(REVB);
-   if wbIsSkyrimSE then wbAddGroupOrder(LENS); {New to SSE}
+   AddGroupOrder(EXPL);
+   AddGroupOrder(DEBR);
+   AddGroupOrder(IMGS);
+   AddGroupOrder(IMAD);
+   AddGroupOrder(FLST);
+   AddGroupOrder(PERK);
+   AddGroupOrder(BPTD);
+   AddGroupOrder(ADDN);
+   AddGroupOrder(AVIF);
+   AddGroupOrder(CAMS);
+   AddGroupOrder(CPTH);
+   AddGroupOrder(VTYP);
+   AddGroupOrder(MATT);
+   AddGroupOrder(IPCT);
+   AddGroupOrder(IPDS);
+   AddGroupOrder(ARMA);
+   AddGroupOrder(ECZN);
+   AddGroupOrder(LCTN);
+   AddGroupOrder(MESG);
+   AddGroupOrder(RGDL);{>>> Unused in Skyrim, but contained in Skyrim.esm <<<}
+   AddGroupOrder(DOBJ);
+   AddGroupOrder(LGTM);
+   AddGroupOrder(MUSC);
+   AddGroupOrder(FSTP);
+   AddGroupOrder(FSTS);
+   AddGroupOrder(SMBN);
+   AddGroupOrder(SMQN);
+   AddGroupOrder(SMEN);
+   AddGroupOrder(DLBR);
+   AddGroupOrder(MUST);
+   AddGroupOrder(DLVW);
+   AddGroupOrder(WOOP);
+   AddGroupOrder(SHOU);
+   AddGroupOrder(EQUP);
+   AddGroupOrder(RELA);
+   AddGroupOrder(SCEN);
+   AddGroupOrder(ASTP);
+   AddGroupOrder(OTFT);
+   AddGroupOrder(ARTO);
+   AddGroupOrder(MATO);
+   AddGroupOrder(MOVT);
+   AddGroupOrder(SNDR);
+   AddGroupOrder(DUAL);
+   AddGroupOrder(SNCT);
+   AddGroupOrder(SOPM);
+   AddGroupOrder(COLL);
+   AddGroupOrder(CLFM);
+   AddGroupOrder(REVB);
+   if IsSkyrimSE then AddGroupOrder(LENS); {New to SSE}
    //wbAddGroupOrder(LSPR);
-   if wbIsSkyrimSE then wbAddGroupOrder(VOLI); {New to SSE}
-  if wbIsSkyrimSE then begin
-    wbNexusModsUrl := 'https://www.nexusmods.com/skyrimspecialedition/mods/164';
-    if wbToolMode = tmLODgen then
-      wbNexusModsUrl := 'https://www.nexusmods.com/skyrimspecialedition/mods/6642';
+   if IsSkyrimSE then AddGroupOrder(VOLI); {New to SSE}
+  if IsSkyrimSE then begin
+    gdNexusModsUrl := 'https://www.nexusmods.com/skyrimspecialedition/mods/164';
+    gdLODGenNexusModsUrl := 'https://www.nexusmods.com/skyrimspecialedition/mods/6642';
   end else begin
-    wbNexusModsUrl := 'https://www.nexusmods.com/skyrim/mods/25859';
-    if wbToolMode = tmLODgen then
-      wbNexusModsUrl := 'https://www.nexusmods.com/skyrim/mods/62698';
+    gdNexusModsUrl := 'https://www.nexusmods.com/skyrim/mods/25859';
+    gdLODGenNexusModsUrl := 'https://www.nexusmods.com/skyrim/mods/62698';
   end;
-  case wbGameMode of
-    gmEnderal: wbNexusModsUrl := 'https://www.nexusmods.com/enderal/mods/23';
-    gmEnderalSE: wbNexusModsUrl := 'https://www.nexusmods.com/enderalspecialedition/mods/78';
+  case GameMode of
+    gmEnderal: begin
+      gdNexusModsUrl := 'https://www.nexusmods.com/enderal/mods/23';
+      gdLODGenNexusModsUrl := '';
+    end;
+    gmEnderalSE: begin
+      gdNexusModsUrl := 'https://www.nexusmods.com/enderalspecialedition/mods/78';
+      gdLODGenNexusModsUrl := '';
+    end;
   end;
-  if wbIsSkyrimSE then begin
-    SetLength(wbOfficialDLC, 3);
-    wbOfficialDLC[0] := 'Dawnguard.esm';
-    wbOfficialDLC[1] := 'HearthFires.esm';
-    wbOfficialDLC[2] := 'Dragonborn.esm';
+  if IsSkyrimSE then begin
+    gdOfficialDLC := ['Dawnguard.esm', 'HearthFires.esm', 'Dragonborn.esm'];
 
-    if wbGameMode = gmTES5VR then begin
+    if GameMode = gmTES5VR then begin
       // new VR esm is loaded after DLCs
-      SetLength(wbOfficialDLC, Succ(Length(wbOfficialDLC)));
-      wbOfficialDLC[Pred(Length(wbOfficialDLC))] := 'SkyrimVR.esm';
+      gdOfficialDLC := OfficialDLC + ['SkyrimVR.esm'];
     end else
-      wbCreationClubContentFileName := 'Skyrim.ccc';
+      gdCreationClubContentFileName := 'Skyrim.ccc';
   end;
-  wbHEDRVersion := 1.7;
-  if wbGameMode in [gmSSE, gmEnderalSE] then
-    wbHEDRVersion := 1.71;
+  gdHEDRVersion := 1.7;
+  if GameMode in [gmSSE, gmEnderalSE] then
+    gdHEDRVersion := 1.71;
+  if GameMode in [gmSSE, gmTES5VR, gmEnderalSE] then
+    gdDefaultFormVersion := 44
+  else
+    gdDefaultFormVersion := 43;
+  gdQuestFlagsSignature := 'DNAM';
+  if GameMode in [gmTES5, gmTES5VR, gmSSE] then
+    gdDefaultLandTexture := 'LDirt02';
+  if GameMode in [gmSSE, gmTES5VR, gmEnderalSE] then begin
+    gdHardcodedRangeAdmitted := (GameMode <> gmTES5VR) or (gcLightPlugins in Capabilities);
+    gdHardcodedRangeMinVersion := 1.709;
+  end;
 end;
 
+initialization
+  wbRegisterGameDef([gmTES5, gmTES5VR, gmEnderal, gmSSE, gmEnderalSE], TwbGameDefTES5);
 end.

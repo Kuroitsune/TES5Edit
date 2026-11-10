@@ -20,11 +20,14 @@ procedure RegisterJvInterpreterAdapter(JvInterpreterAdapter: TJvInterpreterAdapt
 implementation
 
 uses
-  Classes,
+  System.Classes,
+
   wbDataFormat,
-  wbDataFormatNif,
   wbDataFormatMaterial,
-  wbDataFormatMisc;
+  wbDataFormatMisc,
+  wbDataFormatNif,
+
+  xejviScriptArguments;
 
 const
   sDFUnitName = 'wbDataFormat';
@@ -154,7 +157,7 @@ end;
 
 procedure TdfElement_IndexOf(var Value: Variant; Args: TJvInterpreterArgs);
 begin
-  Value := TdfElement(Args.Obj).IndexOf(TdfElement(V2O(Args.Values[0])));
+  Value := TdfElement(Args.Obj).IndexOf(TdfElement(ObjectArgument(Args.Values[0], TdfElement, 0)));
 end;
 
 procedure TdfElement_Add(var Value: Variant; Args: TJvInterpreterArgs);
@@ -285,7 +288,7 @@ end;
 
 procedure TdfElement_Assign(var Value: Variant; Args: TJvInterpreterArgs);
 begin
-  TdfElement(Args.Obj).Assign(TdfElement(V2O(Args.Values[0])));
+  TdfElement(Args.Obj).Assign(TdfElement(ObjectArgument(Args.Values[0], TdfElement, 0)));
 end;
 
 procedure TdfElement_FromJSON(var Value: Variant; Args: TJvInterpreterArgs);
@@ -394,12 +397,12 @@ begin
   case Args.Count of
     0, 1: JvInterpreterError(ieNotEnoughParams, -1);
     2: begin
-      lst := TList(V2O(Args.Values[1]));
+      lst := TList(ObjectArgument(Args.Values[1], TList, 1));
       if Assigned(lst) then
         for b in TwbNifBlock(Args.Obj).ChildrenByType(Args.Values[0]) do lst.Add(b);
     end;
     3: begin
-      lst := TList(V2O(Args.Values[2]));
+      lst := TList(ObjectArgument(Args.Values[2], TList, 2));
       if Assigned(lst) then
         for b in TwbNifBlock(Args.Obj).ChildrenByType(Args.Values[0], Args.Values[1]) do lst.Add(b);
     end else
@@ -426,12 +429,12 @@ begin
   case Args.Count of
     0, 1: JvInterpreterError(ieNotEnoughParams, -1);
     2: begin
-      lst := TList(V2O(Args.Values[1]));
+      lst := TList(ObjectArgument(Args.Values[1], TList, 1));
       if Assigned(lst) then
         for b in TwbNifBlock(Args.Obj).PropertiesByType(Args.Values[0]) do lst.Add(b);
     end;
     3: begin
-      lst := TList(V2O(Args.Values[2]));
+      lst := TList(ObjectArgument(Args.Values[2], TList, 2));
       if Assigned(lst) then
         for b in TwbNifBlock(Args.Obj).PropertiesByType(Args.Values[0], Args.Values[1]) do lst.Add(b);
     end else
@@ -458,12 +461,12 @@ begin
   case Args.Count of
     0, 1: JvInterpreterError(ieNotEnoughParams, -1);
     2: begin
-      lst := TList(V2O(Args.Values[1]));
+      lst := TList(ObjectArgument(Args.Values[1], TList, 1));
       if Assigned(lst) then
         for b in TwbNifBlock(Args.Obj).ExtraDatasByType(Args.Values[0]) do lst.Add(b);
     end;
     3: begin
-      lst := TList(V2O(Args.Values[2]));
+      lst := TList(ObjectArgument(Args.Values[2], TList, 2));
       if Assigned(lst) then
         for b in TwbNifBlock(Args.Obj).ExtraDatasByType(Args.Values[0], Args.Values[1]) do lst.Add(b);
     end else
@@ -513,7 +516,10 @@ var
 begin
   case Args.Count of
    0: Value := TwbNifBlock(Args.Obj).GetAssetsList;
-   1: for s in TwbNifBlock(Args.Obj).GetAssetsList do TStrings(V2O(Args.Values[0])).Add(s);
+   1: begin
+     var lList := TStrings(ObjectArgument(Args.Values[0], TStrings, 0));
+     for s in TwbNifBlock(Args.Obj).GetAssetsList do lList.Add(s);
+   end;
    else
      JvInterpreterError(ieTooManyParams, -1);
   end;
@@ -617,12 +623,12 @@ begin
   case Args.Count of
     0, 1: JvInterpreterError(ieNotEnoughParams, -1);
     2: begin
-      lst := TList(V2O(Args.Values[1]));
+      lst := TList(ObjectArgument(Args.Values[1], TList, 1));
       if Assigned(lst) then
         for b in TwbNifFile(Args.Obj).BlocksByType(Args.Values[0]) do lst.Add(b);
     end;
     3: begin
-      lst := TList(V2O(Args.Values[2]));
+      lst := TList(ObjectArgument(Args.Values[2], TList, 2));
       if Assigned(lst) then
         for b in TwbNifFile(Args.Obj).BlocksByType(Args.Values[0], Args.Values[1]) do lst.Add(b);
     end else
@@ -661,7 +667,10 @@ var
 begin
   case Args.Count of
    0: Value := TwbNifFile(Args.Obj).GetAssetsList;
-   1: for s in TwbNifFile(Args.Obj).GetAssetsList do TStrings(V2O(Args.Values[0])).Add(s);
+   1: begin
+     var lList := TStrings(ObjectArgument(Args.Values[0], TStrings, 0));
+     for s in TwbNifFile(Args.Obj).GetAssetsList do lList.Add(s);
+   end;
    else
      JvInterpreterError(ieTooManyParams, -1);
   end;

@@ -13,10 +13,24 @@ unit xeRichEditForm;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, JvExStdCtrls, JvRichEdit,
-  Vcl.ExtCtrls, Vcl.ComCtrls, VirtualTrees, JvExExtCtrls, JvSplitter, xePushLikeButton,
-  Vcl.Mask;
+  VirtualTrees.Types,
+  System.Classes,
+
+  Vcl.ComCtrls,
+  Vcl.Controls,
+  Vcl.ExtCtrls,
+  Vcl.Forms,
+  Vcl.Mask,
+  Vcl.StdCtrls,
+
+  JvExExtCtrls,
+  JvExStdCtrls,
+  JvRichEdit,
+  JvSplitter,
+
+  VirtualTrees,
+
+  xePushLikeButton;
 
 type
   TfrmRichEdit = class(TForm)
@@ -48,7 +62,7 @@ type
       var Allowed: Boolean);
     procedure splTOCMoved(Sender: TObject);
   protected
-    procedure UpdateActions; override;
+    procedure UpdateActions; override; final;
   private
     NeedRebuildTOC : Boolean;
     NeedToggleTOC : Boolean;
@@ -64,10 +78,18 @@ implementation
 {$R *.dfm}
 
 uses
-  wbInterface,
+  System.SysUtils,
+
+  Vcl.Styles.Utils.SystemMenu,
+
+  Winapi.Messages,
+  Winapi.Windows,
+
   TOM2,
-  xeMainForm,
-  Vcl.Styles.Utils.SystemMenu;
+
+  wbInterface,
+
+  xeMainForm;
 
 procedure TfrmRichEdit.btnTOCClick(Sender: TObject);
 begin

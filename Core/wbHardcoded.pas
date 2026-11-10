@@ -11,7 +11,10 @@ unit wbHardcoded;
 interface
 
 uses
-  System.SysUtils, System.Classes, FileContainer;
+  System.Classes,
+  System.SysUtils,
+
+  FileContainer;
 
 type
   TwbHardcodedContainer = class(TDataModule)
@@ -25,7 +28,7 @@ type
     fcFallout76: TFileContainer;
     fcStarfield: TFileContainer;
   public
-    class function GetHardCodedDat: TBytes;
+    class function GetHardCodedDat(const aGameName: string): TBytes;
   end;
 
 implementation
@@ -37,14 +40,14 @@ uses
 
 { TwbHardcodedContainer }
 
-class function TwbHardcodedContainer.GetHardCodedDat: TBytes;
+class function TwbHardcodedContainer.GetHardCodedDat(const aGameName: string): TBytes;
 var
   s             : string;
   FileContainer : TFileContainer;
 begin
   Result := nil;
   with Create(nil) do try
-    s := wbProgramPath + wbGameName + '.Hardcoded.Override.dat';
+    s := wbProgramPath + aGameName + '.Hardcoded.Override.dat';
     if FileExists(s) then
       with TBytesStream.Create do try
         LoadFromFile(s);
@@ -54,7 +57,7 @@ begin
       finally
         Free;
       end;
-    FileContainer := FindComponent('fc' + wbGameName) as TFileContainer;
+    FileContainer := FindComponent('fc' + aGameName) as TFileContainer;
     if Assigned(FileContainer) then
       Result := FileContainer.Data;
   finally

@@ -52,22 +52,42 @@ end;
 //===========================================================================
 procedure SavePlugin(aFile: IInterface; aFileName: string; aReset: Boolean);
 var
+  ms: TMemoryStream;
   fs: TFileStream;
-  fdate: Integer;
+  ftime: TDateTime;
+  keeptime: Boolean;
+  i: Integer;
 begin
-  if FileExists(aFileName) then
-    fdate := FileAge(aFileName);
+  // a loaded plugin's own file: the editor would not know it changed, and a queued save of it would replace this one at shutdown
+  for i := 0 to Pred(FileCount) do
+    if SameText(ExpandFileName(aFileName), ExpandFileName(GetFilePathOnDisk(FileByIndex(i)))) then
+      raise Exception.Create(aFileName + ' is the file of a loaded plugin and can not be overwritten.');
 
-  fs := TFileStream.Create(aFileName, fmCreate);
+  keeptime := False;
+  if FileExists(aFileName) and ((wbGameMode = gmTES3) or (wbGameMode = gmTES4) or (wbGameMode = gmFO3) or (wbGameMode = gmFNV)) then try
+    ftime := GetFileLastWriteTimeUtc(aFileName);
+    keeptime := True;
+  except
+    on E: Exception do
+      AddMessage('Can not read the file date of ' + aFileName + ': ' + E.Message);
+  end;
+
+  ms := TMemoryStream.Create;
   try
-    FileWriteToStream(aFile, fs, aReset);
+    FileWriteToStream(aFile, ms, aReset);
+    fs := TFileStream.Create(aFileName, fmCreate);
+    try
+      fs.CopyFrom(ms, 0);
+    finally
+      fs.Free;
+    end;
   finally
-    fs.Free;
+    ms.Free;
   end;
 
   // restore original file date for games that use it for load order sorting
-  if (fdate <> 0) and ((wbGameMode = gmTES4) or (wbGameMode = gmFO3) or (wbGameMode = gmFNV)) then try
-    FileSetDate(aFileName, fdate);
+  if keeptime then try
+    SetFileLastWriteTimeUtc(aFileName, ftime);
   except
     on E: Exception do
       AddMessage('Can not change file date to original one: ' + E.Message);
@@ -113,7 +133,6 @@ begin
     chkReset.Width := 200;
     chkReset.Caption := 'Reset modified status';
     chkReset.Checked := False; // ini.ReadBool('Settings', 'ResetModified', chkReset.Checked);
-    chkReset.Visible := False; // doesn't work properly
 
     btnOk := TButton.Create(frm); btnOk.Parent := frm;
     btnOk.Caption := 'OK';

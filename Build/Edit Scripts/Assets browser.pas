@@ -20,7 +20,7 @@ var
   lblItems: TLabel;
   cmbContainer: TComboBox;
   lvAssets: TListView;
-  mInfo: TMemo;
+  mInfo: TRichEdit;
   mnPopup: TPopupMenu;
   MenuItem: TMenuItem;
 
@@ -456,12 +456,12 @@ begin
     sp.Align := alTop;
     sp.Height := 5;
 
-    mInfo := TMemo.Create(frm); mInfo.Parent := frm;
+    mInfo := TRichEdit.Create(frm); mInfo.Parent := frm;
     mInfo.Align := alClient;
     mInfo.BorderStyle := bsNone;
     mInfo.ScrollBars := ssVertical;
     mInfo.ReadOnly := True;
-    mInfo.Lines.Text := 'Additional information'#13#13'Usage:'#13'Right click - Actions menu'#13'Double click - Open action'#13'Ctrl+C - Copy selected file name to clipboard'#13'Esc - Exit';
+    mInfo.Lines.Text := 'Additional information'#13' '#13'Usage:'#13'Right click - Actions menu'#13'Double click - Open action'#13'Ctrl+C - Copy selected file name to clipboard'#13'Esc - Exit';
 
     mnPopup := TPopupMenu.Create(frm);
     mnPopup.OnPopup := MenuPopup;

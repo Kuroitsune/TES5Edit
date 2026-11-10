@@ -23,16 +23,18 @@ uses
   {$IFDEF EXCEPTION_LOGGING_ENABLED}
   nxExceptionHook,
   {$ENDIF }
-  Winapi.Windows,
-  Forms,
-  Dialogs,
-  SysUtils,
+  System.SysUtils,
+
+  VirtualEditTree,
   VirtualTrees,
   VTEditors,
-  VirtualEditTree,
+
   {$IFNDEF LiteVersion}
   cxVTEditors,
   {$ENDIF}
+
+  Vcl.Dialogs,
+  Vcl.Forms,
   Vcl.Themes,
   Vcl.Styles,
   Vcl.Styles.Hooks,
@@ -40,15 +42,19 @@ uses
   Vcl.Styles.Utils.Forms,
   Vcl.Styles.Utils.StdCtrls,
   Vcl.Styles.Utils.ScreenTips,
-  xeInit in 'xEdit\xeInit.pas',
+
+  Winapi.Windows,
+
   wbBetterStringList in 'Core\wbBetterStringList.pas',
   wbBSA in 'Core\wbBSA.pas',
   wbCommandLine in 'Core\wbCommandLine.pas',
+  wbConflict in 'Core\wbConflict.pas',
   wbDataFormat in 'Core\wbDataFormat.pas',
   wbDataFormatMaterial in 'Core\wbDataFormatMaterial.pas',
   wbDataFormatMisc in 'Core\wbDataFormatMisc.pas',
   wbDataFormatNif in 'Core\wbDataFormatNif.pas',
   wbDataFormatNifTypes in 'Core\wbDataFormatNifTypes.pas',
+  wbDataFormatWwise in 'Core\wbDataFormatWwise.pas',
   wbDefinitionsCommon in 'Core\wbDefinitionsCommon.pas',
   wbDefinitionsFNV in 'Core\wbDefinitionsFNV.pas',
   wbDefinitionsFNVSaves in 'Core\wbDefinitionsFNVSaves.pas',
@@ -57,17 +63,22 @@ uses
   wbDefinitionsFO4 in 'Core\wbDefinitionsFO4.pas',
   wbDefinitionsFO4Saves in 'Core\wbDefinitionsFO4Saves.pas',
   wbDefinitionsFO76 in 'Core\wbDefinitionsFO76.pas',
+  wbDefinitionsReflection in 'Core\wbDefinitionsReflection.pas',
+  wbDefinitionsSF1 in 'Core\wbDefinitionsSF1.pas',
+  wbDefinitionsSignatures in 'Core\wbDefinitionsSignatures.pas',
   wbDefinitionsTES3 in 'Core\wbDefinitionsTES3.pas',
   wbDefinitionsTES4 in 'Core\wbDefinitionsTES4.pas',
   wbDefinitionsTES4Saves in 'Core\wbDefinitionsTES4Saves.pas',
   wbDefinitionsTES5 in 'Core\wbDefinitionsTES5.pas',
   wbDefinitionsTES5Saves in 'Core\wbDefinitionsTES5Saves.pas',
+  wbDiff in 'Core\wbDiff.pas',
+  wbHash in 'Core\wbHash.pas',
   wbHalfFloat in 'Core\wbHalfFloat.pas',
   wbHardcoded in 'Core\wbHardcoded.pas' {wbHardcodedContainer: TDataModule},
   wbHelpers in 'Core\wbHelpers.pas',
   wbImplementation in 'Core\wbImplementation.pas',
   wbInterface in 'Core\wbInterface.pas',
-  wbLocalization in 'Core\wbLocalization.pas',
+  wbLoadOrder in 'Core\wbLoadOrder.pas',
   wbLOD in 'Core\wbLOD.pas',
   wbModGroups in 'Core\wbModGroups.pas',
   wbNifMath in 'Core\wbNifMath.pas',
@@ -75,34 +86,43 @@ uses
   wbSaveInterface in 'Core\wbSaveInterface.pas',
   wbSort in 'Core\wbSort.pas',
   wbStreams in 'Core\wbStreams.pas',
+
   xeDeveloperMessageForm in 'xEdit\xeDeveloperMessageForm.pas' {frmDeveloperMessage},
   xeEditWarningForm in 'xEdit\xeEditWarningForm.pas' {frmEditWarning},
   xeFileSelectForm in 'xEdit\xeFileSelectForm.pas' {frmFileSelect},
   xeFilterOptionsForm in 'xEdit\xeFilterOptionsForm.pas' {frmFilterOptions},
+  xeGameSelectForm in 'xEdit\xeGameSelectForm.pas' {frmGameSelect},
+  xeInit in 'xEdit\xeInit.pas',
+  xejviScriptAdapter in 'xEdit\JvI\xejviScriptAdapter.pas',
+  xejviScriptAdapterContainer in 'xEdit\JvI\xejviScriptAdapterContainer.pas',
+  xejviScriptAdapterDF in 'xEdit\JvI\xejviScriptAdapterDF.pas',
+  xejviScriptAdapterElement in 'xEdit\JvI\xejviScriptAdapterElement.pas',
+  xejviScriptAdapterFile in 'xEdit\JvI\xejviScriptAdapterFile.pas',
+  xejviScriptAdapterHost in 'xEdit\JvI\xejviScriptAdapterHost.pas',
+  xejviScriptAdapterMisc in 'xEdit\JvI\xejviScriptAdapterMisc.pas',
+  xejviScriptAdapterMiscJson in 'xEdit\JvI\xejviScriptAdapterMiscJson.pas',
+  xejviScriptAdapterMiscRegEx in 'xEdit\JvI\xejviScriptAdapterMiscRegEx.pas',
+  xejviScriptAdapterMiscVcl in 'xEdit\JvI\xejviScriptAdapterMiscVcl.pas',
+  xejviScriptAdapterRecord in 'xEdit\JvI\xejviScriptAdapterRecord.pas',
+  xejviScriptAdapterResource in 'xEdit\JvI\xejviScriptAdapterResource.pas',
+  xejviScriptArguments in 'xEdit\JvI\xejviScriptArguments.pas',
+  xejviScriptHost in 'xEdit\JvI\xejviScriptHost.pas',
   xeLegendForm in 'xEdit\xeLegendForm.pas' {frmLegend},
   xeLocalizationForm in 'xEdit\xeLocalizationForm.pas' {frmLocalization},
   xeLocalizePluginForm in 'xEdit\xeLocalizePluginForm.pas' {frmLocalizePlugin},
-  xeLODGenForm in 'xEdit\xeLODGenForm.pas', {frmLODGen}
+  xeLODGenForm in 'xEdit\xeLODGenForm.pas',
   xeLogAnalyzerForm in 'xEdit\xeLogAnalyzerForm.pas' {frmLogAnalyzer},
   xeMainForm in 'xEdit\xeMainForm.pas' {frmMain},
-  xeModGroupEditForm in 'xEdit\xeModGroupEditForm.pas', {frmModGroupEdit}
-  xeModGroupSelectForm in 'xEdit\xeModGroupSelectForm.pas', {frmModGroupSelect}
-  xeModuleSelectForm in 'xEdit\xeModuleSelectForm.pas', {frmModuleSelect}
+  xeModGroupEditForm in 'xEdit\xeModGroupEditForm.pas',
+  xeModGroupSelectForm in 'xEdit\xeModGroupSelectForm.pas',
+  xeModuleSelectForm in 'xEdit\xeModuleSelectForm.pas',
   xeOptionsForm in 'xEdit\xeOptionsForm.pas' {frmOptions},
   xeRichEditForm in 'xEdit\xeRichEditForm.pas' {frmRichEdit},
-  xejviScriptAdapter in 'xEdit\JvI\xejviScriptAdapter.pas',
-  xejviScriptAdapterDF in 'xEdit\JvI\xejviScriptAdapterDF.pas',
-  xejviScriptAdapterMisc in 'xEdit\JvI\xejviScriptAdapterMisc.pas',
   xeScriptForm in 'xEdit\xeScriptForm.pas' {frmScript},
-  xeTipForm in 'xEdit\xeTipForm.pas', {frmTip}
+  xeTipForm in 'xEdit\xeTipForm.pas',
   xeViewElementsForm in 'xEdit\xeViewElementsForm.pas' {frmViewElements},
   xeWaitForm in 'xEdit\xeWaitForm.pas' {frmWait},
-  xeWorldspaceCellDetailsForm in 'xEdit\xeWorldspaceCellDetailsForm.pas' {frmWorldspaceCellDetails},
-  xeScriptHost in 'xEdit\xeScriptHost.pas',
-  xejviScriptHost in 'xEdit\JvI\xejviScriptHost.pas',
-  wbDefinitionsSF1 in 'Core\wbDefinitionsSF1.pas',
-  wbDefinitionsSignatures in 'Core\wbDefinitionsSignatures.pas',
-  wbLoadOrder in 'Core\wbLoadOrder.pas';
+  xeWorldspaceCellDetailsForm in 'xEdit\xeWorldspaceCellDetailsForm.pas' {frmWorldspaceCellDetails};
 
 {$R *.res}
 {$MAXSTACKSIZE 2097152}
@@ -114,7 +134,7 @@ const
 
 begin
   UseLatestCommonDialogs := True;
-  SysUtils.FormatSettings.DecimalSeparator := '.';
+  FormatSettings.DecimalSeparator := '.';
 
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
@@ -133,12 +153,12 @@ begin
   end;
 
   {$IFDEF EXCEPTION_LOGGING_ENABLED}
-  nxEHAppVersion := wbApplicationTitle;
+  nxEHAppVersion := xeApplicationTitle;
   {$ENDIF}
-  Application.Title := wbApplicationTitle;
+  Application.Title := xeApplicationTitle;
   try
     Application.CreateForm(TfrmMain, frmMain);
-    Application.Run;
+  Application.Run;
   finally
     DoRename;
   end;

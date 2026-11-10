@@ -8,42 +8,52 @@
 
 unit wbDefinitionsTES4Saves;
 
-interface
+{$I wbDefines.inc}
 
-procedure DefineTES4Saves;
-procedure SwitchToTES4CoSave;
+interface
 
 implementation
 
 uses
-  Types,
-  Classes,
-  SysUtils,
-  Math,
-  Variants,
+  System.SysUtils,
+
   wbInterface,
-  wbSaveInterface,
-  wbImplementation,
-  wbLocalization,
-  wbDefinitionsTES4;
+  wbSaveInterface;
 
-var
-  wbActorValueLabels : array of string;
+type
+  TwbSaveDefTES4Base = class(TwbSaveDef)
+  protected
+    sdActorValueLabels : array of string;
+    sdSaveChapters     : IwbStructDef;
+    sdCoSaveChapters   : IwbStructDef;
+    sdSaveHeader       : IwbStructDef;
+    sdCoSaveHeader     : IwbStructDef;
+    sdExtractInfo      : TByteSet;
 
-var // forward type directives
-//  wbChangeTypes    : IwbEnumDef;
-  wbSaveChapters   : IwbStructDef;
-  wbCoSaveChapters : IwbStructDef;
-  wbSaveHeader     : IwbStructDef;
-  wbCoSaveHeader   : IwbStructDef;
+    procedure DefineTES4SavesA;
+    procedure DefineTES4SavesS;
+  public
+    procedure Define; override;
+  end;
 
-procedure DefineTES4SavesA;
+  TwbSaveDefTES4 = class(TwbSaveDefTES4Base)
+  public
+    procedure Define; override; final;
+  end;
+
+  TwbCoSaveDefTES4 = class(TwbSaveDefTES4Base)
+  public
+    procedure Define; override; final;
+  end;
+
+procedure TwbSaveDefTES4Base.DefineTES4SavesA;
 var
   i: Integer;
 begin
-  SetLength(wbActorValueLabels, wbActorValueEnum.NameCount);
-  for i := 0 to wbActorValueEnum.NameCount - 1 do
-    wbActorValueLabels[i] := wbActorValueEnum.Names[i];
+  var lActorValueEnum := sdGameDef.ActorValueEnum;
+  SetLength(sdActorValueLabels, lActorValueEnum.NameCount);
+  for i := 0 to lActorValueEnum.NameCount - 1 do
+    sdActorValueLabels[i] := lActorValueEnum.Names[i];
 end;
 
 //{ TES4saves }
@@ -127,7 +137,7 @@ begin
   end;
 end;
 
-function FileLocationTableCountCounter(aName: String; aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Cardinal;
+function FileLocationTableCountCounter(const aName: string; aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Cardinal;
 var
   Element : IwbElement;
   Container: IwbDataContainer;
@@ -214,26 +224,14 @@ end;
 //  end;
 //end;
 
-var
-  WorldspaceTableCount : Integer = -1;
-
 procedure WorldspaceTableAfterLoad(const aElement: IwbElement);
 begin
-  if WorldspaceTableCount < 0 then begin
-    WorldspaceTableCount := (aElement as IwbContainer).ElementCount;
-    InitializeSaveWorldspaceArray(aElement as IwbContainer);
-  end;
+  wbSaveTablesOf(aElement).InitializeSaveWorldspaceArray(aElement as IwbContainer);
 end;
-
-var
-  RefIDTableCount : Integer = -1;
 
 procedure RefIDTableAfterLoad(const aElement: IwbElement);
 begin
-  if RefIDTableCount < 0 then begin
-    RefIDTableCount := (aElement as IwbContainer).ElementCount;
-    InitializeSaveRefIDArray(aElement as IwbContainer);
-  end;
+  wbSaveTablesOf(aElement).InitializeSaveRefIDArray(aElement as IwbContainer);
 end;
 
 //function Unknown1000_00001Decider(aBasePtr: Pointer; aEndPtr: Pointer; const aElement: IwbElement): Integer;
@@ -1821,7 +1819,7 @@ end;
 //  Result := wbArrayT(aName, wbFloat('Coord'), 3, ['X', 'Y', 'Z'], nil);
 //end;
 
-procedure DefineTES4SavesS;  // This is all based on the Runtime
+procedure TwbSaveDefTES4Base.DefineTES4SavesS;  // This is all based on the Runtime
 var
   wbHeader                   : IwbStructDef;
   wbFileLocationTable        : IwbStructDef;
@@ -1840,7 +1838,7 @@ var
 //  wbInitialDataType          : IwbUnionDef;
 //  wbChangeFlags010Flags      : IwbFlagsDef;
   wbCoSaveChunk              : IwbStructDef;
-  wbCoSaveChunks             : IwbArrayDef;
+  wbCoSaveChunks             : IwbValueDef;
   wbCoSavePlugin             : IwbStructDef;
   wbCoSavePlugins            : IwbArrayDef;
 
@@ -6314,9 +6312,9 @@ begin
 //      ,wbChangedREFR  {03A}
 //      ,wbStruct('Change ACHR Data', [ {03B}
 //         wbUnion('Player specific', IsActorPlayerDecider, [wbNull, wbStruct('Player data', [
-//           wbArray('ActorValues244', wbFloatT('Actor Value'), wbActorValueLabels),
-//           wbArray('ActorValues378', wbFloatT('Actor Value'), wbActorValueLabels),
-//           wbArray('ActorValues4B0', wbFloatT('Actor Value'), wbActorValueLabels),
+//           wbArray('ActorValues244', wbFloatT('Actor Value'), sdActorValueLabels),
+//           wbArray('ActorValues378', wbFloatT('Actor Value'), sdActorValueLabels),
+//           wbArray('ActorValues4B0', wbFloatT('Actor Value'), sdActorValueLabels),
 //           wbIntegerT('Unk4AC', itU32)
 //         ])])
 //        ,wbChangedCharacter
@@ -6763,29 +6761,29 @@ begin
     wbByteArray('Unused', $6e - 9*4)
   ]);
 
-  wbSaveHeader := wbStruct('Save File Header', [
+  sdSaveHeader := wbStruct('Save File Header', [
      wbString('Magic', 11)
     ,wbInteger('Header Size', itU32)
     ,wbHeader
     ,wbByteArray('Hidden: Screenshot Data', ScreenShotDataCounter)
     ,wbInteger('Form Version', itU8)
     ,wbInteger('PluginInfo Size', itU32)
-    ,wbArrayPT(wbFilePlugins, wbLenStringT('PluginName', -3), -4)
+    ,wbArrayPT(FilePlugins, wbLenStringT('PluginName', -3), -4)
     ,wbFileLocationTable
   ]);
 
-  wbSaveChapters := wbStruct('Save File Chapters', [
+  sdSaveChapters := wbStruct('Save File Chapters', [
      wbArray('Global Data 1', wbGlobalData, [], GlobalData1Counter)
     ,wbArray('Changed Forms', wbChangedForm, [], ChangedFormsCounter)
     ,wbArray('Global Data 2', wbGlobalData, [], GlobalData2Counter)
-    ,wbArray('FormIDs', wbFormID('FormID', cpFormID), -1, RefIDTableAfterLoad)
-    ,wbArray('Visited Worldspace', wbFormID('FormID', cpFormID), -1, WorldspaceTableAfterLoad)
+    ,wbArray('FormIDs', wbLoadOrderFormID('FormID', cpFormID), -1).SetAfterLoad(RefIDTableAfterLoad)
+    ,wbArray('Visited Worldspace', wbLoadOrderFormID('FormID', cpFormID), -1).SetAfterLoad(WorldspaceTableAfterLoad)
     ,wbArray('Unknown Table', wbInteger('Unknown', itU8), -1)
 //    ,wbByteArray('Unused', SkipCounter) // Lets you skip an arbitrary number of byte, Setable from CommandLine -bts:n
 //    ,wbArray('Remaining',  WbByteArray('Unknown', wbBytesToGroup), DumpCounter) // Lets you dump an arbitrary number of quartet, Setable from CommandLine -btd:n
   ]);
 
-  wbCoSaveHeader := wbStruct('CoSave File Header', [
+  sdCoSaveHeader := wbStruct('CoSave File Header', [
      wbString('Magic', 4)
     ,wbInteger('Version', itU32)
     ,wbInteger('OBSE Version', itU16)
@@ -6841,7 +6839,7 @@ begin
   ]);
 //  wbCoSaveChunk.TreeLeaf := True;
 
-  wbCoSaveChunks := wbArray('Chunks', wbCoSaveChunk, wbCoSaveChunkCounter, cpNormal, false, wbDontShowBranch);
+  wbCoSaveChunks := wbArray('Chunks', wbCoSaveChunk, wbCoSaveChunkCounter).SetDontShow(wbDontShowBranch);
   wbCoSavePlugin := wbStructC('Plugin', nil, wbCoSaveArrayType, wbCoSaveArrayTypeName, nil, [
     wbInteger('Opcode Base', itU32),
     wbInteger('Chunks count', itU32),
@@ -6852,41 +6850,49 @@ begin
   wbCoSaveChunks.TreeBranch := True;
   wbCoSavePlugins := wbArray('Plugins', wbCoSavePlugin, wbCoSavePluginCounter);
 
-  wbCoSaveChapters := wbStruct('CoSave File Chapters', [
+  sdCoSaveChapters := wbStruct('CoSave File Chapters', [
     wbCoSavePlugins
   ]);
 
-  wbFileChapters := wbSaveChapters;
-  wbFileHeader := wbSaveHeader;
-  wbSaveHeader.TreeHead := True;
-  wbCoSaveHeader.TreeHead := True;
-//  wbSaveHeader.TreeLeaf := True;
-//  wbCoSaveHeader.TreeLeaf := True;
+  sdSaveHeader.TreeHead := True;
+  sdCoSaveHeader.TreeHead := True;
+//  sdSaveHeader.TreeLeaf := True;
+//  sdCoSaveHeader.TreeLeaf := True;
 end;
 
-var
-  ExtractInfoSave:   TByteSet = [3, 4]; // SaveFileChapters that should be initialized before dumping to get more information
-  ExtractInfoCoSave: TByteSet = [];     // CoSaveFileChapters that should be initialized before dumping to get more information
-
-procedure DefineTES4Saves;
+procedure TwbSaveDefTES4Base.Define;
 begin
-  wbFileMagic := 'FO3SAVEGAME';
-  wbExtractInfo := @ExtractInfoSave;
-  wbFilePlugins := 'Plugins';
-  DefineTES4;
+  FilePlugins := 'Plugins';
   DefineTES4SavesA;
   DefineTES4SavesS;
 end;
 
-procedure SwitchToTES4CoSave;
+procedure TwbSaveDefTES4.Define;
 begin
-  wbFileMagic := 'OBSE';
-  wbExtractInfo := @ExtractInfoCoSave;
-  wbFilePlugins := 'Absolute:44';
-  wbFileChapters := wbCoSaveChapters;
-  wbFileHeader := wbCoSaveHeader;
+  inherited;
+  FileExtension := '.ess';
+  FileMagic := 'FO3SAVEGAME';
+  sdExtractInfo := [3, 4]; // SaveFileChapters that should be initialized before dumping to get more information
+  ExtractInfo := @sdExtractInfo;
+  FileChapters := sdSaveChapters;
+  FileHeader := sdSaveHeader;
+end;
+
+procedure TwbCoSaveDefTES4.Define;
+begin
+  inherited;
+  FileExtension := '.obse';
+  FileMagic := 'OBSE';
+  sdExtractInfo := [];
+  ExtractInfo := @sdExtractInfo;
+  FilePlugins := 'Absolute:44';
+  FileChapters := sdCoSaveChapters;
+  FileHeader := sdCoSaveHeader;
 end;
 
 initialization
+{$IFDEF USE_UNFINISHED_SAVE_DEFS}
+  wbRegisterSaveDefs([gmTES4], TwbSaveDefTES4, TwbCoSaveDefTES4);
+{$ENDIF}
 end.
 

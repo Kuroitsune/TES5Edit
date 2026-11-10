@@ -13,9 +13,6 @@ unit xeScriptHost;
 interface
 
 uses
-  Classes,
-  SysUtils,
-  System.Generics.Collections,
   wbInterface;
 
 type
@@ -23,6 +20,7 @@ type
     ['{3BE80702-B634-46EB-8A45-38D9D911E6B6}']
 
     function FunctionExists(const aName: string): Boolean;
+    function FunctionIsEmpty(const aName: string): Boolean;
     function CallFunction(const aName: string; const aParams: array of Variant): Variant;
     function GetLastErrorLocation: string;
   end;
@@ -35,14 +33,18 @@ type
     constructor Create; virtual;
 
     class function CreateForName(const aName: string): TxeScriptHost;
-    function CreateScriptInternal(const aScriptName, aScript: string): IxeScript; virtual; abstract;
+    function CreateScriptInternal(const aScriptFile, aScript: string): IxeScript; virtual; abstract;
   public
     class procedure Init(const aName: string);
-    class function CreateScript(const aScriptName, aScript: string): IxeScript;
+    class function CreateScript(const aScriptFile, aScript: string): IxeScript;
   end;
   TxeScriptHostClass = class of TxeScriptHost;
 
 implementation
+
+uses
+  System.Generics.Collections,
+  System.SysUtils;
 
 { TxeScriptHost }
 
@@ -73,11 +75,11 @@ end;
 var
   _ScriptHost: TxeScriptHost;
 
-class function TxeScriptHost.CreateScript(const aScriptName, aScript: string): IxeScript;
+class function TxeScriptHost.CreateScript(const aScriptFile, aScript: string): IxeScript;
 begin
   if not Assigned(_ScriptHost) then
     raise Exception.Create('TxeScriptHost has not been initialized');
-  Result := _ScriptHost.CreateScriptInternal(aScriptName, aScript);
+  Result := _ScriptHost.CreateScriptInternal(aScriptFile, aScript);
 end;
 
 class procedure TxeScriptHost.Init(const aName: string);

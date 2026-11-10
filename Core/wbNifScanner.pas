@@ -11,8 +11,8 @@ unit wbNifScanner;
 interface
 
 uses
-  SysUtils,
-  Classes;
+  System.Classes,
+  System.SysUtils;
 
 const
   SLSF1_Environment_Mapping = 1 shl 7;
@@ -54,7 +54,7 @@ type
     Index: Integer;
     Name: string;
     constructor Create(aNiFile: TNiFile; aIndex: Integer); virtual;
-    destructor Destroy; override;
+    destructor Destroy; override; final;
     procedure Load(aStream: TStream); virtual;
   end;
 
@@ -70,35 +70,35 @@ type
     NodeSizes: array of Cardinal;
     NodeStrings: array of string;
     NodeOffsets: array of integer;
-    constructor Create(aNiFile: TNiFile; aIndex: Integer); override;
-    procedure Load(aStream: TStream); override;
+    constructor Create(aNiFile: TNiFile; aIndex: Integer); override; final;
+    procedure Load(aStream: TStream); override; final;
   end;
 
   TNodeNiNode = class(TBaseNiNode)
   public
-    procedure Load(aStream: TStream); override;
+    procedure Load(aStream: TStream); override; final;
   end;
 
   TNodeBSFadeNode = class(TBaseNiNode)
   public
-    procedure Load(aStream: TStream); override;
+    procedure Load(aStream: TStream); override; final;
   end;
 
   TNodeBSXFlags = class(TBaseNiNode)
   public
     Flags: Cardinal;
-    procedure Load(aStream: TStream); override;
+    procedure Load(aStream: TStream); override; final;
   end;
 
   TNodeNiAlphaProperty = class(TBaseNiNode)
   public
-    procedure Load(aStream: TStream); override;
+    procedure Load(aStream: TStream); override; final;
   end;
 
   TNodeBSShaderTextureSet = class(TBaseNiNode)
   public
     Textures: array of string;
-    procedure Load(aStream: TStream); override;
+    procedure Load(aStream: TStream); override; final;
   end;
 
   TNodeBSLightingShaderProperty = class(TBaseNiNode)
@@ -111,14 +111,14 @@ type
     UVOffset: TNiTexCoord;
     UVScale: TNiTexCoord;
     TextureSet: TNodeRef;
-    procedure Load(aStream: TStream); override;
+    procedure Load(aStream: TStream); override; final;
   end;
 
   TNodeBSEffectShaderProperty = class(TBaseNiNode)
   public
     SourceTexture: string;
     GreyScaleTexture: string;
-    procedure Load(aStream: TStream); override;
+    procedure Load(aStream: TStream); override; final;
   end;
 
   TNodeNiTriShape = class(TBaseNiNode)
@@ -160,17 +160,17 @@ type
     HasVertexColors: Boolean;
     VertexColors: array of TNiColor4;
     UVSets: array of array of TNiTexCoord;
-    procedure Load(aStream: TStream); override;
+    procedure Load(aStream: TStream); override; final;
   end;
 
   TNodeNiTriStrips = class(TNodeNiTriShape)
   public
-    procedure Load(aStream: TStream); override;
+    procedure Load(aStream: TStream); override; final;
   end;
 
   TNodeBSLODTriShape = class(TNodeNiTriShape)
   public
-    procedure Load(aStream: TStream); override;
+    procedure Load(aStream: TStream); override; final;
   end;
 
   TNiFile = class
@@ -178,14 +178,14 @@ type
     Header: TNiHeader;
     Nodes: array of TBaseNiNode;
     constructor Create;
-    destructor Destroy; override;
-    procedure Load(aStream: TStream);
+    destructor Destroy; override; final;
+    function Load(aStream: TStream): Boolean;
     function GetNode(aRef: TNodeRef): TBaseNiNode;
   end;
 
-function NifBlockList(aNifData: TBytes; aBlocks: TStrings): Boolean;
-function NifTextures(aNifData: TBytes; aTextures: TStrings): Boolean;
-function NifTexturesUVRange(aNifData: TBytes; UVRange: Single; aTextures: TStrings): Boolean;
+function NifBlockList(const aNifData: TBytes; aBlocks: TStrings): Boolean;
+function NifTextures(const aNifData: TBytes; aTextures: TStrings): Boolean;
+function NifTexturesUVRange(const aNifData: TBytes; UVRange: Single; aTextures: TStrings): Boolean;
 
 var
   wbWarningCallback: procedure(aCheck: TNifCheck; aNode: TBaseNiNode; aMessage: string);
@@ -284,7 +284,8 @@ procedure TNiHeader.Load(aStream: TStream);
 const
   NifMagic = 'Gamebryo File Format';
 var
-  i, j, n: Cardinal;
+  i: Integer;
+  j, n: Cardinal;
 begin
   inherited;
 
@@ -359,7 +360,9 @@ begin
         NodeStrings[i] := ReadSizedString;
     end;
   end;
-  data.ReadUInt32; // skip Unknown Int 2
+  n := data.ReadUInt32;
+  for i := 1 to n do
+    data.ReadUInt32;
 
   // calculate blocks offsets
   SetLength(NodeOffsets, NodeCount);
@@ -402,7 +405,8 @@ end;
 //===========================================================================
 procedure TNodeBSShaderTextureSet.Load(aStream: TStream);
 var
-  i, n: Cardinal;
+  i: Integer;
+  n: Cardinal;
 begin
   inherited;
   n := data.ReadUInt32;
@@ -414,7 +418,8 @@ end;
 //===========================================================================
 procedure TNodeBSLightingShaderProperty.Load(aStream: TStream);
 var
-  i, n: Cardinal;
+  i: Integer;
+  n: Cardinal;
 begin
   inherited;
   SkyrimShaderType := data.ReadUInt32;
@@ -460,7 +465,8 @@ end;
 //===========================================================================
 procedure TNodeNiTriShape.Load(aStream: TStream);
 var
-  i, n: Cardinal;
+  i: Integer;
+  n: Cardinal;
 begin
   inherited;
   Name := ReadString;
@@ -509,7 +515,8 @@ end;
 //===========================================================================
 procedure TNodeNiTriShapeData.Load(aStream: TStream);
 var
-  i, n: Cardinal;
+  i: Integer;
+  n: Cardinal;
 begin
   inherited;
   data.ReadInt32;
@@ -603,7 +610,7 @@ begin
 end;
 
 //===========================================================================
-procedure TNiFile.Load(aStream: TStream);
+function TNiFile.Load(aStream: TStream): Boolean;
 var
   i: integer;
   NodeType: string;
@@ -611,7 +618,8 @@ begin
   Header := TNiHeader.Create(Self, Low(Integer));
   Header.Load(aStream);
 
-  if Length(Header.NodeSizes) = 0 then
+  Result := Length(Header.NodeSizes) > 0;
+  if not Result then
     Exit;
 
   SetLength(Nodes, Header.NodeCount);
@@ -666,7 +674,7 @@ end;
 
 //===========================================================================
 // Get the list of all blocks: index, name and type
-function NifBlockList(aNifData: TBytes; aBlocks: TStrings): Boolean;
+function NifBlockList(const aNifData: TBytes; aBlocks: TStrings): Boolean;
 var
   bs: TBytesStream;
   nif: TNiFile;
@@ -682,7 +690,8 @@ begin
   bs := TBytesStream.Create(aNifData);
   nif := TNiFile.Create;
   try
-    nif.Load(bs);
+    if not nif.Load(bs) then
+      Exit;
     for i := Low(nif.Nodes) to High(nif.Nodes) do begin
       n := nif.Nodes[i];
       if not Assigned(n) then
@@ -700,7 +709,7 @@ end;
 //===========================================================================
 // Get the list of all textures from Nif data into aTextures
 // from all nif nodes that can contain texture file names
-function NifTextures(aNifData: TBytes; aTextures: TStrings): Boolean;
+function NifTextures(const aNifData: TBytes; aTextures: TStrings): Boolean;
 var
   bs: TBytesStream;
   nif: TNiFile;
@@ -720,7 +729,8 @@ begin
   bs := TBytesStream.Create(aNifData);
   nif := TNiFile.Create;
   try
-    nif.Load(bs);
+    if not nif.Load(bs) then
+      Exit;
     for i := Low(nif.Nodes) to High(nif.Nodes) do begin
       n := nif.Nodes[i];
       if not Assigned(n) then
@@ -744,7 +754,7 @@ end;
 
 //===========================================================================
 // Get the list of textures within UV range from Nif data into aTextures
-function NifTexturesUVRange(aNifData: TBytes; UVRange: Single; aTextures: TStrings): Boolean;
+function NifTexturesUVRange(const aNifData: TBytes; UVRange: Single; aTextures: TStrings): Boolean;
 var
   bs: TBytesStream;
   nif: TNiFile;
@@ -769,7 +779,8 @@ begin
   bs := TBytesStream.Create(aNifData);
   nif := TNiFile.Create;
   try
-    nif.Load(bs);
+    if not nif.Load(bs) then
+      Exit;
     for i := Low(nif.Nodes) to High(nif.Nodes) do begin
       n := nif.Nodes[i];
       if not Assigned(n) then

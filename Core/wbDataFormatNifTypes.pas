@@ -11,7 +11,7 @@ unit wbDataFormatNifTypes;
 interface
 
 uses
-  Types, SysUtils, StrUtils, Math, wbDataFormat;
+  wbDataFormat;
 
 var
   // True: Euler YPR, False: Angle and Axis
@@ -89,6 +89,7 @@ function wbBSShaderType(const aName, aDefaultValue: string; const aEvents: array
 function wbBSShaderFlags(const aName, aDefaultValue: string; const aEvents: array of const): TdfDef;
 function wbBSShaderFlags2(const aName, aDefaultValue: string; const aEvents: array of const): TdfDef;
 function wbBSLightingShaderPropertyShaderType(const aName, aDefaultValue: string; const aEvents: array of const): TdfDef;
+function wbBSLightingShaderPropertyPBRFeatures(const aName, aDefaultValue: string; const aEvents: array of const): TdfDef;
 function wbEffectShaderControlledVariable(const aName, aDefaultValue: string; const aEvents: array of const): TdfDef;
 function wbEffectShaderControlledColor(const aName, aDefaultValue: string; const aEvents: array of const): TdfDef;
 function wbLightingShaderControlledVariable(const aName, aDefaultValue: string; const aEvents: array of const): TdfDef;
@@ -165,12 +166,17 @@ function wbLookAtFlags(const aName, aDefaultValue: string; const aEvents: array 
 function wbAdditionalDataInfo(const aName: string; const aEvents: array of const): TdfDef;
 function wbAdditionalDataBlock(const aName: string; const aEvents: array of const): TdfDef;
 function wbBSPackedAdditionalDataBlock(const aName: string; const aEvents: array of const): TdfDef;
-function wbBoundingVolume(const aName: string; const aEvents: array of const): TdfDef;
+function wbBoundingVolume(const aName: string): TdfDef;
 
 
 implementation
 
 uses
+  System.Math,
+  System.StrUtils,
+  System.SysUtils,
+  System.Types,
+
   wbNifMath;
 
 procedure GetTextHexColor(const aElement: TdfElement; var aText: string);
@@ -1068,16 +1074,16 @@ end;
 function wbBSLightingShaderPropertyShaderType(const aName, aDefaultValue: string; const aEvents: array of const): TdfDef;
 begin
   Result := dfEnum(aName, dtU32, [
-    0, 'Default',
-    1, 'Environment Map',
-    2, 'Glow Shader',
-    3, 'Parallax',
-    4, 'Facegen',
-    5, 'Skin Tint',
-    6, 'Hair Tint',
-    7, 'Parallax Occ',
-    8, 'Multitexture Landscape',
-    9, 'LOD Landscape',
+    0,  'Default',
+    1,  'Environment Map',
+    2,  'Glow Shader',
+    3,  'Parallax',
+    4,  'Facegen',
+    5,  'Skin Tint',
+    6,  'Hair Tint',
+    7,  'Parallax Occ',
+    8,  'Multitexture Landscape',
+    9,  'LOD Landscape',
     10, 'Snow',
     11, 'MultiLayer Parallax',
     12, 'Tree Anim',
@@ -1088,7 +1094,23 @@ begin
     17, 'Cloud',
     18, 'LOD Landscape Noise',
     19, 'Multitexture Landscape LOD Blend',
-    20, 'FO4 Dismemberment'
+    20, 'FO4 Dismemberment',
+    21, 'PBR',
+    22, 'PBR Landscape'
+  ], aDefaultValue, aEvents);
+end;
+
+function wbBSLightingShaderPropertyPBRFeatures(const aName, aDefaultValue: string; const aEvents: array of const): TdfDef;
+begin
+  Result := dfFlags(aName, dtU32, [
+    0, 'Subsurface',
+    1, 'Two Layer',
+    2, 'Colored Coat',
+    3, 'Interlayer Parallax',
+    4, 'Coat Normal',
+    5, 'Fuzz',
+    6, 'Hair Marschner',
+    7, 'Glint'
   ], aDefaultValue, aEvents);
 end;
 
@@ -1188,12 +1210,12 @@ end;
 function wbhkConstraintType(const aName, aDefaultValue: string; const aEvents: array of const): TdfDef;
 begin
   Result := dfEnum(aName, dtU32, [
-    0, 'BallAndSocket',
+    0, 'Ball And Socket',
     1, 'Hinge',
     2, 'Limited Hinge',
     6, 'Prismatic',
     7, 'Ragdoll',
-    8, 'StiffSpring',
+    8, 'Stiff Spring',
     13, 'Malleable'
   ], aDefaultValue, aEvents);
 end;
@@ -1728,13 +1750,13 @@ end;
 function wbbhkCMSDChunk(const aName: string; const aEvents: array of const): TdfDef;
 begin
   Result := dfStruct(aName, [
-    wbVector4('Translation'),
+    wbVector4('Offset'),
     dfInteger('Material Index', dtU32),
     dfInteger('Reference', dtU16),
     dfInteger('Transform Index', dtU16),
     dfArray('Vertices', dfInteger('Vertices', dtU16), -4),
     dfArray('Indices', dfInteger('Indices', dtU16), -4),
-    dfArray('Strips', dfInteger('Strips', dtU16), -4),
+    dfArray('Strip Lengths', dfInteger('Strip Length', dtU16), -4),
     dfArray('Welding Info', dfInteger('Welding Info', dtU16), -4)
   ], aEvents);
 end;
@@ -2455,7 +2477,7 @@ begin
     dfInteger('Block Index', dtS32),
     dfInteger('Channel Offset', dtS32),
     dfInteger('Unknown Byte 1', dtU8, '2')
-  ])
+  ]);
 end;
 
 function AdditionalDataBlock_EnData(const e: TdfElement): Boolean; begin Result := e.NativeValues['..\Has Data'] <> 0; end;
@@ -2503,7 +2525,7 @@ begin
 end;
 function BoundingVolume_EnType5(const e: TdfElement): Boolean; begin Result := e.NativeValues['..\Collision Type'] = 5; end;
 
-function wbBoundingVolume(const aName: string; const aEvents: array of const): TdfDef;
+function wbBoundingVolume(const aName: string): TdfDef;
 begin
   Result := dfStruct(aName, [
     dfEnum('Collision Type', dtS32, [
@@ -2534,7 +2556,7 @@ begin
       wbNiPlane('Plane'),
       wbVector3('Center')
     ], [DF_OnGetEnabled, @BoundingVolume_EnType5])
-  ], aEvents);
+  ]);
 end;
 
 

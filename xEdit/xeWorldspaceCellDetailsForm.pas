@@ -13,9 +13,14 @@ unit xeWorldspaceCellDetailsForm;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.Samples.Spin;
+  System.Classes,
 
+  Vcl.Controls,
+  Vcl.Forms,
+  Vcl.Samples.Spin,
+  Vcl.StdCtrls,
+
+  wbInterface;
 type
   TfrmWorldspaceCellDetails = class(TForm)
     rbPersistent: TRadioButton;
@@ -34,13 +39,16 @@ type
     { Public declarations }
   end;
 
+function xeGetCellDetailsForWorldspaceImplementation(aWorldspace: IwbMainRecord; var aPersistent: Boolean; var aGridCell: TwbGridCell): Boolean;
+
 implementation
 
 {$R *.dfm}
 
 uses
-  xeMainForm,
-  wbInterface;
+  xeInit,
+
+  xeMainForm;
 
 procedure TfrmWorldspaceCellDetails.FormCreate(Sender: TObject);
 begin
@@ -64,6 +72,4 @@ begin
   end;
 end;
 
-initialization
-  wbGetCellDetailsForWorldspaceCallback := xeGetCellDetailsForWorldspaceImplementation;
 end.

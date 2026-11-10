@@ -13,9 +13,20 @@ unit xeLogAnalyzerForm;
 interface
 
 uses
-  Windows, Messages, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, ExtCtrls, VirtualTrees, VirtualEditTree, wbInterface,
-  Vcl.Mask;
+  VirtualTrees.Types,
+  System.Classes,
+
+  Vcl.Controls,
+  Vcl.Dialogs,
+  Vcl.ExtCtrls,
+  Vcl.Forms,
+  Vcl.Mask,
+  Vcl.StdCtrls,
+
+  VirtualTrees,
+  VirtualEditTree,
+
+  wbInterface;
 
 type
   TLogType = (
@@ -61,7 +72,7 @@ type
     procedure vstFormsFreeNode(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vstFormsCompareNodes(Sender: TBaseVirtualTree; Node1,
       Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
-    procedure vstFormsHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+    procedure vstFormsHeaderClick(Sender: TVTHeader; const HitInfo: TVTHeaderHitInfo);
     procedure FormCreate(Sender: TObject);
   private
     { Private declarations }
@@ -69,8 +80,8 @@ type
     LogPlugins: array of TLogEntry;
     ProcessLog: function (const aFileName: String): Boolean of object;
 //    function FormIDFromString(s: String): String;
-    function BracketedFormIDFromString(s: String; Brackets: string = '()'): String;
-    function RecordByLoadOrderFormID(FormID: TwbFormID): IwbMainRecord;
+    function BracketedFormIDFromString(const s: String; const Brackets: string = '()'): String;
+    function RecordByLoadOrderFormID(const FormID: TwbFormID): IwbMainRecord;
     procedure BuildPluginsList;
     function ParsePapyrusData(const aData: String): Boolean;
     function ReadPapyrusLog(const aFileName: String): Boolean;
@@ -99,7 +110,7 @@ type
     property Host: TStream read FHost;
   public
     constructor Create(AHost: TStream);
-    destructor Destroy; override;
+    destructor Destroy; override; final;
     function ReadLn: string; overload;
     function ReadLn(out Line: string): Boolean; overload;
     property EOF: Boolean read FEOF;
@@ -111,6 +122,11 @@ type
 implementation
 
 uses
+  System.SysUtils,
+
+  Winapi.Messages,
+
+  xeInit,
   xeMainForm;
 
 {$R *.dfm}
@@ -196,14 +212,14 @@ end;
 
 { TfrmLogAnalyzer }
 
-function TfrmLogAnalyzer.RecordByLoadOrderFormID(FormID: TwbFormID): IwbMainRecord;
+function TfrmLogAnalyzer.RecordByLoadOrderFormID(const FormID: TwbFormID): IwbMainRecord;
 var
   _File  : IwbFile;
   FileID : TwbFileID;
   j      : integer;
 begin
   Result := nil;
-  FileID := FormID.FileID;
+  FileID := FormID.FileID[xeContext.SlotLayout];
 
   if FileID.FullSlot = $FF then
     Exit;
@@ -211,18 +227,18 @@ begin
   _File := nil;
   j := Low(PFiles^);
   while (j <= High(PFiles^)) and not Assigned(_File) do begin
-    if PFiles^[j].LoadOrderFileID = FileID then
+    if PFiles^[j].HasLoadOrderFileID and (PFiles^[j].LoadOrderFileID = FileID) then
       _File := PFiles^[j];
     Inc(j);
   end;
   while Assigned(_File) do begin
-    Result := _File.RecordByFormID[FormID.ChangeFileID(_File.FileFileID[True]), True, True];
+    Result := _File.RecordByFormID[FormID.ChangeFileID(xeContext.SlotLayout, _File.FileFileID[True]), True, True];
     if Assigned(Result) then
       Exit;
 
     _File := nil;
     while (j <= High(PFiles^)) and not Assigned(_File) do begin
-      if PFiles^[j].LoadOrderFileID = FileID then
+      if PFiles^[j].HasLoadOrderFileID and (PFiles^[j].LoadOrderFileID = FileID) then
         _File := PFiles^[j];
       Inc(j);
     end;
@@ -314,7 +330,7 @@ begin
       if IsPlugin then
         CellText := Data.PEntry.Text
       else
-        CellText := Data.PEntry.FormID.ToString(True)
+        CellText := Data.PEntry.FormID.ToDisplayString(xeContext.SlotLayout)
     end;
     1: begin
       if Supports(Data.PEntry.Element, IwbMainRecord, MainRecord) then
@@ -332,7 +348,7 @@ begin
 end;
 
 procedure TfrmLogAnalyzer.vstFormsHeaderClick(Sender: TVTHeader;
-  HitInfo: TVTHeaderHitInfo);
+  const HitInfo: TVTHeaderHitInfo);
 begin
   with HitInfo do begin
     if Button <> mbLeft then
@@ -378,7 +394,7 @@ begin
     j := 0;
     for i := Low(LogEntries) to High(LogEntries) do
       if LogEntries[i].LoadOrder = lo then begin
-        if j = Node.Index then
+        if Cardinal(j) = Node.Index then
           Data.PEntry := @LogEntries[i];
         Inc(j);
       end;
@@ -387,10 +403,10 @@ end;
 
 function IsHex(c: char): boolean;
 begin
-  Result := c in ['0'..'9', 'A'..'F'];
+  Result := CharInSet(c, ['0'..'9', 'A'..'F']);
 end;
 
-function IsHexStr(s: string): boolean;
+function IsHexStr(const s: string): boolean;
 var
   i: integer;
 begin
@@ -419,7 +435,7 @@ end;
 //  end;
 //end;
 
-function TfrmLogAnalyzer.BracketedFormIDFromString(s: String; Brackets: string = '()'): String;
+function TfrmLogAnalyzer.BracketedFormIDFromString(const s: String; const Brackets: string = '()'): String;
 var
   i: integer;
   f: string;
@@ -481,7 +497,7 @@ begin
     end;
 
   elem := RecordByLoadOrderFormID(fid);
-  if (fid.FileID.FullSlot <> $FF) and not Assigned(elem) then begin
+  if (fid.FileID[xeContext.SlotLayout].FullSlot <> $FF) and not Assigned(elem) then begin
     if FormIDErrors = 0 then
       memoText.Lines.Add('Unknown FormID [' + s + '], changed load order? All other unknown forms will be ignored.');
     Inc(FormIDErrors);
@@ -491,7 +507,7 @@ begin
   SetLength(LogEntries, Succ(Length(LogEntries)));
   with LogEntries[Pred(Length(LogEntries))] do begin
     FormID := fid;
-    LoadOrder := FormID.FileID.FullSlot;
+    LoadOrder := FormID.FileID[xeContext.SlotLayout].FullSlot;
     Element := elem;
     Text := txt;
     if IsError then Value1 := 1 else Value1 := 0;
@@ -509,7 +525,7 @@ begin
   with TTextStream.Create(TFileStream.Create(aFilename, fmOpenRead or fmShareDenyWrite)) do try
     Limit := MaxLogSize;
     while ReadLn(sLine) do begin
-      if (Length(sLine) > 25) and (sLine[1] = '[') and (sLine[2] in ['0'..'9']) then begin
+      if (Length(sLine) > 25) and (sLine[1] = '[') and CharInSet(sLine[2], ['0'..'9']) then begin
         if Length(Entry) > 0 then
           ParsePapyrusData(Entry);
         Entry := sLine;
@@ -559,7 +575,7 @@ begin
     end;
 
   elem := RecordByLoadOrderFormID(fid);
-  if (fid.FileID.FullSlot <> $FF) and not Assigned(elem) then begin
+  if (fid.FileID[xeContext.SlotLayout].FullSlot <> $FF) and not Assigned(elem) then begin
     if FormIDErrors = 0 then
       memoText.Lines.Add('Unknown FormID [' + s + '], changed load order? All other unknown forms will be ignored.');
     Inc(FormIDErrors);
@@ -569,7 +585,7 @@ begin
   SetLength(LogEntries, Succ(Length(LogEntries)));
   with LogEntries[Pred(Length(LogEntries))] do begin
     FormID := fid;
-    LoadOrder := FormID.FileID.FullSlot;
+    LoadOrder := FormID.FileID[xeContext.SlotLayout].FullSlot;
     Element := elem;
     Text := txt;
     Value1 := 1;

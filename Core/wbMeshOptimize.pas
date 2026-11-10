@@ -124,8 +124,7 @@ function meshopt_remapIndices(const indices: TTriIndices; const remap: TTriIndic
 implementation
 
 uses
-  Math;
-
+  System.Math;
 
 function IfThen(aCond: Boolean; v1, v2: Byte): Byte; overload; inline;
 begin
@@ -296,7 +295,7 @@ begin
     Assert(start_tag < end_tag);
 
     for var tag := start_tag to Pred(end_tag) do begin
-      var line := tag mod Length(cache);
+      var line := tag mod Cardinal(Length(cache));
 
       // we store +1 since cache is filled with 0 by default
       if cache[line] <> tag + 1 then

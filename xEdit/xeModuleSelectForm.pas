@@ -1,7 +1,7 @@
 {******************************************************************************
 
-  This Source Code Form is subject to the terms of the Mozilla Public License, 
-  v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain 
+  This Source Code Form is subject to the terms of the Mozilla Public License,
+  v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain
   one at https://mozilla.org/MPL/2.0/.
 
 *******************************************************************************}
@@ -13,10 +13,23 @@ unit xeModuleSelectForm;
 interface
 
 uses
-  Windows, Messages, UITypes, SysUtils, Variants, Classes, Graphics, Controls, Forms,
-  Dialogs, StdCtrls, Buttons, CheckLst, Menus,
-  Vcl.Styles.Utils.SystemMenu, VirtualTrees, VirtualEditTree,
-  wbInterface, wbLoadOrder, Vcl.ExtCtrls, System.Actions, Vcl.ActnList, Vcl.Mask;
+  VirtualTrees.BaseTree,
+  VirtualTrees.Types,
+  System.Actions,
+  System.Classes,
+
+  Vcl.ActnList,
+  Vcl.Controls,
+  Vcl.ExtCtrls,
+  Vcl.Forms,
+  Vcl.Mask,
+  Vcl.Menus,
+  Vcl.StdCtrls,
+
+  VirtualTrees,
+
+  wbInterface,
+  wbLoadOrder;
 
 const
   csPluginsTxt = '<plugins.txt>';
@@ -41,6 +54,7 @@ type
     acPresetLoad: TAction;
     acPresetSave: TAction;
     acPresetDelete: TAction;
+    cbRegExFilter: TCheckBox;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -52,7 +66,7 @@ type
     procedure vstModulesGetText(Sender: TBaseVirtualTree; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType; var CellText: string);
     procedure vstModulesBeforeGetCheckState(Sender: TBaseVirtualTree; Node: PVirtualNode);
     procedure vstModulesChecked(Sender: TBaseVirtualTree; Node: PVirtualNode);
-    procedure vstModulesHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+    procedure vstModulesHeaderClick(Sender: TVTHeader; const HitInfo: TVTHeaderHitInfo);
     procedure vstModulesCompareNodes(Sender: TBaseVirtualTree; Node1, Node2: PVirtualNode; Column: TColumnIndex; var Result: Integer);
     procedure vstModulesPaintText(Sender: TBaseVirtualTree; const TargetCanvas: TCanvas; Node: PVirtualNode; Column: TColumnIndex; TextType: TVSTTextType);
     procedure vstModulesIncrementalSearch(Sender: TBaseVirtualTree; Node: PVirtualNode; const SearchText: string; var Result: Integer);
@@ -75,6 +89,7 @@ type
     procedure acPresetLoadExecute(Sender: TObject);
     procedure cbPresetKeyPress(Sender: TObject; var Key: Char);
     procedure btnOKClick(Sender: TObject);
+    procedure cbRegExFilterClick(Sender: TObject);
   private
     ChangingChecked : Integer;
     procedure SimulateLoad;
@@ -102,7 +117,7 @@ type
     MinSelect       : Integer;
 
     procedure AllowCancel;
-    function ShowModal: Integer; override;
+    function ShowModal: Integer; override; final;
   end;
 
   PModuleNodeData = ^TModuleNodeData;
@@ -118,8 +133,19 @@ implementation
 {$R *.dfm}
 
 uses
-  xeMainForm,
-  StrUtils;
+  System.RegularExpressionsCore,
+  System.SysUtils,
+  System.UITypes,
+
+  Vcl.Dialogs,
+  Vcl.Graphics,
+  Vcl.Styles.Utils.SystemMenu,
+
+  Winapi.Windows,
+
+  xeInit,
+
+  xeMainForm;
 
 procedure TfrmModuleSelect.mniInvertSelectionClick(Sender: TObject);
 var
@@ -341,24 +367,50 @@ var
   SearchText : string;
   Node       : PVirtualNode;
   NodeData   : PModuleNodeData;
+  FilterRegex: TPerlRegEx;
 begin
+  edFilter.Color := clWindow;
   SearchText := edFilter.Text;
-  SearchText := SearchText.ToLowerInvariant;
-  with vstModules do begin
+  if not cbRegExFilter.Checked then
+    SearchText := SearchText.ToLowerInvariant;
+  with vstModules do
+  begin
     BeginUpdate;
+    FilterRegex := TPerlRegEx.Create;
     try
-      Node := GetFirst;
-      while Assigned(Node) do begin
-        NodeData := GetNodeData(Node);
-        IsFiltered[Node] := (SearchText <> '') and
-          not NodeData.mndName.ToLowerInvariant.Contains(SearchText);
-        Node := GetNextSibling(Node);
+      try
+        FilterRegex.RegEx := SearchText;
+        FilterRegex.Options := [preCaseLess];
+        Node := GetFirst;
+        while Assigned(Node) do
+        begin
+          NodeData := GetNodeData(Node);
+          if (SearchText <> '') and cbRegExFilter.Checked then
+          begin
+            FilterRegex.Subject := NodeData.mndName;
+            IsFiltered[Node] := not FilterRegex.Match;
+          end
+          else
+            IsFiltered[Node] := (SearchText <> '') and
+              not NodeData.mndName.ToLowerInvariant.Contains(SearchText);
+          if IsFiltered[Node] then
+            FullCollapse(Node);
+          Node := GetNextSibling(Node);
+        end;
+      except
+        on E: ERegularExpressionError do
+        begin
+          edFilter.Color := wbLighter(clRed, 0.85);
+          // Ignore regex errors that can occur while typing
+        end;
       end;
     finally
       EndUpdate;
+      FilterRegex.Free;
     end;
   end;
 end;
+
 
 procedure TfrmModuleSelect.edFilterKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
@@ -380,6 +432,7 @@ end;
 
 procedure TfrmModuleSelect.FormCreate(Sender: TObject);
 begin
+  var lGameDef := xeContext.GameDefObj;
   xeApplyFontAndScale(Self);
   //vstModules.Header.Height := vstModules.DefaultNodeHeight + 4;
 
@@ -390,18 +443,18 @@ begin
     end;
 
   with vstModules.Header.Columns[3] do begin
-    if not wbIsLightSupported then
+    if not lGameDef.IsLightSupported then
       Options := Options - [coVisible]
     else
-      Text := wbLightName;
+      Text := lGameDef.Identity.LightName;
   end;
-  if not wbIsMediumSupported then
+  if not lGameDef.IsMediumSupported then
     with vstModules.Header.Columns[7] do
       Options := Options - [coVisible];
-  if not wbIsUpdateSupported then
+  if not lGameDef.IsUpdateSupported then
     with vstModules.Header.Columns[6] do
       Options := Options - [coVisible];
-  if wbPseudoLight or wbPseudoMedium or wbPseudoUpdate then
+  if xeContext.Settings.PseudoLight or xeContext.Settings.PseudoMedium or xeContext.Settings.PseudoUpdate then
     with vstModules.Header.Columns[5] do
       Options := Options - [coVisible];
 
@@ -443,7 +496,7 @@ begin
       end else if acPresetSave.Execute then
         vstModules.SetFocus
       else
-        Beep;
+        System.SysUtils.Beep;
       Exit;
     end;
     if (ssCtrl in Shift) or (Length(SelectedModules)=0) then
@@ -463,7 +516,7 @@ begin
       if Shift = [ssShift] then begin
         Key := 0;
         if not acPresetDelete.Execute then
-          Beep;
+          System.SysUtils.Beep;
         Exit;
       end;
     end;
@@ -638,6 +691,12 @@ begin
     Key := #0;
 end;
 
+procedure TfrmModuleSelect.cbRegExFilterClick(Sender: TObject);
+begin
+  if edFilter.Text <> '' then
+    edFilterChange(Sender);
+end;
+
 function TfrmModuleSelect.CheckStateForModule(aModule: PwbModuleInfo; aIsRootChild: Boolean): TCheckState;
 begin
   with aModule^ do
@@ -662,7 +721,7 @@ function TfrmModuleSelect.ShowModal: Integer;
 begin
   vstModules.Clear;
   if Length(AllModules) < 1 then
-    AllModules := wbModulesByLoadOrder.FilteredByFlag(mfValid).FilteredByFlag(FilterFlag);
+    AllModules := xeContext.ModuleList.ModulesByLoadOrder(False).FilteredByFlag(mfValid).FilteredByFlag(FilterFlag);
   vstModules.ChildCount[nil] := Length(AllModules);
   vstModules.InitRecursive(nil, 100, False);
 
@@ -706,13 +765,13 @@ begin
         var lModule := AllModules[lModuleIdx];
         Exclude(lModule.miFlags, mfForceLoad);
 
-        if wbAlwaysLoadGameMaster and
+        if xeContext.Settings.AlwaysLoadGameMaster and
            (mfIsGameMaster in lModule.miFlags)
         then
           Include(lModule.miFlags, mfForceLoad);
       end;
 
-      SelectedModules := AllModules.SimulateLoad;
+      SelectedModules := xeContext.ModuleList.SimulateLoad(AllModules);
       FilteredModules := SelectedModules.FilteredByFlag(SelectFlag).FilteredByFlag(FilterFlag);
     end else begin
       SelectedModules := AllModules.FilteredByFlag(SelectFlag).FilteredByFlag(FilterFlag);
@@ -840,7 +899,7 @@ begin
           0 : CellText := miName;
           1 : CellText := LoadOrderDescription;
           2 : if mfHasESMFlag in miFlags then Celltext := 'ESM';
-          3 : if mfHasLightFlag in miFlags then Celltext := wbLightName;
+          3 : if mfHasLightFlag in miFlags then Celltext := xeContext.GameDefObj.Identity.LightName;
           4 : if miLoadOrder < 10000 then Celltext := miLoadOrder.ToString;
           5 : if miLoadOrder < 10000 then Celltext := miFileID.ToString;
           6 : if mfHasUpdateFlag in miFlags then Celltext := 'Update';
@@ -852,7 +911,7 @@ begin
   end;
 end;
 
-procedure TfrmModuleSelect.vstModulesHeaderClick(Sender: TVTHeader; HitInfo: TVTHeaderHitInfo);
+procedure TfrmModuleSelect.vstModulesHeaderClick(Sender: TVTHeader; const HitInfo: TVTHeaderHitInfo);
 begin
   with HitInfo do begin
     if Button <> mbLeft then

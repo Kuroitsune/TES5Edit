@@ -1,6 +1,6 @@
 {******************************************************************************
 
-  This Source Code Form is subject to the terms of the Mozilla Public License, 
+  This Source Code Form is subject to the terms of the Mozilla Public License,
   v. 2.0. If a copy of the MPL was not distributed with this file, You can obtain 
   one at https://mozilla.org/MPL/2.0/.
 
@@ -13,7 +13,10 @@ unit wbDataFormat;
 interface
 
 uses
-  SysUtils, StrUtils, Classes, Windows, Math, Variants, JsonDataObjects;
+  System.Classes,
+  System.SysUtils,
+
+  JsonDataObjects;
 
 type
   TdfDataType = (
@@ -135,7 +138,7 @@ type
     function GetDefaultDataSize: integer; virtual;
   public
     constructor Create(const aName: string; aDataType: TdfDataType; const aDefs: TdfDefs);
-    destructor Destroy; override;
+    destructor Destroy; override; final;
     function Clone: TdfDef; virtual; abstract;
     procedure Assign(const aDef: TdfDef); virtual;
     function CalcHash(const s: string): Cardinal;
@@ -147,6 +150,7 @@ type
     procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); virtual;
     procedure AddDef(const aDef: TdfDef);
     procedure InsertDefsFrom(const aDef: TdfDef; Index: Integer);
+    function SetDefaultValue(const aValue: string): TdfDef;
     function SetOnCreate(aProc: TdfOnCreateEvent): TdfDef;
     function SetOnDestroy(aProc: TdfOnDestroyEvent): TdfDef;
     function SetOnEnabled(aProc: TdfOnEnabledEvent): TdfDef;
@@ -182,6 +186,19 @@ type
     property OnLinksTo: TdfOnLinksToEvent read FOnLinksTo write FOnLinksTo;
   end;
 
+  TdfContainer = class;
+
+  TdfElementEnumerator = class
+  private
+    fIndex: Integer;
+    fContainer: TdfContainer;
+  public
+    constructor Create(aElement: TdfElement);
+    function GetCurrent: TdfElement; inline;
+    function MoveNext: Boolean; inline;
+    property Current: TdfElement read GetCurrent;
+  end;
+
   TdfElement = class
   private
     FDef: TdfDef;
@@ -193,7 +210,7 @@ type
     function GetName: string; virtual;
     function GetNameHash: Cardinal;
     function GetDataType: TdfDataType;
-    function GetDefaultDataSize: integer; virtual;
+    function GetDefaultDataSize: integer;
     function GetCount: Integer; virtual;
     procedure SetCount(NewCount: Integer); virtual;
     function Get(Index: Integer): TdfElement; virtual;
@@ -214,25 +231,26 @@ type
   public
     constructor Create(const aDef: TdfDef; const aParent: TdfElement); virtual;
     destructor Destroy; override;
+    function GetEnumerator: TdfElementEnumerator; inline;
     procedure DoException(const aMessage: string);
     function ValidateData(const aDataStart, aDataEnd: Pointer; aSize: Integer): Boolean;
     function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; virtual;
     function Serialize(const aDataStart, aDataEnd: Pointer): Integer; virtual;
     procedure UnSerializeFromJSON(const aJSON: TJSONBaseObject); virtual;
     procedure SerializeToJSON(const aJSON: TJSONBaseObject); virtual;
-    procedure LoadFromData(const aData: TBytes); virtual;
-    procedure LoadFromFile(const aFileName: string);
+    procedure LoadFromData(const aData: TBytes);
+    procedure LoadFromFile(const aFileName: string); virtual;
     procedure LoadFromJSONFile(const aFileName: string);
     procedure LoadFromResource(const aContainerName, aFileName: string); overload;
     procedure LoadFromResource(const aFileName: string); overload;
-    procedure SaveToData(var aData: TBytes); virtual;
+    procedure SaveToData(var aData: TBytes);
     procedure SaveToFile(const aFileName: string);
     procedure SaveToJSONFile(const aFileName: string; aCompact: Boolean);
     procedure SetToDefault;
     procedure Assign(const aElement: TdfElement); virtual;
     function ToJSON(aCompact: Boolean): string; virtual;
     procedure FromJSON(const aText: string); virtual;
-    function ToText(aIdent: Integer = 0): string; virtual;
+    function ToText(aIdent: Integer = 0): string;
     function Updating: Boolean; virtual;
     procedure BeginUpdate;
     procedure EndUpdate;
@@ -241,15 +259,15 @@ type
     function Root: TdfElement;
     function Add: TdfElement; virtual;
     procedure Delete(Index: Integer); virtual;
-    procedure Remove; virtual;
+    procedure Remove;
     procedure Move(CurIndex, NewIndex: Integer); virtual;
     function Sort(aCompare: TListSortCompareFunc): Boolean; virtual;
     procedure Remap(const aMap: array of Cardinal); virtual;
     function Index: Integer; virtual;
     function IndexOf(aElement: TdfElement): Integer; virtual;
-    function LinksTo: TdfElement; virtual;
+    function LinksTo: TdfElement;
     function ElementByName(const aName: string; aEnabledOnly: Boolean = True): TdfElement; virtual;
-    function ElementByPath(const aPath: string; aEnabledOnly: Boolean = True): TdfElement; virtual;
+    function ElementByPath(const aPath: string; aEnabledOnly: Boolean = True): TdfElement;
     property Def: TdfDef read GetDef;// write FDef;
     property Parent: TdfElement read FParent write FParent;
     property Name: string read GetName;
@@ -278,20 +296,20 @@ type
     FDataStart: PByte;
     FDataEnd: PByte;
   protected
-    function GetNativeValue: Variant; override;
-    procedure SetNativeValue(const aValue: Variant); override;
-    function GetEditValue: string; override;
-    procedure SetEditValue(const aValue: string); override;
+    function GetNativeValue: Variant; override; final;
+    procedure SetNativeValue(const aValue: Variant); override; final;
+    function GetEditValue: string; override; final;
+    procedure SetEditValue(const aValue: string); override; final;
   public
     procedure AllocateValue(var aDataStart, aDataEnd: PByte; aLength: Integer); overload;
     procedure AllocateValue(aLength: Integer); overload;
-    destructor Destroy; override;
+    destructor Destroy; override; final;
     function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override;
-    function Serialize(const aDataStart, aDataEnd: Pointer): Integer; override;
-    procedure UnSerializeFromJSON(const aJSON: TJSONBaseObject); override;
-    procedure SerializeToJSON(const aJSON: TJSONBaseObject); override;
-    procedure Assign(const aElement: TdfElement); override;
-    function DataSize: Integer; override;
+    function Serialize(const aDataStart, aDataEnd: Pointer): Integer; override; final;
+    procedure UnSerializeFromJSON(const aJSON: TJSONBaseObject); override; final;
+    procedure SerializeToJSON(const aJSON: TJSONBaseObject); override; final;
+    procedure Assign(const aElement: TdfElement); override; final;
+    function DataSize: Integer; override; final;
     property DataStart: PByte read FDataStart;
   end;
 
@@ -307,8 +325,8 @@ type
     procedure SetCapacity(NewCapacity: Integer);
     function GetCount: Integer; override;
     procedure SetCount(NewCount: Integer); override;
-    function Get(Index: Integer): TdfElement; override;
-    procedure Put(Index: Integer; const aElement: TdfElement); override;
+    function Get(Index: Integer): TdfElement; override; final;
+    procedure Put(Index: Integer; const aElement: TdfElement); override; final;
   public
     destructor Destroy; override;
     function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override;
@@ -316,10 +334,10 @@ type
     function DataSize: integer; override;
     procedure Delete(Index: Integer); override;
     procedure Move(CurIndex, NewIndex: Integer); override;
-    function Sort(aCompare: TListSortCompareFunc): Boolean; override;
-    procedure Remap(const aMap: array of Cardinal); override;
-    function IndexOf(aElement: TdfElement): integer; override;
-    function ElementByName(const aName: string; aEnabledOnly: Boolean = True): TdfElement; override;
+    function Sort(aCompare: TListSortCompareFunc): Boolean; override; final;
+    procedure Remap(const aMap: array of Cardinal); override; final;
+    function IndexOf(aElement: TdfElement): integer; override; final;
+    function ElementByName(const aName: string; aEnabledOnly: Boolean = True): TdfElement; override; final;
     property Capacity: Integer read GetCapacity write SetCapacity;
   end;
 
@@ -327,20 +345,20 @@ type
   { Structure }
   TdfStructDef = class(TdfDef)
   public
-    function Clone: TdfDef; override;
+    function Clone: TdfDef; override; final;
     function CreateElement(const aParent: TdfElement): TdfElement; override;
   end;
 
   TdfStruct = class(TdfContainer)
   protected
-    procedure SetCount(NewCount: Integer); override; // exception
+    procedure SetCount(NewCount: Integer); override; final; // exception
   public
     function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override;
-    procedure UnSerializeFromJSON(const aJSON: TJSONBaseObject); override;
-    procedure SerializeToJSON(const aJSON: TJSONBaseObject); override;
-    procedure Assign(const aElement: TdfElement); override;
-    procedure Delete(Index: Integer); override; // exception
-    procedure Move(CurIndex, NewIndex: Integer); override; // exception
+    procedure UnSerializeFromJSON(const aJSON: TJSONBaseObject); override; final;
+    procedure SerializeToJSON(const aJSON: TJSONBaseObject); override; final;
+    procedure Assign(const aElement: TdfElement); override; final;
+    procedure Delete(Index: Integer); override; final; // exception
+    procedure Move(CurIndex, NewIndex: Integer); override; final; // exception
   end;
 
 
@@ -349,9 +367,9 @@ type
   private
     FCounter: string;
   public
-    function Clone: TdfDef; override;
-    procedure Assign(const aDef: TdfDef); override;
-    function CreateElement(const aParent: TdfElement): TdfElement; override;
+    function Clone: TdfDef; override; final;
+    procedure Assign(const aDef: TdfDef); override; final;
+    function CreateElement(const aParent: TdfElement): TdfElement; override; final;
     property Counter: string read FCounter write FCounter;
   end;
 
@@ -359,47 +377,47 @@ type
   protected
     function GetExternalCount: Integer;
     procedure SetExternalCount(NewCount: Integer);
-    procedure SetCount(NewCount: Integer); override;
+    procedure SetCount(NewCount: Integer); override; final;
   public
-    function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override;
-    function Serialize(const aDataStart, aDataEnd: Pointer): Integer; override;
-    procedure UnSerializeFromJSON(const aJSON: TJSONBaseObject); override;
-    procedure SerializeToJSON(const aJSON: TJSONBaseObject); override;
-    procedure Assign(const aElement: TdfElement); override;
-    function DataSize: integer; override;
-    function Add: TdfElement; override;
-    procedure Delete(Index: Integer); override;
+    function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override; final;
+    function Serialize(const aDataStart, aDataEnd: Pointer): Integer; override; final;
+    procedure UnSerializeFromJSON(const aJSON: TJSONBaseObject); override; final;
+    procedure SerializeToJSON(const aJSON: TJSONBaseObject); override; final;
+    procedure Assign(const aElement: TdfElement); override; final;
+    function DataSize: integer; override; final;
+    function Add: TdfElement; override; final;
+    procedure Delete(Index: Integer); override; final;
   end;
 
 
   { Union - several different size values but only one is active chosen by decider callback }
   TdfUnionDef = class(TdfValueDef)
   public
-    function Clone: TdfDef; override;
-    function CreateElement(const aParent: TdfElement): TdfElement; override;
+    function Clone: TdfDef; override; final;
+    function CreateElement(const aParent: TdfElement): TdfElement; override; final;
   end;
 
   TdfUnion = class(TdfContainer)
   protected
-    function GetDef: TdfDef; override;
-    function GetCount: Integer; override; // always 0
-    procedure SetCount(NewCount: Integer); override; // do nothing
+    function GetDef: TdfDef; override; final;
+    function GetCount: Integer; override; final; // always 0
+    procedure SetCount(NewCount: Integer); override; final; // do nothing
     // redirect to the active element
-    function GetNativeValue: Variant; override;
-    procedure SetNativeValue(const aValue: Variant); override;
-    function GetEditValue: string; override;
-    procedure SetEditValue(const aValue: string); override;
-    function GetNativeValues(const aPath: string): Variant; override;
-    procedure SetNativeValues(const aPath: string; const aValue: Variant); override;
-    function GetEditValues(const aPath: string): string; override;
-    procedure SetEditValues(const aPath: string; const aValue: string); override;
+    function GetNativeValue: Variant; override; final;
+    procedure SetNativeValue(const aValue: Variant); override; final;
+    function GetEditValue: string; override; final;
+    procedure SetEditValue(const aValue: string); override; final;
+    function GetNativeValues(const aPath: string): Variant; override; final;
+    procedure SetNativeValues(const aPath: string; const aValue: Variant); override; final;
+    function GetEditValues(const aPath: string): string; override; final;
+    procedure SetEditValues(const aPath: string; const aValue: string); override; final;
   public
-    function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override;
-    function Serialize(const aDataStart, aDataEnd: Pointer): Integer; override;
-    procedure UnSerializeFromJSON(const aJSON: TJSONBaseObject); override;
-    procedure SerializeToJSON(const aJSON: TJSONBaseObject); override;
-    procedure Assign(const aElement: TdfElement); override;
-    function DataSize: Integer; override;
+    function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override; final;
+    function Serialize(const aDataStart, aDataEnd: Pointer): Integer; override; final;
+    procedure UnSerializeFromJSON(const aJSON: TJSONBaseObject); override; final;
+    procedure SerializeToJSON(const aJSON: TJSONBaseObject); override; final;
+    procedure Assign(const aElement: TdfElement); override; final;
+    function DataSize: Integer; override; final;
   end;
 
 
@@ -409,13 +427,13 @@ type
   }
   TdfValueUnionDef = class(TdfValueDef)
   public
-    function Clone: TdfDef; override;
-    function CreateElement(const aParent: TdfElement): TdfElement; override;
+    function Clone: TdfDef; override; final;
+    function CreateElement(const aParent: TdfElement): TdfElement; override; final;
   end;
 
   TdfValueUnion = class(TdfValue)
   protected
-    function GetDef: TdfDef; override;
+    function GetDef: TdfDef; override; final;
   end;
 
 
@@ -435,18 +453,18 @@ type
     FDelimiter: string;
     procedure UpdateOffsets;
   protected
-    function GetDefaultDataSize: Integer; override;
+    function GetDefaultDataSize: Integer; override; final;
     function GetValueOffset(aIndex: Integer): Integer;
     function GetValueDataSize(aIndex: Integer): Integer;
   public
     constructor Create(const aName: string; aDataType: TdfDataType; const aDefs: TdfDefs);
-    function Clone: TdfDef; override;
-    procedure Assign(const aDef: TdfDef); override;
-    function CreateElement(const aParent: TdfElement): TdfElement; override;
-    procedure GetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override;
-    procedure SetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override;
-    procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
-    procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
+    function Clone: TdfDef; override; final;
+    procedure Assign(const aDef: TdfDef); override; final;
+    function CreateElement(const aParent: TdfElement): TdfElement; override; final;
+    procedure GetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override; final;
+    procedure SetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override; final;
+    procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override; final;
+    procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override; final;
     property Delimiter: string read FDelimiter write FDelimiter;
     property ValueOffset[Index: Integer]: Integer read GetValueOffset;
     property ValueDataSize[Index: Integer]: Integer read GetValueDataSize;
@@ -454,14 +472,14 @@ type
 
   TdfMerge = class(TdfValue)
     // disable looping callback check
-    function Updating: Boolean; override;
+    function Updating: Boolean; override; final;
     // apply default values of individual elements
-    function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override;
+    function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override; final;
     // override to access by name or index as a virtual child element
-    function GetNativeValues(const aPath: string): Variant; override;
-    procedure SetNativeValues(const aPath: string; const aValue: Variant); override;
-    function GetEditValues(const aPath: string): string; override;
-    procedure SetEditValues(const aPath: string; const aValue: string); override;
+    function GetNativeValues(const aPath: string): Variant; override; final;
+    procedure SetNativeValues(const aPath: string; const aValue: Variant); override; final;
+    function GetEditValues(const aPath: string): string; override; final;
+    procedure SetEditValues(const aPath: string; const aValue: string); override; final;
   end;
 
 
@@ -469,8 +487,8 @@ type
   TdfIntegerDef = class(TdfValueDef)
     function Clone: TdfDef; override;
     function CreateElement(const aParent: TdfElement): TdfElement; override;
-    procedure GetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override;
-    procedure SetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override;
+    procedure GetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override; final;
+    procedure SetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override; final;
     procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
     procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
   end;
@@ -495,7 +513,7 @@ type
     function GetValueByKey(Key: Int64): string;
   public
     function Clone: TdfDef; override;
-    procedure Assign(const aDef: TdfDef); override;
+    procedure Assign(const aDef: TdfDef); override; final;
     procedure AssignValuesMap(const aValuesMap: array of const); virtual;
     property ValuesMapCount: Integer read GetValuesMapCount;
     property Keys[Index: integer]: Int64 read GetKey;
@@ -506,29 +524,29 @@ type
 
   { Flags }
   TdfFlagsDef = class(TdfMappedIntegerDef)
-    function Clone: TdfDef; override;
-    function CreateElement(const aParent: TdfElement): TdfElement; override;
-    procedure AssignValuesMap(const aValuesMap: array of const); override;
-    procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
-    procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
+    function Clone: TdfDef; override; final;
+    function CreateElement(const aParent: TdfElement): TdfElement; override; final;
+    procedure AssignValuesMap(const aValuesMap: array of const); override; final;
+    procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override; final;
+    procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override; final;
   end;
 
   TdfFlags = class(TdfInteger)
   protected
     // override to access by flag name as a virtual child element
-    function GetNativeValues(const aPath: string): Variant; override;
-    procedure SetNativeValues(const aPath: string; const aValue: Variant); override;
-    function GetEditValues(const aPath: string): string; override;
-    procedure SetEditValues(const aPath: string; const aValue: string); override;
+    function GetNativeValues(const aPath: string): Variant; override; final;
+    procedure SetNativeValues(const aPath: string; const aValue: Variant); override; final;
+    function GetEditValues(const aPath: string): string; override; final;
+    procedure SetEditValues(const aPath: string; const aValue: string); override; final;
   end;
 
 
   { Enum }
   TdfEnumDef = class(TdfMappedIntegerDef)
-    function CreateElement(const aParent: TdfElement): TdfElement; override;
-    function Clone: TdfDef; override;
-    procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
-    procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
+    function CreateElement(const aParent: TdfElement): TdfElement; override; final;
+    function Clone: TdfDef; override; final;
+    procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override; final;
+    procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override; final;
   end;
 
   TdfEnum = class(TdfInteger);
@@ -536,12 +554,12 @@ type
 
   { Float }
   TdfFloatDef = class(TdfValueDef)
-    function Clone: TdfDef; override;
-    function CreateElement(const aParent: TdfElement): TdfElement; override;
-    procedure GetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override;
-    procedure SetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override;
-    procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
-    procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
+    function Clone: TdfDef; override; final;
+    function CreateElement(const aParent: TdfElement): TdfElement; override; final;
+    procedure GetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override; final;
+    procedure SetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override; final;
+    procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override; final;
+    procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override; final;
   end;
 
   TdfFloat = class(TdfValue);
@@ -550,18 +568,18 @@ type
   { Bytes }
   TdfBytesDef = class(TdfValueDef)
   protected
-    function GetDefaultDataSize: integer; override;
+    function GetDefaultDataSize: integer; override; final;
   public
-    function Clone: TdfDef; override;
-    function CreateElement(const aParent: TdfElement): TdfElement; override;
-    procedure GetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override;
-    procedure SetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override;
-    procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
-    procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
+    function Clone: TdfDef; override; final;
+    function CreateElement(const aParent: TdfElement): TdfElement; override; final;
+    procedure GetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override; final;
+    procedure SetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override; final;
+    procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override; final;
+    procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override; final;
   end;
 
   TdfBytes = class(TdfValue)
-    function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override;
+    function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override; final;
   end;
 
 
@@ -571,21 +589,21 @@ type
     FTerminator: AnsiChar;
     FTerminated: Boolean;
   protected
-    function GetDefaultDataSize: integer; override;
+    function GetDefaultDataSize: integer; override; final;
   public
-    function Clone: TdfDef; override;
-    procedure Assign(const aDef: TdfDef); override;
-    function CreateElement(const aParent: TdfElement): TdfElement; override;
-    procedure GetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override;
-    procedure SetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override;
-    procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
-    procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override;
+    function Clone: TdfDef; override; final;
+    procedure Assign(const aDef: TdfDef); override; final;
+    function CreateElement(const aParent: TdfElement): TdfElement; override; final;
+    procedure GetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override; final;
+    procedure SetElementNativeValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: Variant); override; final;
+    procedure GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override; final;
+    procedure SetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string); override; final;
     property Terminator: AnsiChar read FTerminator write FTerminator;
     property Terminated: Boolean read FTerminated write FTerminated;
   end;
 
   TdfChars = class(TdfValue)
-    function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override;
+    function UnSerialize(const aDataStart, aDataEnd: Pointer; const aDataSize: Integer): Integer; override; final;
     function ReadChars(const aDataStart, aDataEnd: Pointer; var aString: AnsiString): Integer;
     procedure WriteChars(const aString: AnsiString);
   end;
@@ -705,6 +723,12 @@ function dfChars(
 implementation
 
 uses
+  System.Math,
+  System.StrUtils,
+  System.Variants,
+
+  Winapi.Windows,
+
   wbHalfFloat;
 
 const
@@ -783,7 +807,7 @@ begin
   else if SameText(aValue, 'Max') then
     Result := HalfToFloat(HalfMaxValue)
   else if SameText(aValue, 'Min') then
-    Result := HalfToFloat(HalfMinValue)
+    Result := HalfToFloat(HalfLowestValue)
   else if IsNegZeroString(aValue) then
     Result := -0.0
   else if aValue = '' then
@@ -957,7 +981,7 @@ end;
 
 procedure TdfDef.InsertDefsFrom(const aDef: TdfDef; Index: Integer);
 var
-  i: integer;
+  i: Integer;
 begin
   if Length(aDef.Defs) = 0 then
     Exit;
@@ -967,10 +991,18 @@ begin
   else if (Index < Low(FDefs)) or (Index > High(FDefs)) then
     raise Exception.Create('Invalid index to insert defs');
 
+  i := SizeOf(Pointer) * (Length(FDefs) - Index);
   SetLength(FDefs, Length(FDefs) + Length(aDef.Defs));
-  Move(FDefs[Index], FDefs[Index + Length(aDef.Defs)], SizeOf(Pointer) * (Length(FDefs) - Length(aDef.Defs) - Index));
+  if i > 0 then
+    Move(FDefs[Index], FDefs[Index + Length(aDef.Defs)], i);
   for i := Low(aDef.Defs) to High(aDef.Defs) do
     FDefs[Index + i] := aDef.Defs[i].Clone;
+end;
+
+function TdfDef.SetDefaultValue(const aValue: string): TdfDef;
+begin
+  Result := Self;
+  Result.FDefaultValue := aValue;
 end;
 
 function TdfDef.SetOnCreate(aProc: TdfOnCreateEvent): TdfDef;
@@ -1052,6 +1084,27 @@ begin
 end;
 
 
+{ TdfElementEnumerator }
+
+constructor TdfElementEnumerator.Create(aElement: TdfElement);
+begin
+  inherited Create;
+  fIndex := -1;
+  fContainer := TdfContainer(aElement);
+end;
+
+function TdfElementEnumerator.GetCurrent: TdfElement;
+begin
+  Result := fContainer[fIndex];
+end;
+
+function TdfElementEnumerator.MoveNext: Boolean;
+begin
+  Result := fIndex < fContainer.Count - 1;
+  if Result then
+    Inc(fIndex);
+end;
+
 
 { TdfElement }
 
@@ -1070,6 +1123,11 @@ begin
   // check FDef in case if exception occured in constructor and FDef is not set yet
   if Assigned(FDef) and Assigned(FDef.OnDestroy) then
     FDef.OnDestroy(Self);
+end;
+
+function TdfElement.GetEnumerator: TdfElementEnumerator;
+begin
+  Result := TdfElementEnumerator.Create(Self);
 end;
 
 procedure TdfElement.DoException(const aMessage: string);
@@ -1118,7 +1176,7 @@ end;
 
 procedure TdfElement.LoadFromData(const aData: TBytes);
 begin
-  UnSerialize(@aData[0], @aData[Length(aData)], 0);
+  UnSerialize(aData, PByte(aData) + Length(aData), 0);
 end;
 
 procedure TdfElement.LoadFromFile(const aFileName: string);
@@ -1130,7 +1188,7 @@ begin
   {
   with TFileStream.Create(aFileName, fmOpenRead or fmShareDenyNone) do try
     SetLength(Buffer, Size);
-    ReadBuffer(Buffer[0], Length(Buffer));
+    ReadBuffer(Buffer, Length(Buffer));
   finally
     Free;
   end;
@@ -1233,7 +1291,7 @@ end;
 procedure TdfElement.SaveToData(var aData: TBytes);
 begin
   SetLength(aData, DataSize);
-  Serialize(@aData[0], @aData[Length(aData)]);
+  Serialize(aData, PByte(aData) + Length(aData));
 end;
 
 procedure TdfElement.SaveToFile(const aFileName: string);
@@ -1242,7 +1300,7 @@ var
 begin
   SaveToData(Buffer);
   with TFileStream.Create(aFileName, fmCreate) do try
-    WriteBuffer(Buffer[0], Length(Buffer));
+    WriteBuffer(Buffer, Length(Buffer));
   finally
     Free;
   end;
@@ -2767,7 +2825,8 @@ var
 begin
   Bytes := aValue;
   SetLength(Bytes, GetDefaultDataSize);
-  Move(Bytes[0], aDataStart^, Length(Bytes));
+  if Length(Bytes) > 0 then
+    Move(Bytes[0], aDataStart^, Length(Bytes));
 end;
 
 procedure TdfMergeDef.GetElementEditValue(const aElement: TdfElement; aDataStart, aDataEnd: PByte; var aValue: string);
@@ -3343,8 +3402,10 @@ begin
     dtFloat32: begin
       if VarIsClear(aValue) or IsNaN(Value) then
         PSingle(aDataStart)^ := SingleNaN
-      else if IsInfinite(Value) then
+      else if IsInfinite(Value) and (Value > 0) then
         PCardinal(aDataStart)^ := $7F7FFFFF
+      else if IsInfinite(Value) then
+        PCardinal(aDataStart)^ := $FF7FFFFF
       else if SameValue(Value, MaxSingle) or (Value > MaxSingle) then
         PCardinal(aDataStart)^ := $7F7FFFFF
       else if SameValue(Value, -MaxSingle) or (Value < -MaxSingle) then
